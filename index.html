@@ -90,6 +90,9 @@
   .card p { margin: 0; color: var(--muted); font-size: 15px; }
   .icon { font-size: 26px; }
   .proof { margin-top: 12px; font-size: 13px; color: var(--chip-text); font-weight: 600; }
+  .proof a { color: inherit; }
+  .title-link { text-decoration: none; }
+  .title-link:hover { color: var(--accent); }
 
   /* projects */
   .project { display: flex; flex-direction: column; }
@@ -172,13 +175,13 @@
         <div class="icon" aria-hidden="true">📄</div>
         <h3>Document AI and RAG</h3>
         <p>Chat with your documents with cited sources, or pull structured data out of invoices and forms.</p>
-        <div class="proof">Proof: Menmo, Invoice Parser</div>
+        <div class="proof">Proof: <a href="https://menmo-app.netlify.app">Menmo</a>, Invoice Parser</div>
       </div>
       <div class="card">
         <div class="icon" aria-hidden="true">🤖</div>
         <h3>Custom AI agents</h3>
         <p>LLM workflows with guardrails, fallbacks and evaluation, not just a prompt in a loop.</p>
-        <div class="proof">Proof: Clinic assistant, Menmo</div>
+        <div class="proof">Proof: <a href="https://menmo-app.netlify.app">Menmo</a>, Clinic assistant</div>
       </div>
       <div class="card">
         <div class="icon" aria-hidden="true">📈</div>
@@ -198,6 +201,24 @@
     <div class="grid two">
 
       <article class="card project featured">
+        <span class="tag">Featured · Document AI and RAG</span>
+        <h3><a href="https://menmo-app.netlify.app" class="title-link">Menmo</a></h3>
+        <p>Upload your documents and chat with them. Every answer says where it came from (your documents, the web, general knowledge or memory) and cites its sources with page numbers.</p>
+        <ul>
+          <li>An <strong>LLM router</strong> reads the recent chat and picks intent, tone and answer length, and rewrites follow-up questions so they stand on their own</li>
+          <li><strong>Hybrid retrieval:</strong> dense embeddings + BM25 + optional cross-encoder re-ranking + 👍/👎 feedback from users</li>
+          <li>Answers from your documents when they're relevant; otherwise retries with a rewritten query, then <strong>web search with citations</strong>, then general knowledge</li>
+          <li><strong>Memory:</strong> remembers facts you tell it and recalls them later; each user only ever searches their own documents</li>
+          <li>Web app with accounts, drag-and-drop uploads with progress, documents grouped by topic, and usage analytics</li>
+        </ul>
+        <div class="chips"><span class="chip">RAG</span><span class="chip">Hybrid search</span><span class="chip">LLM routing</span><span class="chip">Django REST</span><span class="chip">Next.js</span><span class="chip">Tailwind</span><span class="chip">Hugging Face Spaces</span></div>
+        <div class="links-row">
+          <a href="https://menmo-app.netlify.app">Try the live app →</a>
+          <a href="https://huggingface.co/spaces/prajwalpujari16/menmo-backend">Live backend (API) →</a>
+        </div>
+      </article>
+
+      <article class="card project">
         <span class="tag">Newest · WhatsApp AI assistant</span>
         <h3>Clinic WhatsApp Assistant</h3>
         <p>A WhatsApp assistant for small clinics, demo built for a dental clinic in Dharwad. Patients ask questions and book in English, Kannada or Kanglish; the clinic sees bookings in a Google Sheet.</p>
@@ -211,22 +232,6 @@
           <span class="chip">LLM + structured output</span><span class="chip">FastAPI</span><span class="chip">WhatsApp Cloud API</span><span class="chip">SQLite</span><span class="chip">Google Sheets API</span><span class="chip">Evals</span>
         </div>
         <div class="links-row"><span>Demo available on request</span></div>
-      </article>
-
-      <article class="card project">
-        <span class="tag">Document AI · RAG</span>
-        <h3>Menmo</h3>
-        <p>Upload documents and chat with them. Every answer says where it came from (your documents, the web, general knowledge or memory) and cites sources with page numbers.</p>
-        <ul>
-          <li>An LLM router picks intent, tone and length, and rewrites follow-up questions</li>
-          <li><strong>Hybrid retrieval:</strong> dense + BM25 + optional cross-encoder + 👍/👎 feedback</li>
-          <li>Falls back to web search, then general knowledge; each user only searches their own files</li>
-        </ul>
-        <div class="chips"><span class="chip">Django REST</span><span class="chip">Next.js</span><span class="chip">RAG</span><span class="chip">Hugging Face Spaces</span></div>
-        <div class="links-row">
-          <a href="https://github.com/Prajwal7-2002/menmo-backend">Backend code →</a>
-          <a href="https://github.com/Prajwal7-2002/menmo-frontend">Frontend code →</a>
-        </div>
       </article>
 
       <article class="card project">
@@ -323,7 +328,7 @@
       <h2>Have a problem AI could take off your plate?</h2>
       <p>Tell me what you're trying to do. I'll reply with whether AI is a good fit, and what a first working version could look like.</p>
       <div class="buttons">
-        <a class="btn primary" href="mailto:prajwalpujari16@gmail.com?subject=Project%20enquiry">Email me</a>
+        <a class="btn primary" href="mailto:prajwalpujari0024@gmail.com?subject=Project%20enquiry">Email me</a>
         <a class="btn ghost" href="https://www.linkedin.com/in/prajwal-pujari-mn9964">LinkedIn</a>
         <a class="btn ghost" href="https://github.com/Prajwal7-2002">GitHub</a>
       </div>
