@@ -94,8 +94,18 @@
   .btn.ghost:hover { background: var(--surface-2); }
 
   /* sections */
-  section { padding: 56px 0; }
-  .section-head { margin-bottom: 28px; }
+  /* section.wrap beats .wrap's own padding, which used to cancel the spacing. */
+  section.wrap { padding: 96px 20px; scroll-margin-top: 60px; }
+  @media (max-width: 640px) { section.wrap { padding: 64px 20px; } }
+  .section-head { margin-bottom: 40px; }
+  /* Every other section sits on a soft full-width band so sections read as separate blocks. */
+  section.band {
+    background: var(--surface-2);
+    box-shadow: 0 0 0 100vmax var(--surface-2);
+    clip-path: inset(0 -100vmax);
+    border-top: 1px solid var(--border);
+  }
+  section.band .card, section.band .stack div { background: var(--surface); }
   .kicker { font-size: 13px; font-weight: 700; color: var(--accent); text-transform: uppercase;
             letter-spacing: .08em; }
   h2 { font-size: clamp(26px, 3.4vw, 36px); letter-spacing: -.02em; margin: 6px 0 8px; line-height: 1.2; }
@@ -239,7 +249,7 @@
     </div>
   </header>
 
-  <section id="services" class="wrap">
+  <section id="services" class="wrap band">
     <div class="section-head">
       <div class="kicker">What I build</div>
       <h2>Practical AI that does a job</h2>
@@ -377,7 +387,7 @@
     </div>
   </section>
 
-  <section id="process" class="wrap">
+  <section id="process" class="wrap band">
     <div class="section-head">
       <div class="kicker">How I work</div>
       <h2>From idea to something you can use</h2>
@@ -404,7 +414,7 @@
     </div>
   </section>
 
-  <section id="contact" class="wrap">
+  <section id="contact" class="wrap band">
     <div class="section-head center">
       <div class="kicker">Get in touch</div>
       <h2>Have a problem AI could take off your plate?</h2>
