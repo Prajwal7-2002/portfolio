@@ -273,7 +273,7 @@
         <div class="icon" aria-hidden="true">📈</div>
         <h3>ML models and efficient deployment</h3>
         <p>Forecasting, classification and anomaly detection, served fast on modest hardware.</p>
-        <div class="proof">Proof: EdgeSLM, VoltGuard, Relvnt</div>
+        <div class="proof">Proof: <a href="https://github.com/Prajwal7-2002/servebench">servebench</a>, EdgeSLM, VoltGuard</div>
       </div>
     </div>
   </section>
@@ -351,18 +351,23 @@
       </article>
 
       <article class="card project">
-        <span class="tag">Forecasting · Web app</span>
-        <h3>Relvnt</h3>
-        <p>Tells creators and brands whether their Instagram reach is heading for a drop before it becomes obvious.</p>
+        <span class="tag">LLM Serving · Systems Benchmark</span>
+        <h3><a href="https://prajwal7-2002.github.io/servebench/" class="title-link">servebench</a></h3>
+        <p>Production load-testing and capacity profiler for any OpenAI-compatible LLM endpoint (Ollama, vLLM, llama.cpp, SGLang, LM Studio) with real-time GPU telemetry and bottleneck diagnosis.</p>
         <ul>
-          <li>TensorFlow LSTM over <strong>14–90 days</strong> of reach data</li>
-          <li>Outputs an account health score, trend and confidence instead of raw metrics</li>
-          <li>FastAPI backend with a Next.js dashboard, deployed live</li>
+          <li><strong>Published on PyPI:</strong> <code>pip install servebench</code> — auto-detects local servers and benchmarks capacity in 60 seconds</li>
+          <li><strong>Statistical rigor:</strong> sample-size-aware percentiles (honest p99 for N &ge; 100), multi-trial repeats with 95% confidence intervals, and steady-state throughput windows</li>
+          <li><strong>Hardware observability:</strong> live NVML GPU telemetry (power, VRAM, temp, tokens/Joule) and server Prometheus queue scraping on one timeline</li>
+          <li><strong>Automated bottleneck diagnosis:</strong> detects whether the system is Slot/Queue-Bound, Memory-Bandwidth-Bound, Compute-Bound, or Client-Bound</li>
+          <li><strong>CI performance gate:</strong> automated regression blocker (<code>servebench check</code>) with 142 automated tests and cross-platform CI</li>
         </ul>
-        <div class="chips"><span class="chip">TensorFlow</span><span class="chip">LSTM</span><span class="chip">FastAPI</span><span class="chip">Next.js</span></div>
+        <div class="chips">
+          <span class="chip">Python 3.11+</span><span class="chip">PyPI</span><span class="chip">asyncio / aiohttp</span><span class="chip">NVML (GPU)</span><span class="chip">Prometheus</span><span class="chip">CI/CD Gate</span><span class="chip">MkDocs</span>
+        </div>
         <div class="links-row">
-          <a href="https://relvnt.vercel.app">Live app →</a>
-          <a href="https://github.com/Prajwal7-2002/relvnt">Code →</a>
+          <a href="https://pypi.org/project/servebench/">PyPI Package →</a>
+          <a href="https://prajwal7-2002.github.io/servebench/">Documentation →</a>
+          <a href="https://github.com/Prajwal7-2002/servebench">Code →</a>
         </div>
       </article>
 
