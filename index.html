@@ -3,519 +3,1296 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Prajwal Pujari</title>
-<meta name="description" content="AI/ML systems engineer working on inference internals: continuous batching, paged KV-cache, speculative decoding, and empirical benchmarks.">
-<meta property="og:title" content="Prajwal Pujari">
-<meta property="og:description" content="AI/ML systems engineer working on inference internals: continuous batching, paged KV-cache, speculative decoding, and empirical benchmarks.">
+<title>Prajwal Pujari · AI/ML Systems & Inference Engineer</title>
+<meta name="description" content="AI/ML systems engineer building continuous-batching LLM inference runtimes, Paged KV-cache allocators, and capacity benchmarking harnesses. Helping businesses implement Document AI, enterprise RAG, and private on-premise SLMs.">
+<meta property="og:title" content="Prajwal Pujari · AI/ML Systems & Inference Engineer">
+<meta property="og:description" content="AI/ML systems engineer building continuous-batching LLM inference runtimes, Paged KV-cache allocators, and capacity benchmarking harnesses. Helping businesses implement Document AI, enterprise RAG, and private on-premise SLMs.">
 <meta property="og:type" content="website">
 <link rel="canonical" href="https://prajwal-pujari.vercel.app/">
-<meta property="og:url" content="https://prajwal-pujari.vercel.app/">
 <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>⚡</text></svg>">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;450;500;600&family=JetBrains+Mono:wght@400;500&family=Newsreader:ital,opsz,wght@1,6..72,400;1,6..72,500&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
 <script>
   try {
     var saved = localStorage.getItem("theme");
     if (saved) {
       document.documentElement.dataset.theme = saved;
-    } else if (window.matchMedia("(prefers-color-scheme: dark)").matches) {
-      document.documentElement.dataset.theme = "dark";
+    } else if (window.matchMedia("(prefers-color-scheme: light)").matches) {
+      document.documentElement.dataset.theme = "light";
     }
   } catch (e) {}
 </script>
 <style>
   :root {
-    --bg: #ffffff;
-    --text: #1a1a1a;
-    --text-secondary: #555555;
-    --text-muted: #767676;
-    --border: #e5e5e5;
-    --border-light: #f0f0f0;
-    --code-bg: #f5f5f5;
-    --tag-bg: #f3f3f3;
-    --tag-text: #444444;
-    --link: #000000;
-    --link-hover: #0969da;
-    --accent: #0969da;
+    --bg: #090a0f;
+    --bg-subtle: #11141c;
+    --card-bg: #131722;
+    --card-hover: #181d2a;
+    --border: #212636;
+    --border-hover: #323a50;
+    --text: #f1f5f9;
+    --text-muted: #94a3b8;
+    --text-dim: #64748b;
+    --accent: #38bdf8;
+    --accent-tint: rgba(56, 189, 248, 0.1);
+    --accent-border: rgba(56, 189, 248, 0.25);
+    --badge-bg: rgba(255, 255, 255, 0.05);
+    --badge-text: #cbd5e1;
+    --chip-bg: rgba(56, 189, 248, 0.08);
+    --chip-text: #38bdf8;
+    --metric-bg: rgba(15, 23, 42, 0.6);
+    --success: #10b981;
+    --success-tint: rgba(16, 185, 129, 0.12);
+    --shadow: 0 4px 20px -2px rgba(0, 0, 0, 0.5);
+    --shadow-hover: 0 12px 28px -4px rgba(0, 0, 0, 0.6);
   }
 
-  :root[data-theme="dark"] {
-    --bg: #141415;
-    --text: #f0f0f0;
-    --text-secondary: #a3a3a8;
-    --text-muted: #73737a;
-    --border: #26262a;
-    --border-light: #1f1f22;
-    --code-bg: #1c1c1f;
-    --tag-bg: #202024;
-    --tag-text: #c0c0c6;
-    --link: #ffffff;
-    --link-hover: #58a6ff;
-    --accent: #58a6ff;
+  :root[data-theme="light"] {
+    --bg: #f8fafc;
+    --bg-subtle: #f1f5f9;
+    --card-bg: #ffffff;
+    --card-hover: #fbfcfe;
+    --border: #e2e8f0;
+    --border-hover: #cbd5e1;
+    --text: #0f172a;
+    --text-muted: #475569;
+    --text-dim: #94a3b8;
+    --accent: #0284c7;
+    --accent-tint: rgba(2, 132, 199, 0.08);
+    --accent-border: rgba(2, 132, 199, 0.2);
+    --badge-bg: #f1f5f9;
+    --badge-text: #334155;
+    --chip-bg: #e0f2fe;
+    --chip-text: #0369a1;
+    --metric-bg: #f8fafc;
+    --success: #059669;
+    --success-tint: rgba(5, 150, 105, 0.1);
+    --shadow: 0 4px 16px -2px rgba(0, 0, 0, 0.06);
+    --shadow-hover: 0 10px 24px -3px rgba(0, 0, 0, 0.1);
   }
 
   * { box-sizing: border-box; margin: 0; padding: 0; }
-  
+
   html {
+    scroll-behavior: smooth;
     font-size: 16px;
     -webkit-font-smoothing: antialiased;
-    -moz-osx-font-smoothing: grayscale;
   }
 
   body {
     background-color: var(--bg);
     color: var(--text);
     font-family: Inter, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
-    line-height: 1.65;
-    transition: background-color 0.2s ease, color 0.2s ease;
-  }
-
-  .container {
-    max-width: 680px;
-    margin: 0 auto;
-    padding: 60px 24px 100px;
-  }
-
-  /* Header */
-  header {
+    line-height: 1.6;
+    min-height: 100vh;
     display: flex;
-    justify-content: space-between;
-    align-items: baseline;
-    margin-bottom: 40px;
-    padding-bottom: 20px;
+    flex-direction: column;
+  }
+
+  /* Navigation Header */
+  .header {
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    background: color-mix(in srgb, var(--bg) 85%, transparent);
+    backdrop-filter: blur(12px);
     border-bottom: 1px solid var(--border);
+    transition: border-color 0.2s ease;
   }
 
-  .site-title {
-    font-size: 1.15rem;
-    font-weight: 600;
-    letter-spacing: -0.01em;
-    color: var(--text);
-    text-decoration: none;
-  }
-
-  .nav-right {
+  .nav-inner {
+    max-width: 820px;
+    margin: 0 auto;
+    padding: 14px 20px;
     display: flex;
     align-items: center;
-    gap: 16px;
+    justify-content: space-between;
+  }
+
+  .nav-logo {
+    font-size: 0.95rem;
+    font-weight: 700;
+    color: var(--text);
+    text-decoration: none;
+    letter-spacing: -0.02em;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  .nav-logo-badge {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 26px;
+    height: 26px;
+    border-radius: 6px;
+    background: var(--chip-bg);
+    color: var(--accent);
+    font-family: "JetBrains Mono", monospace;
+    font-size: 0.8rem;
+    font-weight: 600;
   }
 
   .nav-links {
     display: flex;
-    gap: 16px;
-    font-size: 0.9rem;
+    align-items: center;
+    gap: 18px;
   }
 
-  .nav-links a {
+  .nav-link {
     color: var(--text-muted);
     text-decoration: none;
+    font-size: 0.88rem;
+    font-weight: 500;
     transition: color 0.15s ease;
   }
 
-  .nav-links a:hover {
+  .nav-link:hover {
     color: var(--text);
   }
 
-  .theme-btn {
+  .theme-toggle {
     background: none;
-    border: none;
+    border: 1px solid var(--border);
+    border-radius: 8px;
     color: var(--text-muted);
     cursor: pointer;
-    padding: 4px;
-    font-size: 0.9rem;
-    display: flex;
+    display: inline-flex;
     align-items: center;
-    transition: color 0.15s ease;
-  }
-
-  .theme-btn:hover {
-    color: var(--text);
-  }
-
-  /* Typography */
-  h1 {
-    font-size: 1.75rem;
-    font-weight: 600;
-    letter-spacing: -0.025em;
-    line-height: 1.25;
-    margin-bottom: 16px;
-  }
-
-  h2 {
-    font-size: 1.15rem;
-    font-weight: 600;
-    letter-spacing: -0.015em;
-    margin-top: 48px;
-    margin-bottom: 18px;
-    color: var(--text);
-  }
-
-  p {
-    color: var(--text-secondary);
-    margin-bottom: 16px;
-    font-size: 0.96rem;
-  }
-
-  p.intro {
-    font-size: 1.05rem;
-    color: var(--text);
-    line-height: 1.6;
-    margin-bottom: 24px;
-  }
-
-  .editorial {
-    font-family: "Newsreader", serif;
-    font-style: italic;
-    font-size: 1.15em;
-  }
-
-  a {
-    color: var(--link);
-    text-decoration: underline;
-    text-underline-offset: 3px;
-    text-decoration-color: var(--border);
+    justify-content: center;
+    width: 34px;
+    height: 34px;
     transition: all 0.15s ease;
   }
 
-  a:hover {
-    text-decoration-color: var(--text);
-    color: var(--link-hover);
+  .theme-toggle:hover {
+    color: var(--text);
+    border-color: var(--border-hover);
+    background-color: var(--bg-subtle);
   }
 
-  code, .mono {
-    font-family: "JetBrains Mono", monospace;
-    font-size: 0.85em;
+  /* Main Container */
+  .container {
+    max-width: 820px;
+    width: 100%;
+    margin: 0 auto;
+    padding: 56px 20px 80px;
+    display: flex;
+    flex-direction: column;
+    gap: 64px;
   }
 
-  p code {
-    background: var(--code-bg);
-    padding: 2px 6px;
-    border-radius: 4px;
+  /* Hero Section */
+  .hero {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+  }
+
+  .status-pill {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 5px 12px;
+    border-radius: 999px;
+    background-color: var(--success-tint);
+    border: 1px solid color-mix(in srgb, var(--success) 30%, transparent);
+    color: var(--success);
+    font-size: 0.8rem;
+    font-weight: 500;
+    width: fit-content;
+  }
+
+  .status-dot {
+    width: 7px;
+    height: 7px;
+    border-radius: 50%;
+    background-color: var(--success);
+    box-shadow: 0 0 8px var(--success);
+  }
+
+  .hero h1 {
+    font-size: 2.6rem;
+    font-weight: 700;
+    letter-spacing: -0.035em;
+    line-height: 1.15;
     color: var(--text);
   }
 
-  /* Projects Section */
-  .project-list {
-    display: flex;
-    flex-direction: column;
-    gap: 32px;
+  .hero h2 {
+    font-size: 1.25rem;
+    font-weight: 500;
+    color: var(--accent);
+    letter-spacing: -0.01em;
   }
 
-  .project-item {
+  .hero-bio {
+    color: var(--text-muted);
+    font-size: 1.05rem;
+    line-height: 1.65;
+    max-width: 720px;
+  }
+
+  .hero-bio strong {
+    color: var(--text);
+    font-weight: 600;
+  }
+
+  .hero-actions {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 12px;
+    margin-top: 6px;
+  }
+
+  .btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 9px 16px;
+    border-radius: 8px;
+    font-size: 0.88rem;
+    font-weight: 500;
+    text-decoration: none;
+    transition: all 0.15s ease;
+    cursor: pointer;
+    font-family: inherit;
+  }
+
+  .btn-primary {
+    background-color: var(--text);
+    color: var(--bg);
+    border: 1px solid var(--text);
+  }
+
+  .btn-primary:hover {
+    opacity: 0.9;
+    transform: translateY(-1px);
+  }
+
+  .btn-secondary {
+    background-color: var(--card-bg);
+    color: var(--text);
+    border: 1px solid var(--border);
+  }
+
+  .btn-secondary:hover {
+    border-color: var(--border-hover);
+    background-color: var(--card-hover);
+    transform: translateY(-1px);
+  }
+
+  .btn svg {
+    width: 16px;
+    height: 16px;
+  }
+
+  /* Section Styling */
+  .section-header {
+    margin-bottom: 24px;
     display: flex;
     flex-direction: column;
     gap: 6px;
   }
 
+  .section-title {
+    font-size: 1.35rem;
+    font-weight: 700;
+    letter-spacing: -0.02em;
+    color: var(--text);
+  }
+
+  .section-desc {
+    color: var(--text-muted);
+    font-size: 0.92rem;
+  }
+
+  /* Project Cards */
+  .projects-list {
+    display: flex;
+    flex-direction: column;
+    gap: 24px;
+  }
+
+  .project-card {
+    background-color: var(--card-bg);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 24px;
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+    box-shadow: var(--shadow);
+  }
+
+  .project-card:hover {
+    background-color: var(--card-hover);
+    border-color: var(--border-hover);
+    transform: translateY(-2px);
+    box-shadow: var(--shadow-hover);
+  }
+
   .project-header {
     display: flex;
+    align-items: flex-start;
     justify-content: space-between;
-    align-items: baseline;
-    gap: 12px;
+    gap: 16px;
+  }
+
+  .project-title-group {
+    display: flex;
+    align-items: center;
+    gap: 10px;
     flex-wrap: wrap;
   }
 
-  .project-name {
-    font-size: 1.05rem;
-    font-weight: 600;
-    letter-spacing: -0.01em;
-  }
-
-  .project-name a {
+  .project-title {
+    font-size: 1.25rem;
+    font-weight: 700;
+    letter-spacing: -0.02em;
     color: var(--text);
     text-decoration: none;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    transition: color 0.15s ease;
   }
 
-  .project-name a:hover {
-    text-decoration: underline;
-    text-decoration-color: var(--text-muted);
+  .project-title:hover {
+    color: var(--accent);
   }
 
-  .project-meta {
+  .category-pill {
+    display: inline-flex;
+    align-items: center;
+    padding: 3px 9px;
+    border-radius: 6px;
+    background-color: var(--badge-bg);
+    color: var(--badge-text);
     font-family: "JetBrains Mono", monospace;
-    font-size: 0.78rem;
-    color: var(--text-muted);
-  }
-
-  .project-desc {
-    color: var(--text-secondary);
-    font-size: 0.92rem;
-    line-height: 1.55;
-    margin-bottom: 6px;
-  }
-
-  .project-data {
-    font-family: "JetBrains Mono", monospace;
-    font-size: 0.78rem;
-    color: var(--text-muted);
-    background: var(--code-bg);
-    padding: 6px 10px;
-    border-radius: 5px;
-    display: inline-block;
-    border: 1px solid var(--border-light);
-    line-height: 1.5;
+    font-size: 0.72rem;
+    font-weight: 500;
+    border: 1px solid var(--border);
   }
 
   .project-links {
     display: flex;
-    gap: 14px;
-    font-size: 0.84rem;
-    margin-top: 4px;
+    align-items: center;
+    gap: 8px;
   }
 
-  .project-links a {
-    color: var(--text-secondary);
+  .icon-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 32px;
+    height: 32px;
+    border-radius: 6px;
+    background-color: var(--bg-subtle);
+    border: 1px solid var(--border);
+    color: var(--text-muted);
     text-decoration: none;
+    transition: all 0.15s ease;
   }
 
-  .project-links a:hover {
+  .icon-btn:hover {
     color: var(--text);
-    text-decoration: underline;
+    border-color: var(--border-hover);
+    background-color: var(--card-hover);
+    transform: translateY(-1px);
   }
 
-  /* Compact list */
-  .archive-list {
+  .icon-btn svg {
+    width: 16px;
+    height: 16px;
+  }
+
+  .project-body {
+    color: var(--text-muted);
+    font-size: 0.94rem;
+    line-height: 1.6;
+  }
+
+  .project-body strong {
+    color: var(--text);
+    font-weight: 600;
+  }
+
+  /* Metric Callout Strip */
+  .metrics-strip {
+    background-color: var(--metric-bg);
+    border: 1px solid var(--border);
+    border-left: 3px solid var(--accent);
+    padding: 10px 14px;
+    border-radius: 6px;
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 12px;
+    font-family: "JetBrains Mono", monospace;
+    font-size: 0.8rem;
+    color: var(--text);
+  }
+
+  .metrics-strip span {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+  }
+
+  .metrics-strip .sep {
+    color: var(--text-dim);
+  }
+
+  /* Tech Tags */
+  .tech-pills {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+  }
+
+  .tech-pill {
+    display: inline-flex;
+    align-items: center;
+    padding: 3px 9px;
+    border-radius: 6px;
+    background-color: var(--bg-subtle);
+    color: var(--text-muted);
+    font-family: "JetBrains Mono", monospace;
+    font-size: 0.74rem;
+    font-weight: 500;
+    border: 1px solid var(--border);
+  }
+
+  /* Secondary Projects / Archive */
+  .archive-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 16px;
+    margin-top: 16px;
+  }
+
+  @media (max-width: 640px) {
+    .archive-grid {
+      grid-template-columns: 1fr;
+    }
+  }
+
+  .archive-card {
+    background-color: var(--card-bg);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 18px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    gap: 12px;
+    transition: all 0.2s ease;
+  }
+
+  .archive-card:hover {
+    border-color: var(--border-hover);
+    background-color: var(--card-hover);
+    transform: translateY(-2px);
+  }
+
+  .archive-card h4 {
+    font-size: 1.05rem;
+    font-weight: 600;
+    color: var(--text);
+  }
+
+  .archive-card p {
+    color: var(--text-muted);
+    font-size: 0.88rem;
+    line-height: 1.5;
+  }
+
+  /* Enterprise AI Solutions & Consulting */
+  .solutions-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 16px;
+  }
+
+  @media (max-width: 680px) {
+    .solutions-grid {
+      grid-template-columns: 1fr;
+    }
+  }
+
+  .solution-card {
+    background-color: var(--card-bg);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 24px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    gap: 16px;
+    transition: all 0.2s ease;
+    box-shadow: var(--shadow);
+  }
+
+  .solution-card:hover {
+    background-color: var(--card-hover);
+    border-color: var(--border-hover);
+    transform: translateY(-2px);
+    box-shadow: var(--shadow-hover);
+  }
+
+  .solution-header {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+
+  .solution-icon-box {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 36px;
+    height: 36px;
+    border-radius: 8px;
+    background-color: var(--chip-bg);
+    color: var(--accent);
+    flex-shrink: 0;
+  }
+
+  .solution-icon-box svg {
+    width: 18px;
+    height: 18px;
+  }
+
+  .solution-title {
+    font-size: 1.08rem;
+    font-weight: 700;
+    color: var(--text);
+    letter-spacing: -0.01em;
+  }
+
+  .solution-desc {
+    color: var(--text-muted);
+    font-size: 0.91rem;
+    line-height: 1.55;
+  }
+
+  .solution-desc strong {
+    color: var(--text);
+    font-weight: 600;
+  }
+
+  .solution-highlights {
     list-style: none;
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    background-color: var(--bg-subtle);
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    padding: 10px 12px;
+    font-size: 0.81rem;
+    color: var(--text-muted);
+  }
+
+  .solution-highlights li {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  .solution-highlights li svg {
+    width: 13px;
+    height: 13px;
+    color: var(--accent);
+    flex-shrink: 0;
+  }
+
+  /* Skills Grid */
+  .skills-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 16px;
+  }
+
+  @media (max-width: 640px) {
+    .skills-grid {
+      grid-template-columns: 1fr;
+    }
+  }
+
+  .skill-group {
+    background-color: var(--card-bg);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 20px;
     display: flex;
     flex-direction: column;
     gap: 12px;
   }
 
-  .archive-item {
-    display: flex;
-    justify-content: space-between;
-    align-items: baseline;
-    gap: 16px;
-    font-size: 0.92rem;
-  }
-
-  .archive-title {
+  .skill-group h3 {
+    font-size: 0.95rem;
+    font-weight: 600;
     color: var(--text);
-    text-decoration: none;
-  }
-
-  .archive-title:hover {
-    text-decoration: underline;
-  }
-
-  .archive-desc {
-    color: var(--text-muted);
-    font-size: 0.85rem;
-  }
-
-  /* Hardware / Rigor box */
-  .spec-box {
-    border: 1px solid var(--border);
-    border-radius: 8px;
-    padding: 16px 18px;
-    background: var(--code-bg);
-    font-size: 0.88rem;
-    color: var(--text-secondary);
-    line-height: 1.6;
-    margin: 20px 0;
-  }
-
-  .spec-box strong {
-    color: var(--text);
-  }
-
-  /* Footer */
-  footer {
-    margin-top: 60px;
-    padding-top: 24px;
-    border-top: 1px solid var(--border);
-    display: flex;
-    justify-content: space-between;
+    display: inline-flex;
     align-items: center;
-    font-size: 0.85rem;
+    gap: 8px;
+  }
+
+  .skill-group h3 svg {
+    color: var(--accent);
+    width: 16px;
+    height: 16px;
+  }
+
+  .skill-list {
+    list-style: none;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
     color: var(--text-muted);
+    font-size: 0.88rem;
+    line-height: 1.45;
+  }
+
+  .skill-list li strong {
+    color: var(--text);
+    font-weight: 500;
+  }
+
+  /* About / Engineering Philosophy Card */
+  .about-card {
+    background-color: var(--card-bg);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 28px;
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    line-height: 1.7;
+    color: var(--text-muted);
+    font-size: 0.95rem;
+  }
+
+  .about-card p strong {
+    color: var(--text);
+    font-weight: 600;
+  }
+
+  /* Contact / Connect Card */
+  .contact-card {
+    background-color: var(--card-bg);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 28px;
+    display: flex;
+    flex-direction: column;
+    gap: 18px;
+  }
+
+  .contact-card h3 {
+    font-size: 1.2rem;
+    font-weight: 700;
+    color: var(--text);
+  }
+
+  .contact-card p {
+    color: var(--text-muted);
+    font-size: 0.95rem;
+    max-width: 660px;
+  }
+
+  .contact-links {
+    display: flex;
     flex-wrap: wrap;
     gap: 12px;
   }
 
-  .footer-links {
-    display: flex;
-    gap: 16px;
+  /* Footer */
+  footer {
+    border-top: 1px solid var(--border);
+    padding: 32px 20px;
+    text-align: center;
+    color: var(--text-dim);
+    font-size: 0.84rem;
+    margin-top: auto;
   }
 
-  .footer-links a {
+  footer a {
     color: var(--text-muted);
     text-decoration: none;
   }
 
-  .footer-links a:hover {
+  footer a:hover {
     color: var(--text);
+    text-decoration: underline;
   }
 </style>
 </head>
 <body>
 
-<div class="container">
-  <header>
-    <a href="/" class="site-title">Prajwal Pujari</a>
-    <div class="nav-right">
-      <nav class="nav-links">
-        <a href="#projects">Work</a>
-        <a href="#hardware">Lab</a>
-        <a href="mailto:prajwalpujari16@gmail.com">Contact</a>
-      </nav>
-      <button class="theme-btn" id="theme-btn" type="button" aria-label="Toggle dark/light mode">
-        <svg id="theme-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path></svg>
+<!-- Header Navigation -->
+<header class="header">
+  <div class="nav-inner">
+    <a href="#" class="nav-logo">
+      <span class="nav-logo-badge">PP</span>
+      <span>Prajwal Pujari</span>
+    </a>
+    <nav class="nav-links">
+      <a href="#projects" class="nav-link">Projects</a>
+      <a href="#solutions" class="nav-link">Solutions</a>
+      <a href="#skills" class="nav-link">Skills</a>
+      <a href="#about" class="nav-link">About</a>
+      <a href="#contact" class="nav-link">Contact</a>
+      <button class="theme-toggle" id="theme-btn" type="button" aria-label="Toggle dark/light theme">
+        <svg id="theme-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="5"></circle><line x1="12" y1="1" x2="12" y2="3"></line><line x1="12" y1="21" x2="12" y2="23"></line><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line><line x1="1" y1="12" x2="3" y2="12"></line><line x1="21" y1="12" x2="23" y2="12"></line><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line></svg>
       </button>
-    </div>
-  </header>
+    </nav>
+  </div>
+</header>
 
-  <main>
-    <p class="intro">
-      I'm an engineer focused on <strong>AI/ML systems and inference internals</strong>: continuous batching, memory managers, speculative decoding, and empirical hardware benchmarking.
+<!-- Main Content -->
+<main class="container">
+
+  <!-- Hero Section -->
+  <section class="hero" id="hero">
+    <div class="status-pill">
+      <span class="status-dot"></span>
+      <span>Available for Systems Roles & AI Implementation Consulting</span>
+    </div>
+
+    <h1>Prajwal Pujari</h1>
+    <h2>AI/ML Systems & Inference Engineer</h2>
+
+    <p class="hero-bio">
+      I engineer high-throughput <strong>LLM inference runtimes</strong>, <strong>Paged KV-cache memory allocators</strong>, and <strong>empirical capacity benchmarks</strong> from first principles. I also partner with engineering teams and businesses to implement production <strong>Document AI pipelines</strong>, <strong>cited enterprise RAG</strong>, and <strong>private on-premise SLMs</strong>.
     </p>
 
-    <p>
-      I prefer building systems from first principles to understand how tensors move through physical memory and compute units, rather than treating inference engines as black boxes. I publish all empirical results as measured on real consumer hardware, including negative results and tradeoffs.
-    </p>
+    <div class="hero-actions">
+      <a href="https://github.com/Prajwal7-2002" target="_blank" rel="noopener noreferrer" class="btn btn-primary">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 22v-4a4.8 4.8 0 0 0-1-3.5c3 0 6-2 6-5.5.08-1.25-.27-2.48-1-3.5.28-1.15.28-2.35 0-3.5 0 0-1 0-3 1.5-2.64-.5-5.36-.5-8 0C6 2 5 2 5 2c-.3 1.15-.3 2.35 0 3.5A5.403 5.403 0 0 0 4 9c0 3.5 3 5.5 6 5.5-.39.49-.68 1.05-.85 1.65-.17.6-.22 1.23-.15 1.85v4"/><path d="M9 18c-4.51 2-5-2-7-2"/></svg>
+        <span>GitHub</span>
+      </a>
+      <a href="https://www.linkedin.com/in/prajwal-pujari-mn9964" target="_blank" rel="noopener noreferrer" class="btn btn-secondary">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z"/><rect width="4" height="12" x="2" y="9"/><circle cx="4" cy="4" r="2"/></svg>
+        <span>LinkedIn</span>
+      </a>
+      <a href="#solutions" class="btn btn-secondary">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="7" width="20" height="14" rx="2" ry="2"/><path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"/></svg>
+        <span>Solutions for Business</span>
+      </a>
+      <a href="mailto:prajwalpujari16@gmail.com" class="btn btn-secondary">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect width="20" height="16" x="2" y="4" rx="2"/><path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7"/></svg>
+        <span>Email</span>
+      </a>
+    </div>
+  </section>
 
-    <div class="spec-box">
-      <strong>Local Systems Lab:</strong> AMD Ryzen 5 6600H (12 threads), 16 GB DDR5, NVIDIA GeForce RTX 3050 6GB Laptop GPU. Cloud reproduction on Kaggle dual-T4 GPUs.
+  <!-- Featured Projects Section -->
+  <section id="projects">
+    <div class="section-header">
+      <h2 class="section-title">Featured Systems Work</h2>
+      <p class="section-desc">Production inference engines, capacity load-testing harnesses, and local SLM pipelines.</p>
     </div>
 
-    <h2 id="projects">Selected Systems Work</h2>
+    <div class="projects-list">
 
-    <div class="project-list">
-
-      <!-- servebench -->
-      <article class="project-item">
+      <!-- Project 1: mini-infer -->
+      <article class="project-card">
         <div class="project-header">
-          <span class="project-name"><a href="https://github.com/Prajwal7-2002/servebench">servebench</a></span>
-          <span class="project-meta">PyPI v1.0.1 · 142 tests</span>
+          <div class="project-title-group">
+            <a href="https://github.com/Prajwal7-2002/mini-infer" target="_blank" rel="noopener noreferrer" class="project-title">
+              mini-infer
+              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="7" y1="17" x2="17" y2="7"></line><polyline points="7 7 17 7 17 17"></polyline></svg>
+            </a>
+            <span class="category-pill">Inference Runtime</span>
+          </div>
+          <div class="project-links">
+            <a href="https://github.com/Prajwal7-2002/mini-infer" target="_blank" rel="noopener noreferrer" class="icon-btn" title="View GitHub Repository" aria-label="GitHub Repository">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 22v-4a4.8 4.8 0 0 0-1-3.5c3 0 6-2 6-5.5.08-1.25-.27-2.48-1-3.5.28-1.15.28-2.35 0-3.5 0 0-1 0-3 1.5-2.64-.5-5.36-.5-8 0C6 2 5 2 5 2c-.3 1.15-.3 2.35 0 3.5A5.403 5.403 0 0 0 4 9c0 3.5 3 5.5 6 5.5-.39.49-.68 1.05-.85 1.65-.17.6-.22 1.23-.15 1.85v4"/><path d="M9 18c-4.51 2-5-2-7-2"/></svg>
+            </a>
+          </div>
         </div>
-        <p class="project-desc">
-          Production capacity profiler and load-testing harness for local LLM engines (Ollama, vLLM, llama.cpp, mini-infer). Evaluates TTFT, TPOT, and throughput across concurrency sweeps with sample-size-aware percentiles (honest p99 for N &ge; 100) and 95% confidence intervals. Captures synchronized NVML GPU telemetry (power, VRAM, tokens/Joule) to classify server bottleneck bounds.
+
+        <p class="project-body">
+          Minimal continuous-batching LLM inference engine built from scratch in pure PyTorch for Qwen2.5. Implements a <strong>Paged KV-cache memory manager</strong> with 16-token physical blocks and virtual block tables (eliminating &gt;60% memory fragmentation waste), an iteration-level dynamic scheduler, and radix prefix block hashing. Features <strong>dual-model speculative decoding</strong> (0.5B draft + 1.5B target parallel verifier with Leviathan rejection sampling) guaranteeing mathematically zero distribution drift.
         </p>
-        <div class="project-data">
-          <code>pip install servebench</code> · <span class="mono">112ms TTFT · 14W avg · automated CI regression gate</span>
+
+        <div class="metrics-strip">
+          <span>⚡ 3.81 GB VRAM dual-model</span>
+          <span class="sep">/</span>
+          <span>112ms TTFT</span>
+          <span class="sep">/</span>
+          <span>43.6%–77.8% draft acceptance</span>
+          <span class="sep">/</span>
+          <span>Zero distribution drift</span>
         </div>
-        <div class="project-links">
-          <a href="https://pypi.org/project/servebench/">PyPI Package ↗</a>
-          <a href="https://prajwal7-2002.github.io/servebench/">Documentation ↗</a>
-          <a href="https://github.com/Prajwal7-2002/servebench">Source Code ↗</a>
+
+        <div class="tech-pills">
+          <span class="tech-pill">PyTorch SDPA</span>
+          <span class="tech-pill">PagedAttention</span>
+          <span class="tech-pill">Continuous Batching</span>
+          <span class="tech-pill">Speculative Decoding</span>
+          <span class="tech-pill">FastAPI SSE</span>
         </div>
       </article>
 
-      <!-- mini-infer -->
-      <article class="project-item">
+      <!-- Project 2: servebench -->
+      <article class="project-card">
         <div class="project-header">
-          <span class="project-name"><a href="https://github.com/Prajwal7-2002/mini-infer">mini-infer</a></span>
-          <span class="project-meta">Pure PyTorch · Qwen2.5</span>
+          <div class="project-title-group">
+            <a href="https://github.com/Prajwal7-2002/servebench" target="_blank" rel="noopener noreferrer" class="project-title">
+              servebench
+              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="7" y1="17" x2="17" y2="7"></line><polyline points="7 7 17 7 17 17"></polyline></svg>
+            </a>
+            <span class="category-pill">PyPI Package · v1.0.1</span>
+          </div>
+          <div class="project-links">
+            <a href="https://pypi.org/project/servebench/" target="_blank" rel="noopener noreferrer" class="icon-btn" title="View on PyPI" aria-label="PyPI Package">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m21.12 6.4-6.05-3.5a2.42 2.42 0 0 0-2.4 0L6.6 6.4A2.42 2.42 0 0 0 5.4 8.5v7a2.4 2.4 0 0 0 1.2 2.1l6.05 3.5a2.42 2.42 0 0 0 2.4 0l6.07-3.5a2.4 2.4 0 0 0 1.2-2.1v-7a2.4 2.4 0 0 0-1.2-2.1z"/><polyline points="12 22 12 12"/><polyline points="22.7 7.5 12 12 1.3 7.5"/></svg>
+            </a>
+            <a href="https://github.com/Prajwal7-2002/servebench" target="_blank" rel="noopener noreferrer" class="icon-btn" title="View GitHub Repository" aria-label="GitHub Repository">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 22v-4a4.8 4.8 0 0 0-1-3.5c3 0 6-2 6-5.5.08-1.25-.27-2.48-1-3.5.28-1.15.28-2.35 0-3.5 0 0-1 0-3 1.5-2.64-.5-5.36-.5-8 0C6 2 5 2 5 2c-.3 1.15-.3 2.35 0 3.5A5.403 5.403 0 0 0 4 9c0 3.5 3 5.5 6 5.5-.39.49-.68 1.05-.85 1.65-.17.6-.22 1.23-.15 1.85v4"/><path d="M9 18c-4.51 2-5-2-7-2"/></svg>
+            </a>
+          </div>
         </div>
-        <p class="project-desc">
-          Minimal continuous-batching inference engine built from scratch in pure PyTorch. Implements a Paged KV-cache memory manager with 16-token physical blocks and virtual block tables (eliminating >60% VRAM fragmentation), an iteration-level dynamic scheduler, and radix prefix block hashing. Features dual-model speculative decoding (0.5B draft + 1.5B target parallel verifier with Leviathan rejection sampling) with zero distribution drift.
+
+        <p class="project-body">
+          Production capacity profiler and load-testing harness for local LLM engines (Ollama, vLLM, llama.cpp, mini-infer). Evaluates TTFT, TPOT, and throughput across concurrency sweeps with <strong>sample-size-aware percentiles (honest p99 for N &ge; 100)</strong> and 95% confidence intervals. Captures synchronized <strong>NVML GPU telemetry</strong> (power, VRAM, tokens/Joule) to classify memory-bandwidth vs. compute-saturation roofline bounds.
         </p>
-        <div class="project-data">
-          <span class="mono">3.81 GB VRAM for dual models · 43.6%–77.8% draft acceptance · SDPA kernels</span>
+
+        <div class="metrics-strip">
+          <span>📦 pip install servebench</span>
+          <span class="sep">/</span>
+          <span>142 automated tests</span>
+          <span class="sep">/</span>
+          <span>CI regression gate</span>
+          <span class="sep">/</span>
+          <span>NVML profiling</span>
         </div>
-        <div class="project-links">
-          <a href="https://github.com/Prajwal7-2002/mini-infer">Source Code ↗</a>
-          <a href="https://github.com/Prajwal7-2002/mini-infer#readme">Architecture Details ↗</a>
+
+        <div class="tech-pills">
+          <span class="tech-pill">Python 3.11+</span>
+          <span class="tech-pill">asyncio / aiohttp</span>
+          <span class="tech-pill">NVML</span>
+          <span class="tech-pill">Prometheus</span>
+          <span class="tech-pill">Typer CLI</span>
         </div>
       </article>
 
-      <!-- EdgeSLM -->
-      <article class="project-item">
+      <!-- Project 3: EdgeSLM -->
+      <article class="project-card">
         <div class="project-header">
-          <span class="project-name"><a href="https://github.com/Prajwal7-2002/EdgeSLM">EdgeSLM</a></span>
-          <span class="project-meta">SmolLM2-360M · LoRA · ONNX</span>
+          <div class="project-title-group">
+            <a href="https://github.com/Prajwal7-2002/EdgeSLM" target="_blank" rel="noopener noreferrer" class="project-title">
+              EdgeSLM
+              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="7" y1="17" x2="17" y2="7"></line><polyline points="7 7 17 7 17 17"></polyline></svg>
+            </a>
+            <span class="category-pill">Local SLM</span>
+          </div>
+          <div class="project-links">
+            <a href="https://github.com/Prajwal7-2002/EdgeSLM" target="_blank" rel="noopener noreferrer" class="icon-btn" title="View GitHub Repository" aria-label="GitHub Repository">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 22v-4a4.8 4.8 0 0 0-1-3.5c3 0 6-2 6-5.5.08-1.25-.27-2.48-1-3.5.28-1.15.28-2.35 0-3.5 0 0-1 0-3 1.5-2.64-.5-5.36-.5-8 0C6 2 5 2 5 2c-.3 1.15-.3 2.35 0 3.5A5.403 5.403 0 0 0 4 9c0 3.5 3 5.5 6 5.5-.39.49-.68 1.05-.85 1.65-.17.6-.22 1.23-.15 1.85v4"/><path d="M9 18c-4.51 2-5-2-7-2"/></svg>
+            </a>
+          </div>
         </div>
-        <p class="project-desc">
-          Document sensitivity classifier for local CPU inference. Combines a LoRA fine-tune of SmolLM2-360M with a regex security policy layer so confidential files never leave the machine. Evaluated on a held-out re-labelled dataset with 95% confidence intervals; the report documents unexpected findings, including why a TF-IDF baseline originally beat the fine-tune (91.7% vs 58.3%) and how INT8 quantization traded accuracy for speed.
+
+        <p class="project-body">
+          Document sensitivity classifier designed for strictly local CPU inference. Combines a LoRA fine-tune of SmolLM2-360M with a deterministic regex security policy layer to ensure zero data leaves the machine. Features <strong>rigorous held-out evaluation</strong> documenting why a TF-IDF baseline beat the fine-tune (91.7% vs 58.3%) and evaluates INT8 quantization speed vs. accuracy tradeoffs.
         </p>
-        <div class="project-data">
-          <span class="mono">1.8× CPU speedup on INT8 · empirical failure analysis & held-out eval</span>
+
+        <div class="metrics-strip">
+          <span>🚀 1.8× CPU speedup (INT8)</span>
+          <span class="sep">/</span>
+          <span>SmolLM2-360M</span>
+          <span class="sep">/</span>
+          <span>Held-out evaluation</span>
+          <span class="sep">/</span>
+          <span>Empirical analysis</span>
         </div>
-        <div class="project-links">
-          <a href="https://github.com/Prajwal7-2002/EdgeSLM">Source Code ↗</a>
-          <a href="https://github.com/Prajwal7-2002/EdgeSLM/blob/main/REPORT.md">Empirical Report ↗</a>
+
+        <div class="tech-pills">
+          <span class="tech-pill">SmolLM2-360M</span>
+          <span class="tech-pill">PEFT / LoRA</span>
+          <span class="tech-pill">ONNX Runtime</span>
+          <span class="tech-pill">INT8 Quantization</span>
+          <span class="tech-pill">scikit-learn</span>
         </div>
       </article>
 
-      <!-- Menmo -->
-      <article class="project-item">
+      <!-- Project 4: Menmo -->
+      <article class="project-card">
         <div class="project-header">
-          <span class="project-name"><a href="https://menmo-app.netlify.app">Menmo</a></span>
-          <span class="project-meta">Hybrid RAG · Live Web App</span>
+          <div class="project-title-group">
+            <a href="https://menmo-app.netlify.app" target="_blank" rel="noopener noreferrer" class="project-title">
+              Menmo
+              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="7" y1="17" x2="17" y2="7"></line><polyline points="7 7 17 7 17 17"></polyline></svg>
+            </a>
+            <span class="category-pill">Hybrid Search</span>
+          </div>
+          <div class="project-links">
+            <a href="https://menmo-app.netlify.app" target="_blank" rel="noopener noreferrer" class="icon-btn" title="View Live App" aria-label="Live Demo">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>
+            </a>
+          </div>
         </div>
-        <p class="project-desc">
-          Document search and chat application with strict page-level source citations. Uses hybrid retrieval (dense MiniLM embeddings + sparse BM25 with reciprocal rank fusion on Pinecone) with an LLM routing layer that decides intent and falls back from user files to cited web search to general parametric knowledge.
+
+        <p class="project-body">
+          Document search and chat application with strict page-level source citations. Uses <strong>hybrid retrieval</strong> (dense MiniLM embeddings + sparse BM25 with reciprocal rank fusion on Pinecone) with an LLM routing layer that decides intent and falls back from indexed files to cited web search to general parametric knowledge.
         </p>
-        <div class="project-data">
-          <span class="mono">Django REST backend on Docker (HF Spaces) · Next.js static client</span>
+
+        <div class="metrics-strip">
+          <span>🔍 Hybrid BM25 + Dense RRF</span>
+          <span class="sep">/</span>
+          <span>Pinecone</span>
+          <span class="sep">/</span>
+          <span>Page-level citations</span>
+          <span class="sep">/</span>
+          <span>Multi-tenant</span>
         </div>
-        <div class="project-links">
-          <a href="https://menmo-app.netlify.app">Live Application ↗</a>
-          <a href="https://github.com/Prajwal7-2002/menmo-backend">Backend Code ↗</a>
+
+        <div class="tech-pills">
+          <span class="tech-pill">Pinecone</span>
+          <span class="tech-pill">Django REST</span>
+          <span class="tech-pill">Docker</span>
+          <span class="tech-pill">Next.js</span>
+          <span class="tech-pill">Groq LLaMA</span>
         </div>
       </article>
 
     </div>
 
-    <h2>Other Projects</h2>
-    <ul class="archive-list">
-      <li class="archive-item">
+    <!-- Secondary Projects / Archive -->
+    <div style="margin-top: 32px;">
+      <h3 style="font-size: 1.05rem; font-weight: 600; color: var(--text); margin-bottom: 12px;">Additional Applications & Tooling</h3>
+      <div class="archive-grid">
+        <div class="archive-card">
+          <div>
+            <h4>Clinic Assistant</h4>
+            <p style="margin-top: 6px;">Low-resource healthcare triage assistant using localized embedding retrieval for multilingual rural clinics with deterministic fallback protocols.</p>
+          </div>
+          <div class="tech-pills" style="margin-top: 8px;">
+            <span class="tech-pill">FastAPI</span>
+            <span class="tech-pill">ChromaDB</span>
+            <span class="tech-pill">Sentence-Transformers</span>
+          </div>
+        </div>
+        <div class="archive-card">
+          <div>
+            <h4>Invoice Parser</h4>
+            <p style="margin-top: 6px;">Structured entity extraction pipeline combining layout-aware document OCR with token classification for high-variance financial documents.</p>
+          </div>
+          <div class="tech-pills" style="margin-top: 8px;">
+            <span class="tech-pill">Python</span>
+            <span class="tech-pill">Tesseract OCR</span>
+            <span class="tech-pill">Hugging Face</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Enterprise AI Solutions & Consulting Section -->
+  <section id="solutions">
+    <div class="section-header">
+      <h2 class="section-title">Enterprise AI Solutions & Consulting</h2>
+      <p class="section-desc">Helping businesses and engineering teams implement reliable, privacy-first AI architectures.</p>
+    </div>
+
+    <div class="solutions-grid">
+
+      <!-- Solution 1: Document AI & Structured Extraction -->
+      <div class="solution-card">
         <div>
-          <a href="https://github.com/Prajwal7-2002/clinic-assistant" class="archive-title">Clinic WhatsApp Assistant</a>
-          <span class="archive-desc"> — Multilingual appointment booking on official WhatsApp Cloud API with Google Sheets sync and emergency tripwires.</span>
+          <div class="solution-header">
+            <div class="solution-icon-box">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/><polyline points="10 9 9 9 8 9"/></svg>
+            </div>
+            <h3 class="solution-title">Document AI & Data Extraction</h3>
+          </div>
+          <p class="solution-desc" style="margin-top: 12px;">
+            Extract structured, validated data from high-variance unstructured documents (invoices, receipts, PDF forms, contracts). Combines layout-aware OCR, token classification, and regex rule guards into deterministic JSON schemas.
+          </p>
         </div>
-        <span class="project-meta">123 tests</span>
-      </li>
-      <li class="archive-item">
+
+        <ul class="solution-highlights">
+          <li>
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg>
+            <span>Strict Pydantic / Zod schema validation</span>
+          </li>
+          <li>
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg>
+            <span>Table, key-value, and entity boundary parsing</span>
+          </li>
+          <li>
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg>
+            <span>Self-hosted on-premise to keep documents private</span>
+          </li>
+        </ul>
+
+        <div class="tech-pills">
+          <span class="tech-pill">Invoice & Form OCR</span>
+          <span class="tech-pill">LayoutLM</span>
+          <span class="tech-pill">Regex Guardrails</span>
+          <span class="tech-pill">JSON Schemas</span>
+        </div>
+      </div>
+
+      <!-- Solution 2: Production Enterprise RAG -->
+      <div class="solution-card">
         <div>
-          <a href="https://github.com/Prajwal7-2002/Invoice_parser" class="archive-title">Invoice Parser</a>
-          <span class="archive-desc"> — Automated document extraction pipeline converting invoice PDFs and images into structured schema.</span>
+          <div class="solution-header">
+            <div class="solution-icon-box">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+            </div>
+            <h3 class="solution-title">Production RAG & Knowledge Systems</h3>
+          </div>
+          <p class="solution-desc" style="margin-top: 12px;">
+            Connect your company's proprietary knowledge to LLMs with strict zero-hallucination guarantees. Implements hybrid retrieval (BM25 sparse + dense embeddings with Reciprocal Rank Fusion) and verifiable page-level source citations.
+          </p>
         </div>
-        <span class="project-meta">FastAPI</span>
-      </li>
-    </ul>
 
-    <h2 id="hardware">Focus & Principles</h2>
-    <p>
-      My current work centers on the <strong>systems engineering of inference</strong>:
-    </p>
-    <ul style="margin-left: 20px; color: var(--text-secondary); font-size: 0.94rem; display: flex; flex-direction: column; gap: 8px; margin-bottom: 24px;">
-      <li><strong>Memory layout:</strong> Paged KV-cache, block allocation, virtual-to-physical address translation, and zero-recompute prefix caching.</li>
-      <li><strong>Execution efficiency:</strong> Iteration-level continuous batching, prefill/decode scheduling, and speculation algorithms (Leviathan rejection sampling).</li>
-      <li><strong>Serving rigor:</strong> Statistical latency percentiles, queue dynamics, and real hardware telemetry (tokens/sec, tokens/Joule, VRAM peaks).</li>
-      <li><strong>Reproducibility:</strong> Apache 2.0 open-source code, self-contained implementations without unneeded abstractions, and cross-platform CI.</li>
-    </ul>
+        <ul class="solution-highlights">
+          <li>
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg>
+            <span>Exact page-level and section citations</span>
+          </li>
+          <li>
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg>
+            <span>Hybrid BM25 + dense vector reciprocal re-ranking</span>
+          </li>
+          <li>
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg>
+            <span>Intent routing: internal docs vs. web vs. general</span>
+          </li>
+        </ul>
 
-  </main>
+        <div class="tech-pills">
+          <span class="tech-pill">Hybrid Search</span>
+          <span class="tech-pill">Pinecone / Qdrant</span>
+          <span class="tech-pill">Page Citations</span>
+          <span class="tech-pill">Zero Hallucination</span>
+        </div>
+      </div>
 
-  <footer>
-    <div>Prajwal Pujari · Karnataka, India</div>
-    <div class="footer-links">
-      <a href="https://github.com/Prajwal7-2002" target="_blank" rel="noopener">GitHub</a>
-      <a href="https://www.linkedin.com/in/prajwal-pujari-mn9964" target="_blank" rel="noopener">LinkedIn</a>
-      <a href="mailto:prajwalpujari16@gmail.com">Email</a>
+      <!-- Solution 3: Private On-Premise SLMs -->
+      <div class="solution-card">
+        <div>
+          <div class="solution-header">
+            <div class="solution-icon-box">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+            </div>
+            <h3 class="solution-title">Private On-Premise SLM Deployment</h3>
+          </div>
+          <p class="solution-desc" style="margin-top: 12px;">
+            Deploy compact language models (SmolLM2, Qwen2.5, LLaMA) entirely within your private infrastructure. Ideal for organizations with strict compliance policies (HIPAA, SOC2, confidential IP) that cannot use public cloud APIs.
+          </p>
+        </div>
+
+        <ul class="solution-highlights">
+          <li>
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg>
+            <span>Zero external network egress or API leak risk</span>
+          </li>
+          <li>
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg>
+            <span>INT8 / FP8 CPU & GPU quantization for low latency</span>
+          </li>
+          <li>
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg>
+            <span>LoRA fine-tuning tailored to your domain vocabulary</span>
+          </li>
+        </ul>
+
+        <div class="tech-pills">
+          <span class="tech-pill">SmolLM2 / Qwen2.5</span>
+          <span class="tech-pill">ONNX Runtime</span>
+          <span class="tech-pill">INT8 CPU</span>
+          <span class="tech-pill">Air-Gapped Privacy</span>
+        </div>
+      </div>
+
+      <!-- Solution 4: Inference Serving & Cost Optimization -->
+      <div class="solution-card">
+        <div>
+          <div class="solution-header">
+            <div class="solution-icon-box">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg>
+            </div>
+            <h3 class="solution-title">Inference & Serving Cost Optimization</h3>
+          </div>
+          <p class="solution-desc" style="margin-top: 12px;">
+            Facing high cloud GPU bills or latency spikes under load? I audit and benchmark your LLM serving infrastructure using production load harnesses like <a href="https://github.com/Prajwal7-2002/servebench" target="_blank" rel="noopener noreferrer" style="color: var(--accent); text-decoration: none;">servebench</a> to cut compute waste.
+          </p>
+        </div>
+
+        <ul class="solution-highlights">
+          <li>
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg>
+            <span>Empirical TTFT, TPOT, and p99 concurrency profiling</span>
+          </li>
+          <li>
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg>
+            <span>3×–5× serving throughput boost via continuous batching</span>
+          </li>
+          <li>
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg>
+            <span>GPU memory audit to eliminate VRAM fragmentation</span>
+          </li>
+        </ul>
+
+        <div class="tech-pills">
+          <span class="tech-pill">servebench</span>
+          <span class="tech-pill">Continuous Batching</span>
+          <span class="tech-pill">NVML Profiling</span>
+          <span class="tech-pill">Cloud Cost Cut</span>
+        </div>
+      </div>
+
     </div>
-  </footer>
-</div>
+  </section>
+
+  <!-- Skills Section -->
+  <section id="skills">
+    <div class="section-header">
+      <h2 class="section-title">Technical Competencies</h2>
+      <p class="section-desc">Core systems engineering domains, inference runtimes, and tooling.</p>
+    </div>
+
+    <div class="skills-grid">
+      <div class="skill-group">
+        <h3>
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg>
+          Inference Runtimes
+        </h3>
+        <ul class="skill-list">
+          <li><strong>Continuous Batching:</strong> Iteration-level prefill & decode scheduling</li>
+          <li><strong>Paged KV-Cache:</strong> Physical block pools & virtual block tables</li>
+          <li><strong>Speculative Decoding:</strong> Leviathan rejection sampling, zero drift</li>
+          <li><strong>Attention Kernels:</strong> PyTorch SDPA, FlashAttention primitives</li>
+        </ul>
+      </div>
+
+      <div class="skill-group">
+        <h3>
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 12h-4l-3 9L9 3l-3 9H2"/></svg>
+          Profiling & Capacity
+        </h3>
+        <ul class="skill-list">
+          <li><strong>Hardware Telemetry:</strong> Synchronized NVML GPU power & VRAM</li>
+          <li><strong>Latency Bounds:</strong> TTFT, TPOT, sample-size-aware honest p99</li>
+          <li><strong>Roofline Analysis:</strong> Memory bandwidth vs compute saturation</li>
+          <li><strong>Load Generation:</strong> Concurrency sweeps, Poisson arrival rates</li>
+        </ul>
+      </div>
+
+      <div class="skill-group">
+        <h3>
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="4" width="16" height="16" rx="2"/><rect x="9" y="9" width="6" height="6"/><line x1="9" y1="1" x2="9" y2="4"/><line x1="15" y1="1" x2="15" y2="4"/><line x1="9" y1="20" x2="9" y2="23"/><line x1="15" y1="20" x2="15" y2="23"/><line x1="20" y1="9" x2="23" y2="9"/><line x1="20" y1="14" x2="23" y2="14"/><line x1="1" y1="9" x2="4" y2="9"/><line x1="1" y1="14" x2="4" y2="14"/></svg>
+          Models & Optimization
+        </h3>
+        <ul class="skill-list">
+          <li><strong>Architectures:</strong> Qwen2.5, SmolLM2, LLaMA series</li>
+          <li><strong>Quantization:</strong> INT8/FP8 weights, ONNX Runtime</li>
+          <li><strong>Fine-Tuning:</strong> PEFT / LoRA parameter-efficient adaptation</li>
+          <li><strong>Model Loading:</strong> In-place Safetensors streaming loaders</li>
+        </ul>
+      </div>
+
+      <div class="skill-group">
+        <h3>
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="16 18 22 12 16 6"/><polyline points="8 6 2 12 8 18"/></svg>
+          Stack & Infrastructure
+        </h3>
+        <ul class="skill-list">
+          <li><strong>Languages:</strong> Python 3.11+ (asyncio, uv, ruff), C/C++</li>
+          <li><strong>Frameworks:</strong> PyTorch, FastAPI SSE, Typer, Hugging Face</li>
+          <li><strong>Observability:</strong> Prometheus metrics, OpenTelemetry, Grafana</li>
+          <li><strong>Platforms:</strong> Linux, Docker, Git CI/CD, PyPI Publishing</li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <!-- About Section -->
+  <section id="about">
+    <div class="section-header">
+      <h2 class="section-title">About & Philosophy</h2>
+      <p class="section-desc">How I approach software engineering and systems research.</p>
+    </div>
+
+    <div class="about-card">
+      <p>
+        I focus on the <strong>systems internals of AI/ML inference</strong>: continuous batching schedulers, virtual memory managers, speculative decoding verifiers, and empirical hardware profiling.
+      </p>
+      <p>
+        Rather than treating LLM runtimes as black boxes or wrapping commercial APIs, I prefer building allocators, schedulers, and verification loops from scratch in pure PyTorch to understand exactly how tensors move across physical memory buses and compute registers.
+      </p>
+      <p>
+        I evaluate systems on real hardware with sample-size-aware percentiles (honest p99 for N &ge; 100), 95% confidence intervals, and synchronized GPU telemetry—documenting trade-offs, bottleneck limits, and negative results alongside speedups.
+      </p>
+    </div>
+  </section>
+
+  <!-- Contact Section -->
+  <section id="contact">
+    <div class="contact-card">
+      <h3>Let's Connect & Build</h3>
+      <p>
+        Whether you are looking to hire for a full-time AI/ML systems engineering role, or need an experienced engineer to build a private Document AI pipeline, cited enterprise RAG system, or optimize inference serving for your company—let's discuss your architecture.
+      </p>
+      <div class="contact-links">
+        <a href="mailto:prajwalpujari16@gmail.com" class="btn btn-primary">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect width="20" height="16" x="2" y="4" rx="2"/><path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7"/></svg>
+          <span>prajwalpujari16@gmail.com</span>
+        </a>
+        <a href="https://github.com/Prajwal7-2002" target="_blank" rel="noopener noreferrer" class="btn btn-secondary">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 22v-4a4.8 4.8 0 0 0-1-3.5c3 0 6-2 6-5.5.08-1.25-.27-2.48-1-3.5.28-1.15.28-2.35 0-3.5 0 0-1 0-3 1.5-2.64-.5-5.36-.5-8 0C6 2 5 2 5 2c-.3 1.15-.3 2.35 0 3.5A5.403 5.403 0 0 0 4 9c0 3.5 3 5.5 6 5.5-.39.49-.68 1.05-.85 1.65-.17.6-.22 1.23-.15 1.85v4"/><path d="M9 18c-4.51 2-5-2-7-2"/></svg>
+          <span>GitHub</span>
+        </a>
+        <a href="https://www.linkedin.com/in/prajwal-pujari-mn9964" target="_blank" rel="noopener noreferrer" class="btn btn-secondary">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z"/><rect width="4" height="12" x="2" y="9"/><circle cx="4" cy="4" r="2"/></svg>
+          <span>LinkedIn</span>
+        </a>
+      </div>
+    </div>
+  </section>
+
+</main>
+
+<!-- Footer -->
+<footer>
+  <p>
+    &copy; 2026 Prajwal Pujari · Built with clean semantic HTML & CSS · Hosted on Vercel
+  </p>
+</footer>
 
 <script>
+  // Dark / Light Theme Toggle
   const root = document.documentElement;
-  const btn = document.getElementById("theme-btn");
-  
-  function updateIcon(theme) {
-    btn.innerHTML = theme === "dark" 
-      ? '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="5"></circle><line x1="12" y1="1" x2="12" y2="3"></line><line x1="12" y1="21" x2="12" y2="23"></line><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line><line x1="1" y1="12" x2="3" y2="12"></line><line x1="21" y1="12" x2="23" y2="12"></line><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line></svg>'
-      : '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path></svg>';
+  const themeBtn = document.getElementById('theme-btn');
+  const themeIcon = document.getElementById('theme-icon');
+
+  function updateThemeUI(theme) {
+    if (theme === 'light') {
+      themeIcon.innerHTML = '<path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>';
+    } else {
+      themeIcon.innerHTML = '<circle cx="12" cy="12" r="5"></circle><line x1="12" y1="1" x2="12" y2="3"></line><line x1="12" y1="21" x2="12" y2="23"></line><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line><line x1="1" y1="12" x2="3" y2="12"></line><line x1="21" y1="12" x2="23" y2="12"></line><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>';
+    }
   }
 
-  updateIcon(root.dataset.theme);
+  updateThemeUI(root.dataset.theme || 'dark');
 
-  btn.addEventListener("click", () => {
-    const current = root.dataset.theme === "dark" ? "light" : "dark";
-    root.dataset.theme = current;
-    try { localStorage.setItem("theme", current); } catch (e) {}
-    updateIcon(current);
+  themeBtn.addEventListener('click', () => {
+    const nextTheme = root.dataset.theme === 'light' ? 'dark' : 'light';
+    root.dataset.theme = nextTheme;
+    try { localStorage.setItem('theme', nextTheme); } catch (e) {}
+    updateThemeUI(nextTheme);
   });
 </script>
 </body>
