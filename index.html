@@ -273,7 +273,7 @@
         <div class="icon" aria-hidden="true">📈</div>
         <h3>ML models and efficient deployment</h3>
         <p>Forecasting, classification and anomaly detection, served fast on modest hardware.</p>
-        <div class="proof">Proof: <a href="https://github.com/Prajwal7-2002/servebench">servebench</a>, EdgeSLM, VoltGuard</div>
+        <div class="proof">Proof: <a href="https://github.com/Prajwal7-2002/servebench">servebench</a>, <a href="https://github.com/Prajwal7-2002/mini-infer">mini-infer</a>, EdgeSLM</div>
       </div>
     </div>
   </section>
@@ -338,16 +338,21 @@
       </article>
 
       <article class="card project">
-        <span class="tag">Predictive maintenance</span>
-        <h3>VoltGuard</h3>
-        <p>Warns that an EV motor is heading into thermal trouble from its electrical signals alone, before the temperatures you can't measure get there.</p>
+        <span class="tag">LLM Inference · Systems Architecture</span>
+        <h3><a href="https://github.com/Prajwal7-2002/mini-infer" class="title-link">mini-infer</a></h3>
+        <p>A minimal, high-performance continuous-batching LLM inference engine with Paged KV-cache and speculative decoding for Qwen2.5, built from scratch in pure PyTorch.</p>
         <ul>
-          <li>Built on <strong>1.33 million readings</strong> from 69 recorded drives (Paderborn PMSM dataset)</li>
-          <li>XGBoost chosen over LSTMs for <strong>low-latency CPU inference</strong>; SHAP explanations drive an automatic RPM-limiting response</li>
-          <li>FastAPI service with a Next.js dashboard and live monitor, pytest suite and documented failure cases</li>
+          <li><strong>Paged KV-Cache:</strong> 16-token physical block pool with dynamic virtual-to-physical block tables, eliminating over 60% VRAM waste from memory fragmentation</li>
+          <li><strong>True continuous batching:</strong> iteration-level scheduler dynamically interleaves prefill and decode passes with instant token-step memory reclamation</li>
+          <li><strong>Radix prefix caching:</strong> hashes token blocks to skip redundant prefill on shared system prompts, dropping TTFT by up to 80%</li>
+          <li><strong>Speculative decoding:</strong> 0.5B draft proposer + 1.5B target parallel verifier with Leviathan rejection sampling; runs simultaneously in <strong>3.81 GB VRAM</strong> on an RTX 3050 Laptop GPU with <strong>43.6%–77.8% draft acceptance</strong> and zero distribution drift</li>
         </ul>
-        <div class="chips"><span class="chip">XGBoost</span><span class="chip">SHAP</span><span class="chip">FastAPI</span><span class="chip">Next.js</span><span class="chip">Time series</span></div>
-        <div class="links-row"><a href="https://github.com/Prajwal7-2002/voltguard">Code →</a></div>
+        <div class="chips">
+          <span class="chip">PyTorch</span><span class="chip">PagedAttention</span><span class="chip">Continuous Batching</span><span class="chip">Speculative Decoding</span><span class="chip">FastAPI SSE</span><span class="chip">Qwen2.5</span>
+        </div>
+        <div class="links-row">
+          <a href="https://github.com/Prajwal7-2002/mini-infer">Code on GitHub →</a>
+        </div>
       </article>
 
       <article class="card project">
