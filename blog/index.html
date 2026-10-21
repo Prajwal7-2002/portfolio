@@ -1,0 +1,447 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Engineering Notes & Deep Dives · Prajwal Pujari</title>
+<meta name="description" content="Technical engineering deep dives on LLM inference runtimes, Paged KV-cache allocators, speculative decoding, and local hardware profiling by Prajwal Pujari.">
+<meta property="og:title" content="Engineering Notes & Deep Dives · Prajwal Pujari">
+<meta property="og:description" content="Technical engineering deep dives on LLM inference runtimes, Paged KV-cache allocators, speculative decoding, and local hardware profiling.">
+<meta property="og:type" content="website">
+<link rel="canonical" href="https://prajwal-pujari.vercel.app/blog/">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>⚡</text></svg>">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<script>
+  try {
+    var saved = localStorage.getItem("theme");
+    if (saved) {
+      document.documentElement.dataset.theme = saved;
+    } else if (window.matchMedia("(prefers-color-scheme: light)").matches) {
+      document.documentElement.dataset.theme = "light";
+    }
+  } catch (e) {}
+</script>
+<style>
+  :root {
+    --bg: #090a0f;
+    --bg-subtle: #11141c;
+    --card-bg: #131722;
+    --card-hover: #181d2a;
+    --border: #212636;
+    --border-hover: #323a50;
+    --text: #f1f5f9;
+    --text-muted: #94a3b8;
+    --text-dim: #64748b;
+    --accent: #38bdf8;
+    --accent-tint: rgba(56, 189, 248, 0.1);
+    --accent-border: rgba(56, 189, 248, 0.25);
+    --badge-bg: rgba(255, 255, 255, 0.05);
+    --badge-text: #cbd5e1;
+    --chip-bg: rgba(56, 189, 248, 0.08);
+    --chip-text: #38bdf8;
+    --metric-bg: rgba(15, 23, 42, 0.6);
+    --shadow: 0 4px 20px -2px rgba(0, 0, 0, 0.5);
+    --shadow-hover: 0 12px 28px -4px rgba(0, 0, 0, 0.6);
+  }
+
+  :root[data-theme="light"] {
+    --bg: #f8fafc;
+    --bg-subtle: #f1f5f9;
+    --card-bg: #ffffff;
+    --card-hover: #fbfcfe;
+    --border: #e2e8f0;
+    --border-hover: #cbd5e1;
+    --text: #0f172a;
+    --text-muted: #475569;
+    --text-dim: #94a3b8;
+    --accent: #0284c7;
+    --accent-tint: rgba(2, 132, 199, 0.08);
+    --accent-border: rgba(2, 132, 199, 0.25);
+    --badge-bg: #f1f5f9;
+    --badge-text: #334155;
+    --chip-bg: rgba(2, 132, 199, 0.08);
+    --chip-text: #0284c7;
+    --metric-bg: #f8fafc;
+    --shadow: 0 4px 16px -2px rgba(0, 0, 0, 0.06);
+    --shadow-hover: 0 8px 24px -4px rgba(0, 0, 0, 0.1);
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    background-color: var(--bg);
+    color: var(--text);
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+    line-height: 1.6;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    transition: background-color 0.2s ease, color 0.2s ease;
+  }
+
+  code, pre { font-family: 'JetBrains Mono', monospace; }
+
+  .header {
+    position: sticky;
+    top: 0;
+    z-index: 50;
+    background-color: rgba(9, 10, 15, 0.85);
+    backdrop-filter: blur(12px);
+    border-bottom: 1px solid var(--border);
+  }
+  :root[data-theme="light"] .header {
+    background-color: rgba(248, 250, 252, 0.85);
+  }
+
+  .nav-inner {
+    max-width: 900px;
+    margin: 0 auto;
+    padding: 16px 24px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+
+  .nav-logo {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    text-decoration: none;
+    color: var(--text);
+    font-weight: 700;
+    font-size: 1.05rem;
+  }
+
+  .nav-logo-badge {
+    background: linear-gradient(135deg, #38bdf8, #818cf8);
+    color: #090a0f;
+    font-weight: 800;
+    font-size: 0.75rem;
+    padding: 4px 8px;
+    border-radius: 6px;
+  }
+
+  .nav-links {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+  }
+
+  .nav-link {
+    color: var(--text-muted);
+    text-decoration: none;
+    font-size: 0.9rem;
+    font-weight: 500;
+    transition: color 0.15s ease;
+  }
+  .nav-link:hover, .nav-link.active { color: var(--accent); }
+
+  .theme-toggle {
+    background: none;
+    border: 1px solid var(--border);
+    color: var(--text-muted);
+    border-radius: 6px;
+    padding: 6px 10px;
+    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    transition: border-color 0.15s ease, color 0.15s ease;
+  }
+  .theme-toggle:hover { border-color: var(--border-hover); color: var(--text); }
+
+  .container {
+    max-width: 900px;
+    margin: 0 auto;
+    padding: 48px 24px 80px;
+    flex: 1;
+    width: 100%;
+  }
+
+  .blog-header {
+    margin-bottom: 40px;
+  }
+
+  .blog-tagline {
+    display: inline-block;
+    font-size: 0.8rem;
+    font-weight: 600;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--accent);
+    margin-bottom: 8px;
+  }
+
+  .blog-title {
+    font-size: 2.2rem;
+    font-weight: 800;
+    letter-spacing: -0.02em;
+    margin-bottom: 12px;
+  }
+
+  .blog-desc {
+    color: var(--text-muted);
+    font-size: 1.05rem;
+    max-width: 650px;
+  }
+
+  .posts-list {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+  }
+
+  .post-card {
+    background-color: var(--card-bg);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 24px 28px;
+    text-decoration: none;
+    color: inherit;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    transition: transform 0.15s ease, border-color 0.15s ease, box-shadow 0.15s ease;
+  }
+
+  .post-card:hover {
+    transform: translateY(-2px);
+    border-color: var(--accent-border);
+    box-shadow: var(--shadow-hover);
+  }
+
+  .post-meta {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    font-size: 0.82rem;
+    color: var(--text-dim);
+  }
+
+  .project-badge {
+    background-color: var(--chip-bg);
+    color: var(--chip-text);
+    padding: 2px 8px;
+    border-radius: 4px;
+    font-size: 0.75rem;
+    font-weight: 600;
+    font-family: 'JetBrains Mono', monospace;
+  }
+
+  .post-card-title {
+    font-size: 1.25rem;
+    font-weight: 700;
+    color: var(--text);
+    line-height: 1.4;
+  }
+
+  .post-card-excerpt {
+    color: var(--text-muted);
+    font-size: 0.92rem;
+    line-height: 1.6;
+  }
+
+  .post-metrics-strip {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin-top: 4px;
+    font-size: 0.8rem;
+    font-family: 'JetBrains Mono', monospace;
+    color: var(--text-dim);
+  }
+
+  .post-metric-tag {
+    background-color: var(--badge-bg);
+    border: 1px solid var(--border);
+    padding: 3px 8px;
+    border-radius: 4px;
+    color: var(--text-muted);
+  }
+
+  footer {
+    border-top: 1px solid var(--border);
+    padding: 32px 24px;
+    text-align: center;
+    color: var(--text-dim);
+    font-size: 0.85rem;
+  }
+</style>
+</head>
+<body>
+
+<header class="header">
+  <div class="nav-inner">
+    <a href="/" class="nav-logo">
+      <span class="nav-logo-badge">PP</span>
+      <span>Prajwal Pujari</span>
+    </a>
+    <nav class="nav-links">
+      <a href="/#projects" class="nav-link">Projects</a>
+      <a href="/#solutions" class="nav-link">Solutions</a>
+      <a href="/#skills" class="nav-link">Skills</a>
+      <a href="/blog/" class="nav-link active">Blog</a>
+      <a href="/#contact" class="nav-link">Contact</a>
+      <button class="theme-toggle" id="theme-btn" type="button" aria-label="Toggle dark/light theme">
+        <svg id="theme-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="5"></circle><line x1="12" y1="1" x2="12" y2="3"></line><line x1="12" y1="21" x2="12" y2="23"></line><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line><line x1="1" y1="12" x2="3" y2="12"></line><line x1="21" y1="12" x2="23" y2="12"></line><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line></svg>
+      </button>
+    </nav>
+  </div>
+</header>
+
+<main class="container">
+  <div class="blog-header">
+    <span class="blog-tagline">Engineering Logs & Benchmarks</span>
+    <h1 class="blog-title">Engineering Notes</h1>
+    <p class="blog-desc">
+      Technical deep dives on LLM inference runtimes, Paged KV-cache allocators, speculative decoding, and hardware capacity load-testing from first principles.
+    </p>
+  </div>
+
+  <div class="posts-list" id="posts-container">
+
+    <a href="/blog/posts/paged-kv-cache-vram.html" class="post-card">
+      <div class="post-meta">
+        <span class="project-badge">mini-infer</span>
+        <span>•</span>
+        <span>2026-10-22</span>
+        <span>•</span>
+        <span>5 min read</span>
+        <span>•</span>
+        <span style="color: var(--accent); font-size: 0.75rem; text-transform: uppercase; font-weight: 700;">draft</span>
+      </div>
+      <h2 class="post-card-title">Why Naive KV-Caches Waste >60% VRAM (And How Paged Memory Fixes It)</h2>
+      <p class="post-card-excerpt">How replacing contiguous memory allocations with 16-token physical blocks and virtual table mapping brings production PagedAttention to pure PyTorch.</p>
+      <div class="post-metrics-strip">
+        <span class="post-metric-tag">block size: 16 tokens</span><span class="post-metric-tag">vram waste before: >60%</span><span class="post-metric-tag">vram waste after: <3.8%</span><span class="post-metric-tag">runtime: Pure PyTorch (zero C++/CUDA toolchain)</span><span class="post-metric-tag">laptop gpu: RTX 3050 Laptop GPU</span>
+      </div>
+    </a>
+
+
+    <a href="/blog/posts/prefix-caching-ttft.html" class="post-card">
+      <div class="post-meta">
+        <span class="project-badge">mini-infer</span>
+        <span>•</span>
+        <span>2026-10-24</span>
+        <span>•</span>
+        <span>4 min read</span>
+        <span>•</span>
+        <span style="color: var(--accent); font-size: 0.75rem; text-transform: uppercase; font-weight: 700;">draft</span>
+      </div>
+      <h2 class="post-card-title">Dropping TTFT from 340ms to 12ms with Radix Prefix Caching</h2>
+      <p class="post-card-excerpt">How hashing prompt blocks avoids redundant attention prefill passes on shared system prompts and multi-turn conversations.</p>
+      <div class="post-metrics-strip">
+        <span class="post-metric-tag">ttft cold: 340 ms</span><span class="post-metric-tag">ttft cached: <15 ms</span><span class="post-metric-tag">speedup: 28x</span><span class="post-metric-tag">eviction policy: LRU</span>
+      </div>
+    </a>
+
+
+    <a href="/blog/posts/speculative-decoding-3gb-vram.html" class="post-card">
+      <div class="post-meta">
+        <span class="project-badge">mini-infer</span>
+        <span>•</span>
+        <span>2026-10-26</span>
+        <span>•</span>
+        <span>6 min read</span>
+        <span>•</span>
+        <span style="color: var(--accent); font-size: 0.75rem; text-transform: uppercase; font-weight: 700;">draft</span>
+      </div>
+      <h2 class="post-card-title">Speculative Decoding in 3.81 GB VRAM on a Laptop GPU</h2>
+      <p class="post-card-excerpt">Dual-model speculative execution pairing a 0.5B draft model with a 1.5B target verifier with Leviathan rejection sampling and zero distribution drift.</p>
+      <div class="post-metrics-strip">
+        <span class="post-metric-tag">total vram: 3.81 GB</span><span class="post-metric-tag">draft model: Qwen2.5-0.5B</span><span class="post-metric-tag">target model: Qwen2.5-1.5B</span><span class="post-metric-tag">speedup: 2.2x</span><span class="post-metric-tag">draft acceptance: 43.6% - 77.8%</span><span class="post-metric-tag">distribution drift: 0.0 (Mathematically exact)</span>
+      </div>
+    </a>
+
+
+    <a href="/blog/posts/llm-p99-latency-rigor.html" class="post-card">
+      <div class="post-meta">
+        <span class="project-badge">servebench</span>
+        <span>•</span>
+        <span>2026-10-28</span>
+        <span>•</span>
+        <span>5 min read</span>
+        <span>•</span>
+        <span style="color: var(--accent); font-size: 0.75rem; text-transform: uppercase; font-weight: 700;">draft</span>
+      </div>
+      <h2 class="post-card-title">Why Your LLM p99 Latency is Statistically Invalid</h2>
+      <p class="post-card-excerpt">Why reporting p99 with N < 100 requests is deceptive, and how to build sample-size-aware percentiles with 95% bootstrap confidence intervals.</p>
+      <div class="post-metrics-strip">
+        <span class="post-metric-tag">min sample size p99: N >= 100</span><span class="post-metric-tag">confidence interval: 95% bootstrap</span><span class="post-metric-tag">automated tests: 142 tests</span><span class="post-metric-tag">matrix platforms: Ubuntu, Windows, macOS (9 matrix runs)</span>
+      </div>
+    </a>
+
+
+    <a href="/blog/posts/diagnosing-llm-bottlenecks-nvml.html" class="post-card">
+      <div class="post-meta">
+        <span class="project-badge">servebench</span>
+        <span>•</span>
+        <span>2026-10-30</span>
+        <span>•</span>
+        <span>5 min read</span>
+        <span>•</span>
+        <span style="color: var(--accent); font-size: 0.75rem; text-transform: uppercase; font-weight: 700;">draft</span>
+      </div>
+      <h2 class="post-card-title">Are You Memory-Bound or Compute-Bound? Diagnosing LLM Servers with NVML</h2>
+      <p class="post-card-excerpt">Capturing synchronized GPU wattage, VRAM usage, and Tokens/Joule telemetry on one timeline to diagnose roofline limits.</p>
+      <div class="post-metrics-strip">
+        <span class="post-metric-tag">metrics tracked: Power (W), VRAM (MB), Temp (C), Tokens/Joule</span><span class="post-metric-tag">quick profile time: 60 seconds (`servebench quick`)</span><span class="post-metric-tag">engines supported: Ollama, vLLM, llama.cpp, mini-infer</span>
+      </div>
+    </a>
+
+
+    <a href="/blog/posts/synthetic-data-trap-edgeslm.html" class="post-card">
+      <div class="post-meta">
+        <span class="project-badge">EdgeSLM</span>
+        <span>•</span>
+        <span>2026-11-01</span>
+        <span>•</span>
+        <span>6 min read</span>
+        <span>•</span>
+        <span style="color: var(--accent); font-size: 0.75rem; text-transform: uppercase; font-weight: 700;">draft</span>
+      </div>
+      <h2 class="post-card-title">The Synthetic Data Trap: Why TF-IDF Beat Our Initial Fine-Tune</h2>
+      <p class="post-card-excerpt">An honest postmortem on how our 0.5B model learned a false heuristic on financial numbers, and how balanced counter-training achieved 88.8% accuracy.</p>
+      <div class="post-metrics-strip">
+        <span class="post-metric-tag">initial finetune: 58.3%</span><span class="post-metric-tag">tfidf baseline: 75.0%</span><span class="post-metric-tag">v3 finetune: 88.8%</span><span class="post-metric-tag">mcnemar p value: p = 0.043</span><span class="post-metric-tag">secret recall: 100.0% (15/15)</span>
+      </div>
+    </a>
+
+
+    <a href="/blog/posts/dynamic-tensor-batching-edgeslm.html" class="post-card">
+      <div class="post-meta">
+        <span class="project-badge">EdgeSLM</span>
+        <span>•</span>
+        <span>2026-11-03</span>
+        <span>•</span>
+        <span>5 min read</span>
+        <span>•</span>
+        <span style="color: var(--accent); font-size: 0.75rem; text-transform: uppercase; font-weight: 700;">draft</span>
+      </div>
+      <h2 class="post-card-title">Dynamic Tensor Batching: 6.7x Multi-Page Document Scanning on Edge Hardware</h2>
+      <p class="post-card-excerpt">Why processing multi-page enterprise documents sequentially in Python loops is a bottleneck, and how dynamic chunk stacking cuts latency from 1.5s to 223ms.</p>
+      <div class="post-metrics-strip">
+        <span class="post-metric-tag">sequential 8 chunks: 1,497 ms</span><span class="post-metric-tag">batched 8 chunks: 223.7 ms</span><span class="post-metric-tag">speedup: 6.69x</span><span class="post-metric-tag">early exit compute saved: 88.9%</span><span class="post-metric-tag">onnx int4 size: 392 MB</span>
+      </div>
+    </a>
+
+  </div>
+</main>
+
+<footer>
+  <p>© 2026 Prajwal Pujari · <a href="/" style="color: inherit; text-decoration: underline;">Back to Portfolio</a></p>
+</footer>
+
+<script>
+  // Theme toggle
+  const themeBtn = document.getElementById('theme-btn');
+  themeBtn.addEventListener('click', () => {
+    const current = document.documentElement.dataset.theme;
+    const next = current === 'light' ? 'dark' : 'light';
+    document.documentElement.dataset.theme = next;
+    try { localStorage.setItem('theme', next); } catch(e) {}
+  });
+</script>
+
+</body>
+</html>
