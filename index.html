@@ -877,7 +877,7 @@
               mini-infer
               <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="7" y1="17" x2="17" y2="7"></line><polyline points="7 7 17 7 17 17"></polyline></svg>
             </a>
-            <span class="category-pill">PyPI Package · v0.2.1</span>
+            <span class="category-pill">PyPI Package · v0.2.2</span>
           </div>
           <div class="project-links">
             <a href="https://pypi.org/project/mini-infer/" target="_blank" rel="noopener noreferrer" class="icon-btn" title="View on PyPI" aria-label="PyPI Package">
@@ -893,7 +893,7 @@
         </div>
 
         <p class="project-body">
-          Minimal continuous-batching LLM inference engine built from scratch in pure PyTorch for Qwen2.5. Implements a <strong>Paged KV-cache memory manager</strong> with 16-token physical blocks and virtual block tables (reducing memory waste from &gt;60% to &lt;3.8%), iteration-level dynamic scheduling, and radix prefix caching. Features <strong>unified batched physical block gather</strong> leaping concurrency throughput to 27.0 tok/s (+130.8%) on RTX 3050 Laptop GPU, and <strong>speculative decoding</strong> (0.5B draft + 1.5B target parallel verifier with Leviathan rejection sampling) with zero distribution drift.
+          Minimal continuous-batching LLM inference engine built from scratch in pure PyTorch for Qwen2.5. Implements a <strong>Paged KV-cache memory manager</strong> with 16-token physical blocks (<3.8% memory waste), <strong>INT8 dynamic KV-cache quantization (50% memory reduction)</strong>, and an <strong>AST Repo-Map generator</strong> for large-codebase context injection. Features unified batched physical block gather leaping concurrency 4 throughput to 27.0 tok/s (+130.8%) on RTX 3050 Laptop GPU, and speculative decoding with zero distribution drift.
         </p>
 
         <div class="metrics-strip">
@@ -901,11 +901,11 @@
           <span class="sep">/</span>
           <span>⚡ 27.0 tok/s (c=4)</span>
           <span class="sep">/</span>
+          <span>INT8 KV-Cache (50% save)</span>
+          <span class="sep">/</span>
+          <span>AST Repo-Map</span>
+          <span class="sep">/</span>
           <span>2.04 Tok/Joule</span>
-          <span class="sep">/</span>
-          <span>2.2x speculative speedup</span>
-          <span class="sep">/</span>
-          <span>&lt;3.8% KV waste</span>
         </div>
 
         <div class="tech-pills">
