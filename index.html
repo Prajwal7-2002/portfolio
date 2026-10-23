@@ -512,6 +512,71 @@
     line-height: 1.5;
   }
 
+  /* Engineering Notes / Blog Preview on Home */
+  .blog-preview-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 16px;
+  }
+
+  @media (max-width: 720px) {
+    .blog-preview-grid {
+      grid-template-columns: 1fr;
+    }
+  }
+
+  .blog-preview-card {
+    background-color: var(--card-bg);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 22px 24px;
+    text-decoration: none;
+    color: inherit;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    gap: 14px;
+    transition: all 0.2s ease;
+    box-shadow: var(--shadow);
+  }
+
+  .blog-preview-card:hover {
+    background-color: var(--card-hover);
+    border-color: var(--accent-border);
+    transform: translateY(-2px);
+    box-shadow: var(--shadow-hover);
+  }
+
+  .blog-preview-meta {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 0.78rem;
+    color: var(--text-dim);
+  }
+
+  .blog-preview-title {
+    font-size: 1.05rem;
+    font-weight: 700;
+    color: var(--text);
+    line-height: 1.4;
+  }
+
+  .blog-preview-desc {
+    color: var(--text-muted);
+    font-size: 0.88rem;
+    line-height: 1.55;
+  }
+
+  .blog-preview-link {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    color: var(--accent);
+    font-size: 0.84rem;
+    font-weight: 600;
+  }
+
   /* Enterprise AI Solutions & Consulting */
   .solutions-grid {
     display: grid;
@@ -745,6 +810,7 @@
     </a>
     <nav class="nav-links">
       <a href="#projects" class="nav-link">Projects</a>
+      <a href="#blog" class="nav-link">Notes</a>
       <a href="#solutions" class="nav-link">Solutions</a>
       <a href="#skills" class="nav-link">Skills</a>
       <a href="#about" class="nav-link">About</a>
@@ -811,7 +877,7 @@
               mini-infer
               <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="7" y1="17" x2="17" y2="7"></line><polyline points="7 7 17 7 17 17"></polyline></svg>
             </a>
-            <span class="category-pill">PyPI Package · v0.1.0</span>
+            <span class="category-pill">PyPI Package · v0.2.1</span>
           </div>
           <div class="project-links">
             <a href="https://pypi.org/project/mini-infer/" target="_blank" rel="noopener noreferrer" class="icon-btn" title="View on PyPI" aria-label="PyPI Package">
@@ -827,19 +893,19 @@
         </div>
 
         <p class="project-body">
-          Minimal continuous-batching LLM inference engine built from scratch in pure PyTorch for Qwen2.5. Implements a <strong>Paged KV-cache memory manager</strong> with 16-token physical blocks and virtual block tables (eliminating &gt;60% memory fragmentation waste), an iteration-level dynamic scheduler, and radix prefix block hashing. Features <strong>dual-model speculative decoding</strong> (0.5B draft + 1.5B target parallel verifier with Leviathan rejection sampling) guaranteeing mathematically zero distribution drift.
+          Minimal continuous-batching LLM inference engine built from scratch in pure PyTorch for Qwen2.5. Implements a <strong>Paged KV-cache memory manager</strong> with 16-token physical blocks and virtual block tables (reducing memory waste from &gt;60% to &lt;3.8%), iteration-level dynamic scheduling, and radix prefix caching. Features <strong>unified batched physical block gather</strong> leaping concurrency throughput to 27.0 tok/s (+130.8%) on RTX 3050 Laptop GPU, and <strong>speculative decoding</strong> (0.5B draft + 1.5B target parallel verifier with Leviathan rejection sampling) with zero distribution drift.
         </p>
 
         <div class="metrics-strip">
           <span>📦 pip install mini-infer</span>
           <span class="sep">/</span>
-          <span>⚡ 3.81 GB VRAM dual-model</span>
+          <span>⚡ 27.0 tok/s (c=4)</span>
           <span class="sep">/</span>
-          <span>112ms TTFT</span>
+          <span>2.04 Tok/Joule</span>
           <span class="sep">/</span>
           <span>2.2x speculative speedup</span>
           <span class="sep">/</span>
-          <span>Zero distribution drift</span>
+          <span>&lt;3.8% KV waste</span>
         </div>
 
         <div class="tech-pills">
@@ -859,7 +925,7 @@
               servebench
               <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="7" y1="17" x2="17" y2="7"></line><polyline points="7 7 17 7 17 17"></polyline></svg>
             </a>
-            <span class="category-pill">PyPI Package · v1.0.1</span>
+            <span class="category-pill">PyPI Package · v1.1.2 · Sigstore Verified</span>
           </div>
           <div class="project-links">
             <a href="https://pypi.org/project/servebench/" target="_blank" rel="noopener noreferrer" class="icon-btn" title="View on PyPI" aria-label="PyPI Package">
@@ -875,15 +941,17 @@
         </div>
 
         <p class="project-body">
-          Production capacity profiler and load-testing harness for local LLM engines (Ollama, vLLM, llama.cpp, mini-infer). Evaluates TTFT, TPOT, and throughput across concurrency sweeps with <strong>sample-size-aware percentiles (honest p99 for N &ge; 100)</strong> and 95% confidence intervals. Captures synchronized <strong>NVML GPU telemetry</strong> (power, VRAM, tokens/Joule) to classify memory-bandwidth vs. compute-saturation roofline bounds.
+          Production capacity profiler and auto-tuning harness (<code>servebench tune</code>) for local LLM engines (Ollama, vLLM, llama.cpp, mini-infer). Evaluates TTFT, TPOT, and throughput across concurrency sweeps with <strong>sample-size-aware percentiles (honest p99 for N &ge; 100)</strong> and 95% confidence intervals. Captures synchronized <strong>NVML GPU telemetry</strong> (power, VRAM, tokens/Joule) to classify memory-bandwidth vs. compute-saturation roofline bounds. Published to PyPI with <strong>Sigstore cryptographic provenance</strong>.
         </p>
 
         <div class="metrics-strip">
           <span>📦 pip install servebench</span>
           <span class="sep">/</span>
-          <span>142 automated tests</span>
+          <span>152 automated tests</span>
           <span class="sep">/</span>
-          <span>CI regression gate</span>
+          <span>Sigstore Provenance</span>
+          <span class="sep">/</span>
+          <span>Auto-tuning (servebench tune)</span>
           <span class="sep">/</span>
           <span>NVML profiling</span>
         </div>
@@ -1012,6 +1080,64 @@
           </div>
         </div>
       </div>
+    </div>
+  </section>
+
+  <!-- Engineering Notes / Blog Section -->
+  <section id="blog">
+    <div class="section-header" style="display: flex; flex-direction: row; justify-content: space-between; align-items: flex-end; flex-wrap: wrap; gap: 12px;">
+      <div>
+        <h2 class="section-title">Engineering Notes & Teardowns</h2>
+        <p class="section-desc">Empirical benchmarks, KV-cache allocators, and hardware capacity profiling from first principles.</p>
+      </div>
+      <a href="/blog/" class="btn btn-secondary" style="font-size: 0.82rem; padding: 7px 14px;">
+        <span>View All Notes</span>
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"></line><polyline points="12 5 19 12 12 19"></polyline></svg>
+      </a>
+    </div>
+
+    <div class="blog-preview-grid">
+      <!-- Post 1 -->
+      <a href="/blog/posts/roofline-serving-benchmarks.html" class="blog-preview-card">
+        <div style="display: flex; flex-direction: column; gap: 10px;">
+          <div class="blog-preview-meta">
+            <span class="category-pill" style="font-size: 0.72rem; padding: 2px 7px;">servebench & mini-infer</span>
+            <span>•</span>
+            <span>2026-10-23</span>
+            <span>•</span>
+            <span>7 min read</span>
+          </div>
+          <h3 class="blog-preview-title">Roofline Benchmarking & Auto-Tuning LLM Serving: How We Pushed Pure PyTorch to 27 tok/s</h3>
+          <p class="blog-preview-desc">
+            Empirical roofline modeling, MBU tracking, and unified batched physical block gather leaping concurrency 4 throughput by +130.8% on an RTX 3050 Laptop GPU.
+          </p>
+        </div>
+        <div class="blog-preview-link">
+          <span>Read Teardown</span>
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"></line><polyline points="12 5 19 12 12 19"></polyline></svg>
+        </div>
+      </a>
+
+      <!-- Post 2 -->
+      <a href="/blog/posts/paged-kv-cache-vram.html" class="blog-preview-card">
+        <div style="display: flex; flex-direction: column; gap: 10px;">
+          <div class="blog-preview-meta">
+            <span class="category-pill" style="font-size: 0.72rem; padding: 2px 7px;">mini-infer</span>
+            <span>•</span>
+            <span>2026-10-22</span>
+            <span>•</span>
+            <span>5 min read</span>
+          </div>
+          <h3 class="blog-preview-title">Why Naive KV-Caches Waste >60% VRAM (And How Paged Memory Fixes It)</h3>
+          <p class="blog-preview-desc">
+            How replacing contiguous memory allocations with 16-token physical blocks and virtual table mapping brings production PagedAttention to pure PyTorch.
+          </p>
+        </div>
+        <div class="blog-preview-link">
+          <span>Read Teardown</span>
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"></line><polyline points="12 5 19 12 12 19"></polyline></svg>
+        </div>
+      </a>
     </div>
   </section>
 
