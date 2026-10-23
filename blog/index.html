@@ -3,16 +3,12 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Engineering Notes & Deep Dives · Prajwal Pujari</title>
+<title>Prajwal Pujari // Architectural Notes &amp; Systems Research</title>
 <meta name="description" content="Technical engineering deep dives on LLM inference runtimes, Paged KV-cache allocators, speculative decoding, and local hardware profiling by Prajwal Pujari.">
-<meta property="og:title" content="Engineering Notes & Deep Dives · Prajwal Pujari">
-<meta property="og:description" content="Technical engineering deep dives on LLM inference runtimes, Paged KV-cache allocators, speculative decoding, and local hardware profiling.">
-<meta property="og:type" content="website">
-<link rel="canonical" href="https://prajwal-pujari.vercel.app/blog/">
 <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>⚡</text></svg>">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
 <script>
   try {
     var saved = localStorage.getItem("theme");
@@ -31,19 +27,31 @@
     --card-hover: #19191e;
     --border: #27272a;
     --border-hover: #3f3f46;
+    --border-bright: #52525b;
     --text: #fafafa;
     --text-muted: #a1a1aa;
     --text-dim: #71717a;
+    
     --accent: #f59e0b;
     --accent-tint: rgba(245, 158, 11, 0.08);
     --accent-border: rgba(245, 158, 11, 0.25);
+    --accent-border-hover: rgba(245, 158, 11, 0.5);
+    
+    --telemetry-green: #10b981;
+    --telemetry-green-tint: rgba(16, 185, 129, 0.1);
+    --telemetry-green-border: rgba(16, 185, 129, 0.28);
+    
+    --telemetry-cyan: #38bdf8;
+    --telemetry-cyan-tint: rgba(56, 189, 248, 0.1);
+    
     --badge-bg: rgba(255, 255, 255, 0.04);
     --badge-text: #d4d4d8;
     --chip-bg: rgba(245, 158, 11, 0.1);
     --chip-text: #fbbf24;
-    --metric-bg: rgba(20, 20, 23, 0.7);
+    
     --shadow: 0 4px 20px -2px rgba(0, 0, 0, 0.45);
     --shadow-hover: 0 12px 28px -4px rgba(0, 0, 0, 0.6);
+    --card-inset: inset 0 1px 0 rgba(255, 255, 255, 0.06);
   }
 
   :root[data-theme="light"] {
@@ -53,75 +61,160 @@
     --card-hover: #f9f9fa;
     --border: #e4e4e7;
     --border-hover: #cbd5e1;
+    --border-bright: #94a3b8;
     --text: #09090b;
     --text-muted: #52525b;
     --text-dim: #a1a1aa;
+    
     --accent: #d97706;
     --accent-tint: rgba(217, 119, 6, 0.08);
     --accent-border: rgba(217, 119, 6, 0.25);
+    --accent-border-hover: rgba(217, 119, 6, 0.5);
+    
+    --telemetry-green: #059669;
+    --telemetry-green-tint: rgba(5, 150, 105, 0.1);
+    --telemetry-green-border: rgba(5, 150, 105, 0.25);
+    
+    --telemetry-cyan: #0284c7;
+    --telemetry-cyan-tint: rgba(2, 132, 199, 0.1);
+    
     --badge-bg: #f4f4f5;
     --badge-text: #3f3f46;
     --chip-bg: #fef3c7;
     --chip-text: #b45309;
-    --metric-bg: #fafafa;
+    
     --shadow: 0 2px 10px -1px rgba(0, 0, 0, 0.05);
     --shadow-hover: 0 8px 20px -2px rgba(0, 0, 0, 0.08);
+    --card-inset: inset 0 1px 0 rgba(255, 255, 255, 0.8);
   }
 
   * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  html {
+    scroll-behavior: smooth;
+    font-size: 16px;
+    -webkit-font-smoothing: antialiased;
+  }
+
   body {
     background-color: var(--bg);
+    background-image: radial-gradient(rgba(255, 255, 255, 0.05) 1px, transparent 1px);
+    background-size: 24px 24px;
+    background-repeat: repeat;
     color: var(--text);
-    font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
-    line-height: 1.6;
+    font-family: Inter, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+    line-height: 1.55;
     min-height: 100vh;
     display: flex;
     flex-direction: column;
-    transition: background-color 0.2s ease, color 0.2s ease;
+  }
+
+  :root[data-theme="light"] body {
+    background-image: radial-gradient(rgba(0, 0, 0, 0.04) 1px, transparent 1px);
+    background-size: 24px 24px;
   }
 
   code, pre { font-family: 'JetBrains Mono', monospace; }
 
+  /* TOP TELEMETRY SPEC HEADER (Style C) */
+  .telemetry-topbar {
+    background-color: var(--bg-subtle);
+    border-bottom: 1px solid var(--border);
+    font-family: "JetBrains Mono", monospace;
+    font-size: 0.76rem;
+    padding: 6px 16px;
+    color: var(--text-dim);
+  }
+
+  .telemetry-topbar-inner {
+    max-width: 1140px;
+    margin: 0 auto;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    flex-wrap: wrap;
+  }
+
+  .telemetry-topbar-left {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    flex-wrap: wrap;
+  }
+
+  .telemetry-item {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+  }
+
+  .telemetry-dot {
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background-color: var(--telemetry-green);
+    box-shadow: 0 0 0 2px var(--telemetry-green-tint);
+  }
+
+  .telemetry-topbar-right {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+
+  .telemetry-topbar-right a {
+    color: var(--text-muted);
+    text-decoration: none;
+    transition: color 0.15s ease;
+  }
+
+  .telemetry-topbar-right a:hover {
+    color: var(--text);
+  }
+
+  /* WORKSTATION NAVIGATION HEADER */
   .header {
     position: sticky;
     top: 0;
-    z-index: 50;
-    background-color: rgba(9, 10, 15, 0.85);
+    z-index: 100;
+    background: color-mix(in srgb, var(--bg) 90%, transparent);
     backdrop-filter: blur(12px);
     border-bottom: 1px solid var(--border);
   }
-  :root[data-theme="light"] .header {
-    background-color: rgba(248, 250, 252, 0.85);
-  }
 
   .nav-inner {
-    max-width: 900px;
+    max-width: 1140px;
     margin: 0 auto;
-    padding: 16px 24px;
+    padding: 14px 20px;
     display: flex;
-    justify-content: space-between;
     align-items: center;
+    justify-content: space-between;
   }
 
-  .nav-logo {
-    display: flex;
+  .nav-brand {
+    display: inline-flex;
     align-items: center;
     gap: 10px;
     text-decoration: none;
     color: var(--text);
-    font-weight: 700;
-    font-size: 1.05rem;
   }
 
-  .nav-logo-badge {
+  .nav-prompt {
+    font-family: "JetBrains Mono", monospace;
+    font-size: 0.85rem;
+    font-weight: 700;
+    color: var(--accent);
     background: var(--accent-tint);
     border: 1px solid var(--accent-border);
-    color: var(--accent);
-    font-family: 'JetBrains Mono', monospace;
-    font-weight: 700;
-    font-size: 0.75rem;
     padding: 3px 8px;
     border-radius: 4px;
+  }
+
+  .nav-title {
+    font-size: 0.96rem;
+    font-weight: 700;
+    letter-spacing: -0.02em;
   }
 
   .nav-links {
@@ -133,58 +226,78 @@
   .nav-link {
     color: var(--text-muted);
     text-decoration: none;
-    font-size: 0.9rem;
+    font-size: 0.86rem;
     font-weight: 500;
+    font-family: "JetBrains Mono", monospace;
     transition: color 0.15s ease;
   }
-  .nav-link:hover, .nav-link.active { color: var(--accent); }
+
+  .nav-link:hover, .nav-link.active {
+    color: var(--accent);
+  }
 
   .theme-toggle {
     background: none;
     border: 1px solid var(--border);
-    color: var(--text-muted);
     border-radius: 6px;
-    padding: 6px 10px;
+    color: var(--text-muted);
     cursor: pointer;
     display: inline-flex;
     align-items: center;
-    transition: border-color 0.15s ease, color 0.15s ease;
+    justify-content: center;
+    width: 32px;
+    height: 32px;
+    transition: all 0.15s ease;
   }
-  .theme-toggle:hover { border-color: var(--border-hover); color: var(--text); }
 
+  .theme-toggle:hover {
+    color: var(--text);
+    border-color: var(--border-hover);
+    background-color: var(--bg-subtle);
+  }
+
+  /* BLOG CONTAINER */
   .container {
     max-width: 900px;
     margin: 0 auto;
-    padding: 48px 24px 80px;
+    padding: 40px 20px 80px;
     flex: 1;
     width: 100%;
+    display: flex;
+    flex-direction: column;
+    gap: 32px;
   }
 
   .blog-header {
-    margin-bottom: 40px;
+    border-bottom: 1px solid var(--border);
+    padding-bottom: 24px;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
   }
 
   .blog-tagline {
-    display: inline-block;
-    font-size: 0.8rem;
-    font-weight: 600;
-    letter-spacing: 0.08em;
-    text-transform: uppercase;
+    font-family: "JetBrains Mono", monospace;
+    font-size: 0.78rem;
+    font-weight: 700;
+    letter-spacing: 0.05em;
     color: var(--accent);
-    margin-bottom: 8px;
+    text-transform: uppercase;
   }
 
   .blog-title {
     font-size: 2.2rem;
-    font-weight: 800;
-    letter-spacing: -0.02em;
-    margin-bottom: 12px;
+    font-weight: 700;
+    letter-spacing: -0.03em;
+    color: var(--text);
+    line-height: 1.2;
   }
 
   .blog-desc {
     color: var(--text-muted);
-    font-size: 1.05rem;
-    max-width: 650px;
+    font-size: 1.02rem;
+    line-height: 1.6;
+    max-width: 720px;
   }
 
   .posts-list {
@@ -196,27 +309,29 @@
   .post-card {
     background-color: var(--card-bg);
     border: 1px solid var(--border);
-    border-radius: 12px;
+    border-radius: 8px;
     padding: 24px 28px;
     text-decoration: none;
     color: inherit;
     display: flex;
     flex-direction: column;
-    gap: 10px;
-    transition: transform 0.15s ease, border-color 0.15s ease, box-shadow 0.15s ease;
+    gap: 12px;
+    box-shadow: var(--card-inset), var(--shadow);
+    transition: all 0.2s ease;
   }
 
   .post-card:hover {
     transform: translateY(-2px);
-    border-color: var(--accent-border);
-    box-shadow: var(--shadow-hover);
+    border-color: var(--accent-border-hover);
+    box-shadow: var(--card-inset), var(--shadow-hover);
   }
 
   .post-meta {
     display: flex;
     align-items: center;
-    gap: 12px;
-    font-size: 0.82rem;
+    gap: 10px;
+    font-family: "JetBrains Mono", monospace;
+    font-size: 0.78rem;
     color: var(--text-dim);
   }
 
@@ -225,16 +340,18 @@
     color: var(--chip-text);
     padding: 2px 8px;
     border-radius: 4px;
-    font-size: 0.75rem;
+    font-size: 0.74rem;
     font-weight: 600;
     font-family: 'JetBrains Mono', monospace;
+    border: 1px solid var(--accent-border);
   }
 
   .post-card-title {
-    font-size: 1.25rem;
+    font-size: 1.28rem;
     font-weight: 700;
     color: var(--text);
-    line-height: 1.4;
+    line-height: 1.35;
+    letter-spacing: -0.02em;
   }
 
   .post-card-excerpt {
@@ -248,13 +365,12 @@
     flex-wrap: wrap;
     gap: 8px;
     margin-top: 4px;
-    font-size: 0.8rem;
     font-family: 'JetBrains Mono', monospace;
-    color: var(--text-dim);
+    font-size: 0.76rem;
   }
 
   .post-metric-tag {
-    background-color: var(--badge-bg);
+    background-color: var(--bg-subtle);
     border: 1px solid var(--border);
     padding: 3px 8px;
     border-radius: 4px;
@@ -263,29 +379,82 @@
 
   footer {
     border-top: 1px solid var(--border);
-    padding: 32px 24px;
-    text-align: center;
+    background-color: var(--bg-subtle);
+    padding: 24px 20px;
+    font-family: "JetBrains Mono", monospace;
+    font-size: 0.76rem;
     color: var(--text-dim);
-    font-size: 0.85rem;
+    margin-top: auto;
+  }
+
+  .footer-inner {
+    max-width: 1140px;
+    margin: 0 auto;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    flex-wrap: wrap;
+  }
+
+  .footer-inner a {
+    color: var(--text-muted);
+    text-decoration: none;
+  }
+
+  .footer-inner a:hover {
+    color: var(--text);
   }
 </style>
 </head>
 <body>
 
+<!-- TOP SPEC TELEMETRY STRIP (Style C) -->
+<div class="telemetry-topbar">
+  <div class="telemetry-topbar-inner">
+    <div class="telemetry-topbar-left">
+      <span class="telemetry-item"><span class="telemetry-dot"></span> HOST: NVIDIA Ampere (RTX 3050 6GB Laptop GPU)</span>
+      <span class="telemetry-item">⚡ RUNTIME: mini-infer v0.2.4</span>
+      <span class="telemetry-item">🛡️ SIGSTORE: Cryptographically Attested</span>
+      <span class="telemetry-item">🧪 TESTS: 174/174 Pass (100% CI)</span>
+    </div>
+    <div class="telemetry-topbar-right">
+      <a href="https://github.com/Prajwal7-2002" target="_blank" rel="noopener noreferrer">GitHub ↗</a>
+      <span>·</span>
+      <a href="https://pypi.org/project/mini-infer/" target="_blank" rel="noopener noreferrer">PyPI: mini-infer ↗</a>
+      <span>·</span>
+      <a href="mailto:prajwalpujari16@gmail.com">Contact Direct ↗</a>
+    </div>
+  </div>
+</div>
+
+<!-- WORKSTATION NAVIGATION BAR -->
 <header class="header">
   <div class="nav-inner">
-    <a href="/" class="nav-logo">
-      <span class="nav-logo-badge">PP</span>
-      <span>Prajwal Pujari</span>
+    <a href="/" class="nav-brand">
+      <span class="nav-prompt">PP://SYS</span>
+      <span class="nav-title">Prajwal Pujari · Inference Systems</span>
     </a>
     <nav class="nav-links">
-      <a href="/#projects" class="nav-link">Projects</a>
-      <a href="/#solutions" class="nav-link">Solutions</a>
-      <a href="/#skills" class="nav-link">Skills</a>
-      <a href="/blog/" class="nav-link active">Blog</a>
-      <a href="/#contact" class="nav-link">Contact</a>
-      <button class="theme-toggle" id="theme-btn" type="button" aria-label="Toggle dark/light theme">
-        <svg id="theme-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="5"></circle><line x1="12" y1="1" x2="12" y2="3"></line><line x1="12" y1="21" x2="12" y2="23"></line><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line><line x1="1" y1="12" x2="3" y2="12"></line><line x1="21" y1="12" x2="23" y2="12"></line><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line></svg>
+      <a href="/#simulator" class="nav-link">01 // SIMULATOR</a>
+      <a href="/#benchmarks" class="nav-link">02 // BENCHMARKS</a>
+      <a href="/#flagships" class="nav-link">03 // RUNTIMES</a>
+      <a href="/#rag" class="nav-link">04 // RAG &amp; EDGE</a>
+      <a href="/blog/" class="nav-link active">05 // NOTES</a>
+      <a href="/#solutions" class="nav-link">06 // SOLUTIONS</a>
+      <a href="/#contact" class="nav-link">07 // DISPATCH</a>
+      <button class="theme-toggle" id="theme-btn" aria-label="Toggle theme">
+        <svg id="theme-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <circle cx="12" cy="12" r="5"></circle>
+          <line x1="12" y1="1" x2="12" y2="3"></line>
+          <line x1="12" y1="21" x2="12" y2="23"></line>
+          <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
+          <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
+          <line x1="1" y1="12" x2="3" y2="12"></line>
+          <line x1="21" y1="12" x2="23" y2="12"></line>
+          <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
+          <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
+        </svg>
       </button>
     </nav>
   </div>
@@ -293,10 +462,10 @@
 
 <main class="container">
   <div class="blog-header">
-    <span class="blog-tagline">Engineering Logs & Benchmarks</span>
+    <span class="blog-tagline">RESEARCH &amp; HARDWARE PROFILING TEARDOWNS</span>
     <h1 class="blog-title">Engineering Notes</h1>
     <p class="blog-desc">
-      Technical deep dives on LLM inference runtimes, Paged KV-cache allocators, speculative decoding, and hardware capacity load-testing from first principles.
+      Empirical investigations on LLM serving runtimes, Paged KV-cache memory allocators, continuous batching schedulers, and consumer laptop GPU capacity engineering.
     </p>
   </div>
 
@@ -304,16 +473,20 @@
 
     <a href="/blog/posts/roofline-serving-benchmarks.html" class="post-card">
       <div class="post-meta">
-        <span class="project-badge">servebench & mini-infer</span>
+        <span class="project-badge">servebench &amp; mini-infer</span>
         <span>•</span>
-        <span>2026-10-23</span>
+        <span>OCTOBER 2026</span>
         <span>•</span>
-        <span>7 min read</span>
+        <span>7 MIN READ</span>
       </div>
-      <h2 class="post-card-title">Roofline Benchmarking & Auto-Tuning LLM Serving: How We Pushed Pure PyTorch to 27 tok/s</h2>
-      <p class="post-card-excerpt">Most engineers treat LLM serving as an opaque black box—guessing thread counts, setting arbitrary batch sizes, and hoping VRAM doesn't crash. Here is how empirical roofline modeling and batched paged KV-cache gather eliminated DRAM memory bandwidth waste.</p>
+      <h2 class="post-card-title">Roofline Benchmarking &amp; Auto-Tuning LLM Serving: How We Pushed Pure PyTorch to 27 tok/s</h2>
+      <p class="post-card-excerpt">Most engineers treat LLM serving as an opaque black box—guessing thread counts, setting arbitrary batch sizes, and hoping VRAM doesn't crash. Here is how empirical roofline modeling and batched paged KV-cache gather eliminated DRAM memory bandwidth waste on our RTX 3050 6GB Laptop GPU.</p>
       <div class="post-metrics-strip">
-        <span class="post-metric-tag">c=1 throughput: 13.6 tok/s</span><span class="post-metric-tag">c=4 throughput: 27.0 tok/s (+130.8%)</span><span class="post-metric-tag">energy: 2.04 Tok/Joule</span><span class="post-metric-tag">dram power: 13.2 W</span><span class="post-metric-tag">laptop gpu: RTX 3050 6GB Laptop</span>
+        <span class="post-metric-tag">c=1 throughput: 13.6 tok/s</span>
+        <span class="post-metric-tag">c=4 throughput: 27.0 tok/s (+130.8%)</span>
+        <span class="post-metric-tag">energy: 2.04 Tok/Joule</span>
+        <span class="post-metric-tag">dram power: 13.2 W</span>
+        <span class="post-metric-tag">silicon: RTX 3050 6GB Laptop GPU</span>
       </div>
     </a>
 
@@ -321,14 +494,18 @@
       <div class="post-meta">
         <span class="project-badge">mini-infer</span>
         <span>•</span>
-        <span>2026-10-22</span>
+        <span>OCTOBER 2026</span>
         <span>•</span>
-        <span>5 min read</span>
+        <span>5 MIN READ</span>
       </div>
-      <h2 class="post-card-title">Why Naive KV-Caches Waste >60% VRAM (And How Paged Memory Fixes It)</h2>
-      <p class="post-card-excerpt">How replacing contiguous memory allocations with 16-token physical blocks and virtual table mapping brings production PagedAttention to pure PyTorch.</p>
+      <h2 class="post-card-title">Why Naive KV-Caches Waste &gt;60% VRAM (And How Paged Memory Fixes It)</h2>
+      <p class="post-card-excerpt">How replacing contiguous dynamic memory allocations with 16-token physical blocks and virtual table mapping brings production PagedAttention to pure PyTorch, eliminating CUDA out-of-memory crashes.</p>
       <div class="post-metrics-strip">
-        <span class="post-metric-tag">block size: 16 tokens</span><span class="post-metric-tag">vram waste before: >60%</span><span class="post-metric-tag">vram waste after: <3.8%</span><span class="post-metric-tag">runtime: Pure PyTorch (zero C++/CUDA toolchain)</span><span class="post-metric-tag">laptop gpu: RTX 3050 Laptop GPU</span>
+        <span class="post-metric-tag">block size: 16 tokens</span>
+        <span class="post-metric-tag">vram waste before: &gt;60%</span>
+        <span class="post-metric-tag">vram waste after: &lt;3.8%</span>
+        <span class="post-metric-tag">runtime: Pure PyTorch</span>
+        <span class="post-metric-tag">silicon: RTX 3050 6GB Laptop GPU</span>
       </div>
     </a>
 
@@ -336,17 +513,39 @@
 </main>
 
 <footer>
-  <p>© 2026 Prajwal Pujari · <a href="/" style="color: inherit; text-decoration: underline;">Back to Portfolio</a></p>
+  <div class="footer-inner">
+    <div>
+      &copy; 2026 Prajwal Pujari · High-Performance AI/ML Systems &amp; Inference Engineering
+    </div>
+    <div style="display: flex; gap: 16px;">
+      <a href="/">Workstation Home</a>
+      <a href="https://github.com/Prajwal7-2002" target="_blank" rel="noopener noreferrer">GitHub</a>
+      <a href="https://pypi.org/project/mini-infer/" target="_blank" rel="noopener noreferrer">PyPI</a>
+      <a href="https://www.linkedin.com/in/prajwal-pujari-mn9964" target="_blank" rel="noopener noreferrer">LinkedIn</a>
+    </div>
+  </div>
 </footer>
 
 <script>
-  // Theme toggle
+  const root = document.documentElement;
   const themeBtn = document.getElementById('theme-btn');
+  const themeIcon = document.getElementById('theme-icon');
+
+  function updateThemeUI(theme) {
+    if (theme === 'light') {
+      themeIcon.innerHTML = '<path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>';
+    } else {
+      themeIcon.innerHTML = '<circle cx="12" cy="12" r="5"></circle><line x1="12" y1="1" x2="12" y2="3"></line><line x1="12" y1="21" x2="12" y2="23"></line><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line><line x1="1" y1="12" x2="3" y2="12"></line><line x1="21" y1="12" x2="23" y2="12"></line><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>';
+    }
+  }
+
+  updateThemeUI(root.dataset.theme || 'dark');
+
   themeBtn.addEventListener('click', () => {
-    const current = document.documentElement.dataset.theme;
-    const next = current === 'light' ? 'dark' : 'light';
-    document.documentElement.dataset.theme = next;
-    try { localStorage.setItem('theme', next); } catch(e) {}
+    const nextTheme = root.dataset.theme === 'light' ? 'dark' : 'light';
+    root.dataset.theme = nextTheme;
+    try { localStorage.setItem('theme', nextTheme); } catch (e) {}
+    updateThemeUI(nextTheme);
   });
 </script>
 

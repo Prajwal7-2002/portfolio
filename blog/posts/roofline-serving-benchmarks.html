@@ -61,87 +61,179 @@
   }
 
   * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  html {
+    scroll-behavior: smooth;
+    font-size: 16px;
+    -webkit-font-smoothing: antialiased;
+  }
+
   body {
     background-color: var(--bg);
+    background-image: radial-gradient(rgba(255, 255, 255, 0.05) 1px, transparent 1px);
+    background-size: 24px 24px;
+    background-repeat: repeat;
     color: var(--text);
-    font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+    font-family: Inter, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
     line-height: 1.7;
     min-height: 100vh;
     display: flex;
     flex-direction: column;
-    transition: background-color 0.2s ease, color 0.2s ease;
+  }
+
+  :root[data-theme="light"] body {
+    background-image: radial-gradient(rgba(0, 0, 0, 0.04) 1px, transparent 1px);
+    background-size: 24px 24px;
   }
 
   code, pre { font-family: 'JetBrains Mono', monospace; }
 
+  /* TOP TELEMETRY SPEC HEADER (Style C) */
+  .telemetry-topbar {
+    background-color: var(--bg-subtle);
+    border-bottom: 1px solid var(--border);
+    font-family: "JetBrains Mono", monospace;
+    font-size: 0.76rem;
+    padding: 6px 16px;
+    color: var(--text-dim);
+  }
+
+  .telemetry-topbar-inner {
+    max-width: 1140px;
+    margin: 0 auto;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    flex-wrap: wrap;
+  }
+
+  .telemetry-topbar-left {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    flex-wrap: wrap;
+  }
+
+  .telemetry-item {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+  }
+
+  .telemetry-dot {
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background-color: #10b981;
+    box-shadow: 0 0 0 2px rgba(16, 185, 129, 0.2);
+  }
+
+  .telemetry-topbar-right {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+
+  .telemetry-topbar-right a {
+    color: var(--text-muted);
+    text-decoration: none;
+    transition: color 0.15s ease;
+  }
+
+  .telemetry-topbar-right a:hover {
+    color: var(--text);
+  }
+
+  /* WORKSTATION NAVIGATION HEADER */
   .header {
     position: sticky;
     top: 0;
-    z-index: 50;
-    background-color: rgba(9, 10, 15, 0.85);
+    z-index: 100;
+    background: color-mix(in srgb, var(--bg) 90%, transparent);
     backdrop-filter: blur(12px);
     border-bottom: 1px solid var(--border);
   }
-  :root[data-theme="light"] .header {
-    background-color: rgba(248, 250, 252, 0.85);
-  }
 
   .nav-inner {
-    max-width: 820px;
+    max-width: 1140px;
     margin: 0 auto;
-    padding: 16px 24px;
+    padding: 14px 20px;
     display: flex;
     align-items: center;
     justify-content: space-between;
   }
 
-  .nav-logo {
+  .nav-brand {
     display: inline-flex;
     align-items: center;
-    gap: 8px;
+    gap: 10px;
     text-decoration: none;
     color: var(--text);
-    font-weight: 700;
   }
 
-  .nav-logo-badge {
-    background-color: var(--chip-bg);
+  .nav-prompt {
+    font-family: "JetBrains Mono", monospace;
+    font-size: 0.85rem;
+    font-weight: 700;
     color: var(--accent);
-    padding: 2px 6px;
+    background: var(--accent-tint);
+    border: 1px solid var(--accent-border);
+    padding: 3px 8px;
     border-radius: 4px;
-    font-size: 0.8rem;
-    font-family: 'JetBrains Mono', monospace;
+  }
+
+  .nav-title {
+    font-size: 0.96rem;
+    font-weight: 700;
+    letter-spacing: -0.02em;
   }
 
   .nav-links {
     display: flex;
     align-items: center;
-    gap: 16px;
+    gap: 20px;
   }
 
   .nav-link {
     color: var(--text-muted);
     text-decoration: none;
-    font-size: 0.9rem;
+    font-size: 0.86rem;
     font-weight: 500;
+    font-family: "JetBrains Mono", monospace;
+    transition: color 0.15s ease;
   }
-  .nav-link:hover { color: var(--text); }
+
+  .nav-link:hover, .nav-link.active {
+    color: var(--accent);
+  }
 
   .theme-toggle {
     background: none;
     border: 1px solid var(--border);
     border-radius: 6px;
     color: var(--text-muted);
-    padding: 6px;
     cursor: pointer;
     display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 32px;
+    height: 32px;
+    transition: all 0.15s ease;
+  }
+
+  .theme-toggle:hover {
+    color: var(--text);
+    border-color: var(--border-hover);
+    background-color: var(--bg-subtle);
   }
 
   .container {
-    max-width: 760px;
+    max-width: 800px;
     margin: 0 auto;
-    padding: 48px 24px 80px;
+    padding: 40px 20px 80px;
     flex: 1;
+    width: 100%;
   }
 
   .article-header {
@@ -275,37 +367,113 @@
     color: var(--text-muted);
   }
 
+  .back-link {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    color: var(--accent);
+    text-decoration: none;
+    font-size: 0.84rem;
+    font-family: 'JetBrains Mono', monospace;
+    font-weight: 500;
+    margin-bottom: 24px;
+    padding: 4px 10px;
+    border-radius: 4px;
+    background: var(--accent-tint);
+    border: 1px solid var(--accent-border);
+    transition: all 0.15s ease;
+  }
+  .back-link:hover {
+    border-color: var(--accent);
+    color: var(--text);
+  }
+
   footer {
     border-top: 1px solid var(--border);
-    padding: 32px 24px;
-    text-align: center;
+    padding: 24px 20px;
+    font-size: 0.82rem;
     color: var(--text-dim);
-    font-size: 0.85rem;
+    font-family: "JetBrains Mono", monospace;
+    background: var(--bg-subtle);
+  }
+
+  .footer-inner {
+    max-width: 1140px;
+    margin: 0 auto;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 12px;
+  }
+
+  .footer-inner a {
+    color: var(--text-muted);
+    text-decoration: none;
+    transition: color 0.15s ease;
+  }
+
+  .footer-inner a:hover {
+    color: var(--accent);
   }
 </style>
 </head>
 <body>
 
+<!-- TOP SPEC TELEMETRY STRIP (Style C) -->
+<div class="telemetry-topbar">
+  <div class="telemetry-topbar-inner">
+    <div class="telemetry-topbar-left">
+      <span class="telemetry-item"><span class="telemetry-dot"></span> HOST: NVIDIA Ampere (RTX 3050 6GB Laptop GPU)</span>
+      <span class="telemetry-item">⚡ RUNTIME: mini-infer v0.2.4</span>
+      <span class="telemetry-item">🛡️ SIGSTORE: Cryptographically Attested</span>
+      <span class="telemetry-item">🧪 TESTS: 174/174 Pass (100% CI)</span>
+    </div>
+    <div class="telemetry-topbar-right">
+      <a href="https://github.com/Prajwal7-2002" target="_blank" rel="noopener noreferrer">GitHub ↗</a>
+      <span>·</span>
+      <a href="https://pypi.org/project/mini-infer/" target="_blank" rel="noopener noreferrer">PyPI: mini-infer ↗</a>
+      <span>·</span>
+      <a href="mailto:prajwalpujari16@gmail.com">Contact Direct ↗</a>
+    </div>
+  </div>
+</div>
+
+<!-- WORKSTATION NAVIGATION BAR -->
 <header class="header">
   <div class="nav-inner">
-    <a href="/" class="nav-logo">
-      <span class="nav-logo-badge">PP</span>
-      <span>Prajwal Pujari</span>
+    <a href="/" class="nav-brand">
+      <span class="nav-prompt">PP://SYS</span>
+      <span class="nav-title">Prajwal Pujari · Inference Systems</span>
     </a>
     <nav class="nav-links">
-      <a href="/#projects" class="nav-link">Projects</a>
-      <a href="/#solutions" class="nav-link">Solutions</a>
-      <a href="/#skills" class="nav-link">Skills</a>
-      <a href="/blog/" class="nav-link">Blog</a>
-      <a href="/#contact" class="nav-link">Contact</a>
-      <button class="theme-toggle" id="theme-btn" type="button" aria-label="Toggle dark/light theme">
-        <svg id="theme-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="5"></circle><line x1="12" y1="1" x2="12" y2="3"></line><line x1="12" y1="21" x2="12" y2="23"></line><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line><line x1="1" y1="12" x2="3" y2="12"></line><line x1="21" y1="12" x2="23" y2="12"></line><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line></svg>
+      <a href="/#simulator" class="nav-link">01 // SIMULATOR</a>
+      <a href="/#benchmarks" class="nav-link">02 // BENCHMARKS</a>
+      <a href="/#flagships" class="nav-link">03 // RUNTIMES</a>
+      <a href="/#rag" class="nav-link">04 // RAG &amp; EDGE</a>
+      <a href="/blog/" class="nav-link active">05 // NOTES</a>
+      <a href="/#solutions" class="nav-link">06 // SOLUTIONS</a>
+      <a href="/#contact" class="nav-link">07 // DISPATCH</a>
+      <button class="theme-toggle" id="theme-btn" aria-label="Toggle theme">
+        <svg id="theme-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <circle cx="12" cy="12" r="5"></circle>
+          <line x1="12" y1="1" x2="12" y2="3"></line>
+          <line x1="12" y1="21" x2="12" y2="23"></line>
+          <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
+          <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
+          <line x1="1" y1="12" x2="3" y2="12"></line>
+          <line x1="21" y1="12" x2="23" y2="12"></line>
+          <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
+          <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
+        </svg>
       </button>
     </nav>
   </div>
 </header>
 
 <main class="container">
+  <a href="/blog/" class="back-link">← Return to Engineering Notes</a>
+
   <article>
     <header class="article-header">
       <div class="post-meta">
@@ -366,7 +534,7 @@ logits = model(tokens_batch, k_all, v_all, mask)</code></pre>
 
       <h2>3. Empirical Load Testing with servebench</h2>
       <p>
-        We load-tested the engine using <a href="https://github.com/Prajwal7-2002/servebench">servebench 1.1.2</a> on an RTX 3050 Laptop GPU running <code>Qwen2.5-0.5B-Instruct</code> across concurrency levels <code>c = 1, 2, 4</code>:
+        We load-tested the engine using <a href="https://github.com/Prajwal7-2002/servebench">servebench 1.1.2</a> on an RTX 3050 6GB Laptop GPU running <code>Qwen2.5-0.5B-Instruct</code> across concurrency levels <code>c = 1, 2, 4</code>:
       </p>
 
       <table>
@@ -431,16 +599,40 @@ logits = model(tokens_batch, k_all, v_all, mask)</code></pre>
 </main>
 
 <footer>
-  <p>© 2026 Prajwal Pujari · <a href="/blog/" style="color: inherit; text-decoration: underline;">Engineering Notes</a> · <a href="/" style="color: inherit; text-decoration: underline;">Portfolio</a></p>
+  <div class="footer-inner">
+    <div>
+      &copy; 2026 Prajwal Pujari · High-Performance AI/ML Systems &amp; Inference Engineering
+    </div>
+    <div style="display: flex; gap: 16px;">
+      <a href="/">Workstation Home</a>
+      <a href="/blog/">Engineering Notes</a>
+      <a href="https://github.com/Prajwal7-2002" target="_blank" rel="noopener noreferrer">GitHub</a>
+      <a href="https://pypi.org/project/mini-infer/" target="_blank" rel="noopener noreferrer">PyPI</a>
+      <a href="https://www.linkedin.com/in/prajwal-pujari-mn9964" target="_blank" rel="noopener noreferrer">LinkedIn</a>
+    </div>
+  </div>
 </footer>
 
 <script>
+  const root = document.documentElement;
   const themeBtn = document.getElementById('theme-btn');
+  const themeIcon = document.getElementById('theme-icon');
+
+  function updateThemeUI(theme) {
+    if (theme === 'light') {
+      themeIcon.innerHTML = '<path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>';
+    } else {
+      themeIcon.innerHTML = '<circle cx="12" cy="12" r="5"></circle><line x1="12" y1="1" x2="12" y2="3"></line><line x1="12" y1="21" x2="12" y2="23"></line><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line><line x1="1" y1="12" x2="3" y2="12"></line><line x1="21" y1="12" x2="23" y2="12"></line><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>';
+    }
+  }
+
+  updateThemeUI(root.dataset.theme || 'dark');
+
   themeBtn.addEventListener('click', () => {
-    const current = document.documentElement.dataset.theme;
-    const next = current === 'light' ? 'dark' : 'light';
-    document.documentElement.dataset.theme = next;
-    try { localStorage.setItem('theme', next); } catch(e) {}
+    const nextTheme = root.dataset.theme === 'light' ? 'dark' : 'light';
+    root.dataset.theme = nextTheme;
+    try { localStorage.setItem('theme', nextTheme); } catch (e) {}
+    updateThemeUI(nextTheme);
   });
 </script>
 
