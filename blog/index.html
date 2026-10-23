@@ -300,6 +300,21 @@
 
   <div class="posts-list" id="posts-container">
 
+    <a href="/blog/posts/roofline-serving-benchmarks.html" class="post-card">
+      <div class="post-meta">
+        <span class="project-badge">servebench & mini-infer</span>
+        <span>•</span>
+        <span>2026-10-23</span>
+        <span>•</span>
+        <span>7 min read</span>
+      </div>
+      <h2 class="post-card-title">Roofline Benchmarking & Auto-Tuning LLM Serving: How We Pushed Pure PyTorch to 27 tok/s</h2>
+      <p class="post-card-excerpt">Most engineers treat LLM serving as an opaque black box—guessing thread counts, setting arbitrary batch sizes, and hoping VRAM doesn't crash. Here is how empirical roofline modeling and batched paged KV-cache gather eliminated DRAM memory bandwidth waste.</p>
+      <div class="post-metrics-strip">
+        <span class="post-metric-tag">c=1 throughput: 13.6 tok/s</span><span class="post-metric-tag">c=4 throughput: 27.0 tok/s (+130.8%)</span><span class="post-metric-tag">energy: 2.04 Tok/Joule</span><span class="post-metric-tag">dram power: 13.2 W</span><span class="post-metric-tag">laptop gpu: RTX 3050 6GB Laptop</span>
+      </div>
+    </a>
+
     <a href="/blog/posts/paged-kv-cache-vram.html" class="post-card">
       <div class="post-meta">
         <span class="project-badge">mini-infer</span>
