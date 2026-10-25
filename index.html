@@ -742,6 +742,18 @@
     gap: 20px;
   }
 
+  .flagships-grid-trio {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 20px;
+  }
+
+  @media (max-width: 1040px) {
+    .flagships-grid-trio {
+      grid-template-columns: 1fr;
+    }
+  }
+
   @media (max-width: 800px) {
     .flagships-grid {
       grid-template-columns: 1fr;
@@ -1082,7 +1094,7 @@
     <div class="telemetry-topbar-left">
       <span class="telemetry-item"><span class="telemetry-dot"></span> ⚡ RUNTIME: mini-infer v0.2.4</span>
       <span class="telemetry-item">🛡️ SIGSTORE: Cryptographically Attested</span>
-      <span class="telemetry-item">🧪 TESTS: 174/174 Pass (100% CI)</span>
+      <span class="telemetry-item">🧪 TESTS: 208/208 Pass (100% CI across 3 Flagships)</span>
     </div>
     <div class="telemetry-topbar-right">
       <a href="https://github.com/Prajwal7-2002" target="_blank" rel="noopener noreferrer">GitHub ↗</a>
@@ -1298,7 +1310,7 @@
   </div>
 
   <!-- FLAGSHIPS GRID (Style B) -->
-  <section class="flagships-grid">
+  <section class="flagships-grid-trio">
 
     <!-- FLAGSHIP 1: mini-infer -->
     <div class="flagship-card">
@@ -1386,25 +1398,68 @@
       </div>
     </div>
 
+    <!-- FLAGSHIP 3: sched-sim -->
+    <div class="flagship-card">
+      <div class="flagship-top">
+        <div class="flagship-header-row">
+          <a href="https://github.com/Prajwal7-2002/sched-sim" target="_blank" rel="noopener noreferrer" class="flagship-title">
+            sched-sim
+            <span style="font-size: 0.8rem; color: var(--text-dim); font-family: 'JetBrains Mono', monospace;">v0.2.0</span>
+          </a>
+          <span class="provenance-pill">PyPI · Discrete-Event</span>
+        </div>
+        <p class="flagship-desc">
+          High-fidelity <strong>discrete-event simulator for LLM serving schedulers</strong>. Evaluates Sarathi Chunked Prefill, Radix Prefix Caching, and PD Disaggregation on CPU with &lt;8% variance to real silicon.
+        </p>
+        <ul class="flagship-features">
+          <li><span>[Roofline]</span> Analytical compute &amp; DRAM bandwidth latency physics calibrated with physical silicon data.</li>
+          <li><span>[Radix Cache]</span> SGLang/vLLM-style Radix tree prefix caching with chained block hashing and LRU eviction.</li>
+          <li><span>[Perfetto]</span> Microsecond forward-pass iteration slicing and request lifecycle export for ui.perfetto.dev.</li>
+        </ul>
+      </div>
+
+      <div style="display: flex; flex-direction: column; gap: 12px;">
+        <div class="flagship-stat-strip">
+          <span>Tests: <span class="metric">34/34 Pass</span></span>
+          <span>Policies: <span class="metric">6 Schedulers</span></span>
+          <span>Silicon Error: <span class="metric">&lt;8% vs RTX 3050</span></span>
+        </div>
+
+        <div class="flagship-footer-row">
+          <div class="flagship-links">
+            <a href="https://github.com/Prajwal7-2002/sched-sim" target="_blank" rel="noopener noreferrer" class="flagship-link">
+              GitHub ↗
+            </a>
+            <a href="https://pypi.org/project/sched-sim/" target="_blank" rel="noopener noreferrer" class="flagship-link">
+              PyPI Package ↗
+            </a>
+          </div>
+          <button class="copy-btn" onclick="copySnippet('pip install sched-sim', this)">
+            $ pip install sched-sim
+          </button>
+        </div>
+      </div>
+    </div>
+
   </section>
 
-  <!-- HORIZON FLAGSHIP 3 (PREVIEW & ARCHITECTURE BLUEPRINT) -->
+  <!-- HORIZON FLAGSHIP 4 (PREVIEW & ARCHITECTURE BLUEPRINT) -->
   <div class="horizon-card">
     <div class="horizon-header">
       <div style="display: flex; align-items: center; gap: 10px;">
-        <span class="tile-label" style="color: var(--telemetry-cyan);">HORIZON FLAGSHIP #3 // ARCHITECTURE BLUEPRINT</span>
+        <span class="tile-label" style="color: var(--telemetry-cyan);">HORIZON FLAGSHIP #4 // ARCHITECTURE BLUEPRINT</span>
         <span class="tile-badge">IN ACTIVE DEVELOPMENT</span>
       </div>
       <span class="provenance-pill" style="color: var(--telemetry-cyan); background: var(--telemetry-cyan-tint); border-color: rgba(56, 189, 248, 0.3);">
-        Pure Python (heapq) · Zero GPU Required
+        Kaggle T4 · First-Principles Quantization
       </span>
     </div>
     <div>
       <h3 style="font-size: 1.15rem; font-weight: 700; color: var(--text); margin-bottom: 6px;">
-        sched-sim: Discrete-Event LLM Serving Scheduler Simulator
+        quant-from-scratch: Handcrafted GPTQ, AWQ, and SmoothQuant Kernels
       </h3>
       <p style="font-size: 0.9rem; color: var(--text-muted); line-height: 1.55;">
-        A high-speed discrete-event simulator modeling <strong>Sarathi chunked prefill</strong>, <strong>continuous batching</strong>, and <strong>prefill-decode disaggregation (Splitwise / DistServe)</strong>. Allows cluster capacity planning and SLO-aware scheduling audits over millions of simulated requests in seconds on commodity CPUs.
+        Custom implementation of post-training quantization algorithms from mathematical first principles (Hessian matrix inversion, activation-aware channel scaling, and INT4 packing). Quantizes Qwen2.5-1.5B/3B and benchmarks accuracy loss vs. inference speedup against official AutoGPTQ and vLLM kernels.
       </p>
     </div>
   </div>
