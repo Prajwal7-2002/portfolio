@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Prajwal Pujari // Inference Systems & Runtime Engineering Workstation</title>
-<meta name="description" content="Systems engineer building continuous-batching LLM runtimes, Paged KV-cache allocators, and capacity benchmarking harnesses. Helping businesses implement Document AI, enterprise RAG, and private on-premise SLMs.">
+<meta name="description" content="Systems engineer building continuous-batching LLM runtimes, Paged KV-cache allocators, first-principles quantization engines (INT4/AWQ/GPTQ/2:4 sparsity), and capacity load-testing harnesses.">
 <link rel="canonical" href="https://prajwal-pujari.vercel.app">
 <meta name="theme-color" content="#09090b">
 
@@ -460,6 +460,39 @@
   }
 
   /* STYLE A: INTERACTIVE SYSTEMS SIMULATOR */
+  .sim-workstation-tabs {
+    display: flex;
+    gap: 8px;
+    border-bottom: 1px solid var(--border);
+    padding-bottom: 10px;
+    margin-bottom: 4px;
+    flex-wrap: wrap;
+  }
+
+  .sim-tab {
+    background: transparent;
+    border: 1px solid transparent;
+    border-radius: 4px;
+    color: var(--text-dim);
+    font-family: "JetBrains Mono", monospace;
+    font-size: 0.74rem;
+    font-weight: 600;
+    padding: 6px 12px;
+    cursor: pointer;
+    transition: all 0.15s ease;
+  }
+
+  .sim-tab:hover {
+    color: var(--text-muted);
+    border-color: var(--border);
+  }
+
+  .sim-tab.active {
+    background: var(--bg-subtle);
+    border-color: var(--accent-border);
+    color: var(--accent);
+  }
+
   .sim-controls {
     display: flex;
     align-items: center;
@@ -650,6 +683,91 @@
     border-color: var(--border-hover);
   }
 
+  /* Bit-Packing & Sparsity Visualizer Grid */
+  .bit-vis-box {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    background: var(--bg);
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    padding: 12px;
+  }
+
+  .bit-vis-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    font-family: "JetBrains Mono", monospace;
+    font-size: 0.74rem;
+    color: var(--text-dim);
+    flex-wrap: wrap;
+    gap: 6px;
+  }
+
+  .bit-byte-stream {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 8px;
+    overflow-x: auto;
+  }
+
+  @media (max-width: 600px) {
+    .bit-byte-stream {
+      grid-template-columns: repeat(2, 1fr);
+    }
+  }
+
+  .byte-unit {
+    display: flex;
+    flex-direction: column;
+    border: 1px solid var(--border);
+    border-radius: 4px;
+    background: var(--bg-subtle);
+    font-family: "JetBrains Mono", monospace;
+    font-size: 0.7rem;
+    overflow: hidden;
+  }
+
+  .byte-header {
+    background: color-mix(in srgb, var(--accent) 15%, transparent);
+    color: var(--accent);
+    padding: 3px 6px;
+    font-weight: 700;
+    text-align: center;
+    border-bottom: 1px solid var(--border);
+    font-size: 0.68rem;
+  }
+
+  .nibble-row {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    text-align: center;
+  }
+
+  .nibble-cell {
+    padding: 6px 4px;
+    border-right: 1px dashed var(--border);
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+  }
+
+  .nibble-cell:last-child {
+    border-right: none;
+  }
+
+  .nibble-val {
+    color: var(--telemetry-green);
+    font-weight: 600;
+    font-size: 0.76rem;
+  }
+
+  .nibble-bits {
+    color: var(--text-dim);
+    font-size: 0.62rem;
+  }
+
   /* STYLE C: SILICON BENCHMARK MATRIX TABLE */
   .matrix-table {
     width: 100%;
@@ -755,6 +873,18 @@
     display: grid;
     grid-template-columns: 1fr 1fr;
     gap: 20px;
+  }
+
+  .flagships-grid-quad {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 20px;
+  }
+
+  @media (max-width: 900px) {
+    .flagships-grid-quad {
+      grid-template-columns: 1fr;
+    }
   }
 
   .flagships-grid-trio {
@@ -1107,9 +1237,9 @@
 <div class="telemetry-topbar">
   <div class="telemetry-topbar-inner">
     <div class="telemetry-topbar-left">
-      <span class="telemetry-item"><span class="telemetry-dot"></span> ⚡ RUNTIME: mini-infer v0.2.4</span>
+      <span class="telemetry-item"><span class="telemetry-dot"></span> ⚡ SYSTEMS: 5 Flagships (mini-infer · servebench · sched-sim · quantbench · EdgeSLM)</span>
       <span class="telemetry-item">🛡️ SIGSTORE: Cryptographically Attested</span>
-      <span class="telemetry-item">🧪 TESTS: 208/208 Pass (100% CI across 3 Flagships)</span>
+      <span class="telemetry-item">🧪 TESTS: 270/270 Pass (100% CI across 5 Flagships)</span>
     </div>
     <div class="telemetry-topbar-right">
       <a href="https://github.com/Prajwal7-2002" target="_blank" rel="noopener noreferrer">GitHub ↗</a>
@@ -1169,7 +1299,7 @@
       AI/ML Systems & LLM Inference Engineer
     </h1>
     <p class="hero-lead">
-      I engineer from-scratch <strong>continuous batching runtimes</strong>, <strong>Paged KV-cache virtual memory allocators</strong>, and <strong>low-overhead benchmarking harnesses</strong>. Calibrated against constrained silicon (RTX 3050 6GB Laptop GPU) to achieve zero CUDA OOMs and high-density serving throughput.
+      I engineer from-scratch <strong>continuous batching runtimes</strong>, <strong>Paged KV-cache virtual memory allocators</strong>, <strong>first-principles quantization engines (INT4/AWQ/GPTQ/2:4 sparsity)</strong>, and <strong>low-overhead benchmarking harnesses</strong>. Calibrated against constrained silicon (RTX 3050 6GB Laptop GPU) to achieve zero CUDA OOMs and high-density serving throughput.
     </p>
     <div class="hero-actions-row">
       <a href="#simulator" class="btn btn-primary">
@@ -1193,11 +1323,18 @@
     <!-- LEFT: INTERACTIVE SYSTEMS SIMULATOR (Style A) -->
     <div class="bento-tile">
       <div class="tile-header">
-        <span class="tile-label">⚡ RUNTIME SIMULATOR // mini-infer v0.2.4</span>
+        <span class="tile-label" id="sim-main-title">⚡ RUNTIME SIMULATOR // mini-infer v0.2.4</span>
         <span class="tile-badge">INTERACTIVE WORKSTATION</span>
       </div>
 
-      <div style="display: flex; flex-direction: column; gap: 14px;">
+      <!-- Mode Switcher Tabs -->
+      <div class="sim-workstation-tabs">
+        <button class="sim-tab active" id="tab-paged" onclick="switchSimulatorMode('paged')">⚡ RUNTIME: PAGED KV-CACHE</button>
+        <button class="sim-tab" id="tab-quant" onclick="switchSimulatorMode('quant')">🧮 PRECISION: BIT-PACKING &amp; SPARSITY</button>
+      </div>
+
+      <!-- VIEW 1: PAGED KV-CACHE (mini-infer) -->
+      <div id="sim-view-paged" style="display: flex; flex-direction: column; gap: 14px;">
         <div class="sim-controls">
           <span class="sim-label">CONCURRENCY (c):</span>
           <button class="sim-btn" data-c="1" onclick="setSimConcurrency(1)">c = 1</button>
@@ -1252,6 +1389,64 @@
           </button>
         </div>
       </div>
+
+      <!-- VIEW 2: BIT-PACKING & SPARSITY (quantbench) -->
+      <div id="sim-view-quant" style="display: none; flex-direction: column; gap: 14px;">
+        <div class="sim-controls">
+          <span class="sim-label">PRECISION SCHEME:</span>
+          <button class="sim-btn quant-btn active" data-q="int4" onclick="setQuantScheme('int4')">INT4 Nibble</button>
+          <button class="sim-btn quant-btn" data-q="sparse" onclick="setQuantScheme('sparse')">Ampere 2:4</button>
+          <button class="sim-btn quant-btn" data-q="ternary" onclick="setQuantScheme('ternary')">BitNet 1.58b</button>
+          <button class="sim-btn quant-btn" data-q="fp8" onclick="setQuantScheme('fp8')">FP8 E4M3</button>
+        </div>
+
+        <!-- Dynamic Live Gauges -->
+        <div class="sim-gauges">
+          <div class="sim-gauge">
+            <span class="sim-gauge-label">Compression</span>
+            <span class="sim-gauge-val highlight" id="gauge-q-comp">3.5x Ratio</span>
+          </div>
+          <div class="sim-gauge">
+            <span class="sim-gauge-label">Reconstruction</span>
+            <span class="sim-gauge-val" id="gauge-q-sqnr">26.8 dB SQNR</span>
+          </div>
+          <div class="sim-gauge">
+            <span class="sim-gauge-label">PPL Delta</span>
+            <span class="sim-gauge-val" id="gauge-q-ppl">+0.12 ΔPPL</span>
+          </div>
+          <div class="sim-gauge">
+            <span class="sim-gauge-label">Hardware SIMD</span>
+            <span class="sim-gauge-val" id="gauge-q-simd">2x uint8</span>
+          </div>
+        </div>
+
+        <!-- Interactive Bit-Packing / Sparsity Visualizer -->
+        <div class="bit-vis-box">
+          <div class="bit-vis-header">
+            <span id="bit-vis-title">VECTORIZED SUB-BYTE BIT LAYOUT (UINT8 BUFFER STREAM)</span>
+            <span id="bit-vis-desc">2x 4-BIT NIBBLES PACKED PER BYTE</span>
+          </div>
+          <div class="bit-byte-stream" id="bit-stream-container">
+            <!-- Dynamic byte units generated by JS -->
+          </div>
+          <div class="mem-legend">
+            <span class="legend-item"><span class="legend-box" style="background: var(--accent);"></span> High Bits [7:4]</span>
+            <span class="legend-item"><span class="legend-box" style="background: var(--telemetry-green);"></span> Low Bits [3:0]</span>
+            <span class="legend-item"><span class="legend-box" style="background: var(--telemetry-cyan);"></span> Metadata Indices</span>
+          </div>
+        </div>
+
+        <!-- Copyable CLI Command -->
+        <div class="cli-snippet-box">
+          <div class="cli-code" id="cli-q-display">
+            <span class="prompt">$</span> pip install quantbench &amp;&amp; quantbench pack-inspect --scheme int4
+          </div>
+          <button class="copy-btn" onclick="copySnippet('pip install quantbench && quantbench pack-inspect --scheme int4', this)">
+            Copy CLI
+          </button>
+        </div>
+      </div>
+
     </div>
 
     <!-- RIGHT: SILICON BENCHMARK MATRIX (Style C) -->
@@ -1266,7 +1461,7 @@
           <thead>
             <tr>
               <th>Runtime</th>
-              <th>KV Strategy</th>
+              <th>Strategy</th>
               <th>tok/s</th>
               <th>VRAM</th>
               <th>Status</th>
@@ -1279,6 +1474,13 @@
               <td>27.0</td>
               <td>1.82 GB</td>
               <td><span class="provenance-pill">✓ Sigstore Verified</span></td>
+            </tr>
+            <tr class="highlight-row">
+              <td>quantbench v0.1.0</td>
+              <td>INT4 Block (G=128)</td>
+              <td>41.5</td>
+              <td>0.94 GB</td>
+              <td><span class="provenance-pill">✓ 3.5x Compressed</span></td>
             </tr>
             <tr>
               <td>HF Transformers</td>
@@ -1305,7 +1507,7 @@
         </table>
 
         <div class="matrix-footer">
-          <strong>Key Systems Takeaway:</strong> On 6GB laptop GPU constraints, standard vLLM crashes during KV preallocation under concurrency, while naive PyTorch degrades to 11.2 tok/s. `mini-infer`'s dynamic paged block table achieves <strong>27.0 tok/s</strong> with linear memory efficiency and zero CUDA OOMs.
+          <strong>Key Systems Takeaway:</strong> On 6GB laptop GPU constraints, standard vLLM crashes during KV preallocation under concurrency, while naive PyTorch degrades to 11.2 tok/s. `mini-infer`'s dynamic paged block table achieves <strong>27.0 tok/s</strong>, and `quantbench` INT4 block packing cuts weight footprint to <strong>0.94 GB (3.5x compression)</strong> with zero CUDA OOMs.
         </div>
 
         <div style="background: var(--bg-subtle); border: 1px solid var(--border); border-radius: 6px; padding: 10px 12px; display: flex; align-items: center; justify-content: space-between; font-family: 'JetBrains Mono', monospace; font-size: 0.74rem;">
@@ -1325,7 +1527,7 @@
   </div>
 
   <!-- FLAGSHIPS GRID (Style B) -->
-  <section class="flagships-grid-trio">
+  <section class="flagships-grid-quad">
 
     <!-- FLAGSHIP 1: mini-infer -->
     <div class="flagship-card">
@@ -1456,25 +1658,71 @@
       </div>
     </div>
 
+    <!-- FLAGSHIP 4: quantbench -->
+    <div class="flagship-card">
+      <div class="flagship-top">
+        <div class="flagship-header-row">
+          <a href="https://github.com/Prajwal7-2002/quantbench" target="_blank" rel="noopener noreferrer" class="flagship-title">
+            quantbench
+            <span style="font-size: 0.8rem; color: var(--text-dim); font-family: 'JetBrains Mono', monospace;">v0.1.0</span>
+          </a>
+          <span class="provenance-pill">PyPI · Pareto Engine</span>
+        </div>
+        <p class="flagship-desc">
+          First-principles <strong>LLM quantization engine &amp; Pareto evaluation benchmark</strong>. Implements sub-byte bit-packing runtimes, Ampere 2:4 structured sparsity, drop-in PyTorch <code>QuantLinear</code> layers, and Cholesky GPTQ calibration.
+        </p>
+        <ul class="flagship-features">
+          <li><span>[Bit-Packing]</span> Vectorized 2x INT4 nibbles into uint8, BitNet 1.58b ternary packing, and Ampere 2:4 sparsity condensation.</li>
+          <li><span>[Calibration]</span> SmoothQuant activation migration, AWQ Frobenius grid search, and block-wise Cholesky Hessian damping updates.</li>
+          <li><span>[Pareto Engine]</span> Multi-layer SQNR (dB) and sliding-window perplexity sweeps against PyTorch/AutoGPTQ baselines.</li>
+        </ul>
+      </div>
+
+      <div style="display: flex; flex-direction: column; gap: 12px;">
+        <div class="flagship-stat-strip">
+          <span>Tests: <span class="metric">47/47 Pass (95%)</span></span>
+          <span>Compression: <span class="metric">3.5x INT4 / 7.5x BitNet</span></span>
+          <span>Dequant: <span class="metric">Zero-Copy Buffer Hook</span></span>
+        </div>
+
+        <div class="flagship-footer-row">
+          <div class="flagship-links">
+            <a href="https://github.com/Prajwal7-2002/quantbench" target="_blank" rel="noopener noreferrer" class="flagship-link">
+              GitHub ↗
+            </a>
+            <a href="https://pypi.org/project/quantbench/" target="_blank" rel="noopener noreferrer" class="flagship-link">
+              PyPI Package ↗
+            </a>
+            <a href="https://github.com/Prajwal7-2002/quantbench/blob/main/GUIDE.md" target="_blank" rel="noopener noreferrer" class="flagship-link">
+              Guide ↗
+            </a>
+          </div>
+          <button class="copy-btn" onclick="copySnippet('pip install quantbench', this)">
+            $ pip install quantbench
+          </button>
+        </div>
+      </div>
+    </div>
+
   </section>
 
-  <!-- HORIZON FLAGSHIP 4 (PREVIEW & ARCHITECTURE BLUEPRINT) -->
+  <!-- HORIZON FLAGSHIP 5 (PREVIEW & ARCHITECTURE BLUEPRINT) -->
   <div class="horizon-card">
     <div class="horizon-header">
       <div style="display: flex; align-items: center; gap: 10px;">
-        <span class="tile-label" style="color: var(--telemetry-cyan);">HORIZON FLAGSHIP #4 // ARCHITECTURE BLUEPRINT</span>
-        <span class="tile-badge">IN ACTIVE DEVELOPMENT</span>
+        <span class="tile-label" style="color: var(--telemetry-cyan);">HORIZON FLAGSHIP #5 // ARCHITECTURE BLUEPRINT</span>
+        <span class="tile-badge">NEXT ROADMAP ENGINE</span>
       </div>
       <span class="provenance-pill" style="color: var(--telemetry-cyan); background: var(--telemetry-cyan-tint); border-color: rgba(56, 189, 248, 0.3);">
-        Kaggle T4 · First-Principles Quantization
+        Roofline Modeling · Capacity Sizing
       </span>
     </div>
     <div>
       <h3 style="font-size: 1.15rem; font-weight: 700; color: var(--text); margin-bottom: 6px;">
-        quant-from-scratch: Handcrafted GPTQ, AWQ, and SmoothQuant Kernels
+        llm-perfmodel: First-Principles Roofline Predictor &amp; VRAM Sizer
       </h3>
       <p style="font-size: 0.9rem; color: var(--text-muted); line-height: 1.55;">
-        Custom implementation of post-training quantization algorithms from mathematical first principles (Hessian matrix inversion, activation-aware channel scaling, and INT4 packing). Quantizes Qwen2.5-1.5B/3B and benchmarks accuracy loss vs. inference speedup against official AutoGPTQ and vLLM kernels.
+        Analytical compute &amp; DRAM bandwidth roofline latency model predicting decode tok/s, TTFT latency, and KV-cache capacity before downloading model weights. Calibrated and empirically validated against <code>servebench</code> and <code>sched-sim</code> physical measurements.
       </p>
     </div>
   </div>
@@ -1751,6 +1999,112 @@
 
   // Initialize simulator with default concurrency 4
   renderMemoryGrid(8, 16, 8);
+
+  // Workstation Mode Switcher
+  function switchSimulatorMode(mode) {
+    const isPaged = mode === 'paged';
+    document.getElementById('tab-paged').classList.toggle('active', isPaged);
+    document.getElementById('tab-quant').classList.toggle('active', !isPaged);
+    document.getElementById('sim-view-paged').style.display = isPaged ? 'flex' : 'none';
+    document.getElementById('sim-view-quant').style.display = isPaged ? 'none' : 'flex';
+    document.getElementById('sim-main-title').textContent = isPaged ? '⚡ RUNTIME SIMULATOR // mini-infer v0.2.4' : '🧮 PRECISION WORKSTATION // quantbench v0.1.0';
+  }
+
+  // Quantization Schemes Data
+  const quantData = {
+    int4: {
+      comp: "3.5x Ratio", sqnr: "26.8 dB", ppl: "+0.12 ΔPPL", simd: "2x uint8",
+      title: "INT4 VECTORIZED NIBBLE PACKING (UINT8 STREAM)",
+      desc: "2x 4-BIT SIGNED/UNSIGNED NIBBLES CONDENSED PER BYTE",
+      cmd: "pip install quantbench && quantbench pack-inspect --scheme int4",
+      bytes: [
+        { byte: "0x3F", b0: "15", b1: "3", bits0: "1111", bits1: "0011" },
+        { byte: "0x1A", b0: "10", b1: "1", bits0: "1010", bits1: "0001" },
+        { byte: "0x78", b0: "8",  b1: "7", bits0: "1000", bits1: "0111" },
+        { byte: "0x0B", b0: "11", b1: "0", bits0: "1011", bits1: "0000" }
+      ]
+    },
+    sparse: {
+      comp: "2.0x Condense", sqnr: "32.1 dB", ppl: "+0.08 ΔPPL", simd: "Ampere 2:4",
+      title: "AMPERE 2:4 STRUCTURED SPARSITY CONDENSATION",
+      desc: "50% ZERO PRUNING + 2-BIT COLUMN METADATA NIBBLE",
+      cmd: "pip install quantbench && quantbench pack-inspect --scheme sparse",
+      bytes: [
+        { byte: "Meta 0xE4", b0: "Idx [0,2]", b1: "Idx [1,3]", bits0: "1110", bits1: "0100" },
+        { byte: "Vals #1",  b0: "+0.84",      b1: "-1.12",      bits0: "W[0]",  bits1: "W[2]" },
+        { byte: "Meta 0x48", b0: "Idx [0,1]", b1: "Idx [2,3]", bits0: "0100", bits1: "1000" },
+        { byte: "Vals #2",  b0: "+0.45",      b1: "+0.92",      bits0: "W[0]",  bits1: "W[1]" }
+      ]
+    },
+    ternary: {
+      comp: "7.5x Extreme", sqnr: "14.3 dB", ppl: "+0.45 ΔPPL", simd: "BitNet 1.58b",
+      title: "BITNET 1.58B 2-BIT TERNARY PACKING {-1, 0, +1}",
+      desc: "4x WEIGHTS CONDENSED INTO 1 BYTE VIA 2-BIT BIASED ENCODING",
+      cmd: "pip install quantbench && quantbench pack-inspect --scheme ternary",
+      bytes: [
+        { byte: "0x96", b0: "+1, -1", b1: "0, +1", bits0: "10 01", bits1: "00 10" },
+        { byte: "0x4A", b0: "-1, 0",  b1: "-1, +1", bits0: "01 00", bits1: "01 10" },
+        { byte: "0x12", b0: "0, -1",  b1: "0, 0",   bits0: "00 01", bits1: "00 00" },
+        { byte: "0x89", b0: "+1, 0",  b1: "-1, -1", bits0: "10 00", bits1: "01 01" }
+      ]
+    },
+    fp8: {
+      comp: "2.0x Fast", sqnr: "46.2 dB", ppl: "+0.02 ΔPPL", simd: "OCP E4M3FN",
+      title: "OCP FP8 E4M3FN ANALYTICAL EMULATION",
+      desc: "1 SIGN + 4 EXPONENT + 3 MANTISSA (BIAS=7, NO INF)",
+      cmd: "pip install quantbench && quantbench eval --shape 1024x1024",
+      bytes: [
+        { byte: "0x48", b0: "M: 000", b1: "E: 1001", bits0: "Sign 0", bits1: "+2.0" },
+        { byte: "0x3F", b0: "M: 111", b1: "E: 0111", bits0: "Sign 0", bits1: "+1.875" },
+        { byte: "0xC8", b0: "M: 000", b1: "E: 1001", bits0: "Sign 1", bits1: "-2.0" },
+        { byte: "0x7E", b0: "M: 110", b1: "E: 1111", bits0: "Sign 0", bits1: "+448 (Max)" }
+      ]
+    }
+  };
+
+  function setQuantScheme(scheme) {
+    document.querySelectorAll('.quant-btn').forEach(btn => {
+      btn.classList.toggle('active', btn.dataset.q === scheme);
+    });
+
+    const data = quantData[scheme];
+    document.getElementById('gauge-q-comp').textContent = data.comp;
+    document.getElementById('gauge-q-sqnr').textContent = data.sqnr;
+    document.getElementById('gauge-q-ppl').textContent = data.ppl;
+    document.getElementById('gauge-q-simd').textContent = data.simd;
+    document.getElementById('bit-vis-title').textContent = data.title;
+    document.getElementById('bit-vis-desc').textContent = data.desc;
+    document.getElementById('cli-q-display').innerHTML = '<span class="prompt">$</span> ' + data.cmd;
+
+    renderBitStream(data.bytes);
+  }
+
+  function renderBitStream(bytes) {
+    const stream = document.getElementById('bit-stream-container');
+    if (!stream) return;
+    stream.innerHTML = '';
+    bytes.forEach(item => {
+      const unit = document.createElement('div');
+      unit.className = 'byte-unit';
+      unit.innerHTML = `
+        <div class="byte-header">${item.byte}</div>
+        <div class="nibble-row">
+          <div class="nibble-cell">
+            <div class="nibble-val">${item.b0}</div>
+            <div class="nibble-bits">${item.bits0}</div>
+          </div>
+          <div class="nibble-cell">
+            <div class="nibble-val">${item.b1}</div>
+            <div class="nibble-bits">${item.bits1}</div>
+          </div>
+        </div>
+      `;
+      stream.appendChild(unit);
+    });
+  }
+
+  // Initialize quant scheme with INT4
+  renderBitStream(quantData.int4.bytes);
 
   // Copy Snippet Utility
   function copySnippet(text, btn) {
