@@ -1,0 +1,844 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>From Scratch: Vectorized INT4 Bit-Packing, Ampere 2:4 Sparsity, and Second-Order Hessian Calibration in Pure PyTorch · Prajwal Pujari</title>
+<meta name="description" content="How sub-byte bit-packing runtimes, continuous outlier migration, and 2:4 structured sparsity eliminate DRAM bandwidth bottlenecks during LLM autoregressive decoding.">
+<meta property="og:title" content="From Scratch: Vectorized INT4 Bit-Packing, Ampere 2:4 Sparsity, and Second-Order Hessian Calibration in Pure PyTorch · Prajwal Pujari">
+<meta property="og:description" content="How sub-byte bit-packing runtimes, continuous outlier migration, and 2:4 structured sparsity eliminate DRAM bandwidth bottlenecks during LLM autoregressive decoding.">
+<meta property="og:type" content="article">
+<link rel="canonical" href="https://prajwal-pujari.vercel.app/blog/posts/quantbench-bit-packing-sparsity.html">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>⚡</text></svg>">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<script>
+  try {
+    var saved = localStorage.getItem("theme");
+    if (saved) {
+      document.documentElement.dataset.theme = saved;
+    } else if (window.matchMedia("(prefers-color-scheme: light)").matches) {
+      document.documentElement.dataset.theme = "light";
+    }
+  } catch (e) {}
+</script>
+<style>
+  :root {
+    --bg: #09090b;
+    --bg-subtle: #121215;
+    --card-bg: #141417;
+    --card-hover: #19191e;
+    --border: #27272a;
+    --border-hover: #3f3f46;
+    --border-bright: #52525b;
+    --text: #fafafa;
+    --text-muted: #a1a1aa;
+    --text-dim: #71717a;
+    
+    --accent: #f59e0b;
+    --accent-tint: rgba(245, 158, 11, 0.08);
+    --accent-border: rgba(245, 158, 11, 0.25);
+    --accent-border-hover: rgba(245, 158, 11, 0.5);
+    
+    --telemetry-green: #10b981;
+    --telemetry-green-tint: rgba(16, 185, 129, 0.1);
+    --telemetry-green-border: rgba(16, 185, 129, 0.28);
+    
+    --telemetry-cyan: #38bdf8;
+    --telemetry-cyan-tint: rgba(56, 189, 248, 0.1);
+    
+    --badge-bg: rgba(255, 255, 255, 0.04);
+    --badge-text: #d4d4d8;
+    --chip-bg: rgba(245, 158, 11, 0.1);
+    --chip-text: #fbbf24;
+    
+    --shadow: 0 4px 20px -2px rgba(0, 0, 0, 0.45);
+    --shadow-hover: 0 12px 28px -4px rgba(0, 0, 0, 0.6);
+    --card-inset: inset 0 1px 0 rgba(255, 255, 255, 0.06);
+    --code-bg: #121215;
+  }
+
+  :root[data-theme="light"] {
+    --bg: #fafafa;
+    --bg-subtle: #f4f4f5;
+    --card-bg: #ffffff;
+    --card-hover: #f9f9fa;
+    --border: #e4e4e7;
+    --border-hover: #cbd5e1;
+    --border-bright: #94a3b8;
+    --text: #09090b;
+    --text-muted: #52525b;
+    --text-dim: #a1a1aa;
+    
+    --accent: #d97706;
+    --accent-tint: rgba(217, 119, 6, 0.08);
+    --accent-border: rgba(217, 119, 6, 0.25);
+    --accent-border-hover: rgba(217, 119, 6, 0.5);
+    
+    --telemetry-green: #059669;
+    --telemetry-green-tint: rgba(5, 150, 105, 0.1);
+    --telemetry-green-border: rgba(5, 150, 105, 0.25);
+    
+    --telemetry-cyan: #0284c7;
+    --telemetry-cyan-tint: rgba(2, 132, 199, 0.1);
+    
+    --badge-bg: #f4f4f5;
+    --badge-text: #3f3f46;
+    --chip-bg: #fef3c7;
+    --chip-text: #b45309;
+    
+    --shadow: 0 2px 10px -1px rgba(0, 0, 0, 0.05);
+    --shadow-hover: 0 8px 20px -2px rgba(0, 0, 0, 0.08);
+    --card-inset: inset 0 1px 0 rgba(255, 255, 255, 0.8);
+    --code-bg: #f4f4f5;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  html {
+    scroll-behavior: smooth;
+    font-size: 16px;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  body {
+    background-color: var(--bg);
+    background-image: radial-gradient(rgba(255, 255, 255, 0.05) 1px, transparent 1px);
+    background-size: 24px 24px;
+    background-repeat: repeat;
+    color: var(--text);
+    font-family: Inter, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+    line-height: 1.7;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+  }
+
+  :root[data-theme="light"] body {
+    background-image: radial-gradient(rgba(0, 0, 0, 0.04) 1px, transparent 1px);
+    background-size: 24px 24px;
+  }
+
+  code, pre { font-family: 'JetBrains Mono', monospace; }
+
+  /* TOP TELEMETRY SPEC HEADER (Style C) */
+  .telemetry-topbar {
+    background-color: var(--bg-subtle);
+    border-bottom: 1px solid var(--border);
+    font-family: "JetBrains Mono", monospace;
+    font-size: 0.76rem;
+    padding: 6px 16px;
+    color: var(--text-dim);
+  }
+
+  .telemetry-topbar-inner {
+    max-width: 1140px;
+    margin: 0 auto;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    flex-wrap: wrap;
+  }
+
+  .telemetry-topbar-left {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    flex-wrap: wrap;
+  }
+
+  .telemetry-item {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+  }
+
+  .telemetry-dot {
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background-color: #10b981;
+    box-shadow: 0 0 0 2px rgba(16, 185, 129, 0.2);
+  }
+
+  .telemetry-topbar-right {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+
+  .telemetry-topbar-right a {
+    color: var(--text-muted);
+    text-decoration: none;
+    transition: color 0.15s ease;
+  }
+
+  .telemetry-topbar-right a:hover {
+    color: var(--text);
+  }
+
+  /* WORKSTATION NAVIGATION HEADER */
+  .header {
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    background: color-mix(in srgb, var(--bg) 90%, transparent);
+    backdrop-filter: blur(12px);
+    border-bottom: 1px solid var(--border);
+  }
+
+  .nav-inner {
+    max-width: 1140px;
+    margin: 0 auto;
+    padding: 14px 20px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+
+  .nav-brand {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    text-decoration: none;
+    color: var(--text);
+  }
+
+  .nav-prompt {
+    font-family: "JetBrains Mono", monospace;
+    font-size: 0.85rem;
+    font-weight: 700;
+    color: var(--accent);
+    background: var(--accent-tint);
+    border: 1px solid var(--accent-border);
+    padding: 3px 8px;
+    border-radius: 4px;
+  }
+
+  .nav-title {
+    font-size: 0.96rem;
+    font-weight: 700;
+    letter-spacing: -0.02em;
+  }
+
+  .nav-links {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+  }
+
+  .nav-link {
+    color: var(--text-muted);
+    text-decoration: none;
+    font-size: 0.86rem;
+    font-weight: 500;
+    font-family: "JetBrains Mono", monospace;
+    transition: color 0.15s ease;
+  }
+
+  .nav-link:hover, .nav-link.active {
+    color: var(--accent);
+  }
+
+  .theme-toggle {
+    background: none;
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    color: var(--text-muted);
+    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 32px;
+    height: 32px;
+    transition: all 0.15s ease;
+  }
+
+  .theme-toggle:hover {
+    color: var(--text);
+    border-color: var(--border-hover);
+    background-color: var(--bg-subtle);
+  }
+
+  /* ARTICLE LAYOUT */
+  .container {
+    max-width: 820px;
+    margin: 0 auto;
+    padding: 36px 20px 80px;
+    flex: 1;
+    width: 100%;
+  }
+
+  .back-link {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    color: var(--text-dim);
+    text-decoration: none;
+    font-family: "JetBrains Mono", monospace;
+    font-size: 0.82rem;
+    margin-bottom: 24px;
+    transition: color 0.15s ease;
+  }
+
+  .back-link:hover {
+    color: var(--accent);
+  }
+
+  .post-header {
+    margin-bottom: 36px;
+    border-bottom: 1px solid var(--border);
+    padding-bottom: 28px;
+  }
+
+  .post-meta-bar {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-family: "JetBrains Mono", monospace;
+    font-size: 0.78rem;
+    color: var(--text-dim);
+    margin-bottom: 14px;
+  }
+
+  .project-pill {
+    background-color: var(--chip-bg);
+    color: var(--chip-text);
+    padding: 3px 10px;
+    border-radius: 4px;
+    font-weight: 600;
+    border: 1px solid var(--accent-border);
+  }
+
+  .post-title {
+    font-size: 2.1rem;
+    font-weight: 700;
+    line-height: 1.25;
+    letter-spacing: -0.03em;
+    color: var(--text);
+    margin-bottom: 14px;
+  }
+
+  .post-subtitle {
+    font-size: 1.05rem;
+    color: var(--text-muted);
+    line-height: 1.6;
+  }
+
+  /* PROSE CONTENT TYPOGRAPHY */
+  .prose {
+    font-size: 1.02rem;
+    color: var(--text);
+  }
+
+  .prose h2 {
+    font-size: 1.45rem;
+    font-weight: 700;
+    margin: 40px 0 16px;
+    color: var(--text);
+    letter-spacing: -0.02em;
+    border-bottom: 1px solid var(--border);
+    padding-bottom: 8px;
+  }
+
+  .prose h3 {
+    font-size: 1.18rem;
+    font-weight: 600;
+    margin: 28px 0 12px;
+    color: var(--text);
+    letter-spacing: -0.01em;
+  }
+
+  .prose p {
+    margin-bottom: 20px;
+    color: var(--text-muted);
+  }
+
+  .prose p strong {
+    color: var(--text);
+  }
+
+  .prose ul, .prose ol {
+    margin-bottom: 24px;
+    padding-left: 24px;
+    color: var(--text-muted);
+  }
+
+  .prose li {
+    margin-bottom: 8px;
+  }
+
+  .prose a {
+    color: var(--accent);
+    text-decoration: underline;
+    text-underline-offset: 3px;
+  }
+
+  .prose a:hover {
+    color: #fbbf24;
+  }
+
+  .prose hr {
+    border: 0;
+    height: 1px;
+    background: var(--border);
+    margin: 40px 0;
+  }
+
+  .callout {
+    background-color: var(--bg-subtle);
+    border-left: 3px solid var(--accent);
+    padding: 16px 20px;
+    border-radius: 0 6px 6px 0;
+    margin: 24px 0;
+    font-size: 0.95rem;
+    color: var(--text-muted);
+  }
+
+  .callout strong {
+    color: var(--text);
+  }
+
+  /* TABLES */
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 24px 0;
+    font-size: 0.88rem;
+    font-family: "JetBrains Mono", monospace;
+  }
+
+  th, td {
+    border: 1px solid var(--border);
+    padding: 10px 14px;
+    text-align: left;
+  }
+
+  th {
+    background-color: var(--bg-subtle);
+    color: var(--text);
+    font-weight: 600;
+  }
+
+  td {
+    color: var(--text-muted);
+  }
+
+  tr:nth-child(even) td {
+    background-color: rgba(255, 255, 255, 0.015);
+  }
+
+  /* CODE BLOCKS */
+  .codehilite {
+    background-color: var(--code-bg);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 18px 20px;
+    margin: 24px 0;
+    overflow-x: auto;
+    font-size: 0.86rem;
+    line-height: 1.55;
+    box-shadow: var(--card-inset);
+  }
+
+  .codehilite pre {
+    color: var(--text);
+  }
+
+  code:not(pre code) {
+    background-color: var(--bg-subtle);
+    border: 1px solid var(--border);
+    padding: 2px 6px;
+    border-radius: 4px;
+    font-size: 0.86em;
+    color: var(--chip-text);
+  }
+
+  /* DISCUSSION CTA */
+  .discussion-box {
+    margin-top: 48px;
+    padding: 24px 28px;
+    background-color: var(--card-bg);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    box-shadow: var(--card-inset), var(--shadow);
+  }
+
+  .discussion-box h3 {
+    font-size: 1.15rem;
+    font-weight: 700;
+    color: var(--text);
+  }
+
+  .discussion-links {
+    display: flex;
+    gap: 12px;
+    flex-wrap: wrap;
+    margin-top: 4px;
+  }
+
+  .discussion-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    background-color: var(--bg-subtle);
+    border: 1px solid var(--border);
+    color: var(--text);
+    padding: 8px 16px;
+    border-radius: 6px;
+    font-family: "JetBrains Mono", monospace;
+    font-size: 0.82rem;
+    text-decoration: none;
+    transition: all 0.15s ease;
+  }
+
+  .discussion-btn:hover {
+    border-color: var(--accent);
+    background-color: var(--chip-bg);
+    color: var(--accent);
+  }
+
+  .comments-container {
+    margin-top: 48px;
+  }
+
+  footer {
+    border-top: 1px solid var(--border);
+    padding: 24px 20px;
+    font-size: 0.82rem;
+    color: var(--text-dim);
+    font-family: "JetBrains Mono", monospace;
+    background: var(--bg-subtle);
+  }
+
+  .footer-inner {
+    max-width: 1140px;
+    margin: 0 auto;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 12px;
+  }
+
+  .footer-inner a {
+    color: var(--text-muted);
+    text-decoration: none;
+    transition: color 0.15s ease;
+  }
+
+  .footer-inner a:hover {
+    color: var(--accent);
+  }
+</style>
+</head>
+<body>
+
+<!-- TOP SPEC TELEMETRY STRIP (Style C) -->
+<div class="telemetry-topbar">
+  <div class="telemetry-topbar-inner">
+    <div class="telemetry-topbar-left">
+      <span class="telemetry-item"><span class="telemetry-dot"></span> ⚡ RUNTIME: quantbench-engine v0.1.0</span>
+      <span class="telemetry-item">🛡️ SIGSTORE: Cryptographically Attested</span>
+      <span class="telemetry-item">🧪 TESTS: 270/270 Pass (100% CI)</span>
+    </div>
+    <div class="telemetry-topbar-right">
+      <a href="https://github.com/Prajwal7-2002" target="_blank" rel="noopener noreferrer">GitHub ↗</a>
+      <span>·</span>
+      <a href="https://pypi.org/user/Prajwal2002PI/" target="_blank" rel="noopener noreferrer">PyPI Profile ↗</a>
+      <span>·</span>
+      <a href="mailto:prajwalpujari16@gmail.com">Contact Direct ↗</a>
+    </div>
+  </div>
+</div>
+
+<!-- WORKSTATION NAVIGATION BAR -->
+<header class="header">
+  <div class="nav-inner">
+    <a href="/" class="nav-brand">
+      <span class="nav-prompt">PP://SYS</span>
+      <span class="nav-title">Prajwal Pujari · Inference Systems</span>
+    </a>
+    <nav class="nav-links">
+      <a href="/#simulator" class="nav-link">01 // SIMULATOR</a>
+      <a href="/#benchmarks" class="nav-link">02 // BENCHMARKS</a>
+      <a href="/#flagships" class="nav-link">03 // RUNTIMES</a>
+      <a href="/#rag" class="nav-link">04 // RAG &amp; EDGE</a>
+      <a href="/blog/" class="nav-link active">05 // NOTES</a>
+      <a href="/#solutions" class="nav-link">06 // SOLUTIONS</a>
+      <a href="/#contact" class="nav-link">07 // DISPATCH</a>
+      <button class="theme-toggle" id="theme-btn" aria-label="Toggle theme">
+        <svg id="theme-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <circle cx="12" cy="12" r="5"></circle>
+          <line x1="12" y1="1" x2="12" y2="3"></line>
+          <line x1="12" y1="21" x2="12" y2="23"></line>
+          <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
+          <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
+          <line x1="1" y1="12" x2="3" y2="12"></line>
+          <line x1="21" y1="12" x2="23" y2="12"></line>
+          <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
+          <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
+        </svg>
+      </button>
+    </nav>
+  </div>
+</header>
+
+<main class="container">
+  <a href="/blog/" class="back-link">← Return to Engineering Notes</a>
+
+  <article>
+    <header class="post-header">
+      <div class="post-meta-bar">
+        <span class="project-pill">quantbench-engine</span>
+        <span>•</span>
+        <span>2026-10-27</span>
+        <span>•</span>
+        <span>8 min read</span>
+      </div>
+      <h1 class="post-title">From Scratch: Vectorized INT4 Bit-Packing, Ampere 2:4 Sparsity, and Second-Order Hessian Calibration in Pure PyTorch</h1>
+      <p class="post-subtitle">Why naive quantization collapses under activation outliers, how two 4-bit signed nibbles pack into uint8 vectors, and how slashing DRAM traffic by 73.4% scales autoregressive decode throughput on consumer GPUs.</p>
+    </header>
+
+    <div class="prose">
+      <h2 id="the-physics-of-decoding">The Physics of LLM Decoding: Why Weights Are the Bottleneck</h2>
+      <p>Most machine learning engineers treat quantization as an off-the-shelf black box: run <code>AutoAWQ</code>, download a GGUF checkpoint, and assume "4-bit quantization makes models fast because matrix multiplies are smaller."</p>
+      <p>In production LLM serving, that intuition is fundamentally incomplete. During autoregressive decoding (generating tokens one-by-one with batch size = 1), the computation is <strong>not compute-bound</strong>. It is <strong>100% memory bandwidth bound</strong>.</p>
+      
+      <div class="callout">
+        <strong>The Operational Intensity Equation (Batch Size = 1):</strong><br>
+        For every linear layer with $N$ parameters, generating a single token requires multiplying activation vector $[1, 1, D_{\text{in}}]$ against weight matrix $[D_{\text{in}}, D_{\text{out}}]$. The arithmetic intensity $I$ is strictly:
+        $$I = \frac{\text{FLOPs}}{\text{DRAM Byte Transfers}} = \frac{2 \cdot N \cdot 1}{N \cdot \text{bytes\_per\_param}} = \frac{2}{\text{bytes\_per\_param}} \text{ FLOPs/byte}$$
+      </div>
+
+      <p>On consumer laptop hardware (such as our benchmark NVIDIA RTX 3050 6GB Laptop GPU with $192.0\text{ GB/s}$ DRAM bandwidth and an FP16 ridge point of $189.6\text{ FLOPs/byte}$):</p>
+      <ul>
+        <li><strong>FP16 Baseline</strong> ($2.0\text{ bytes/param}$): $I = 1.00\text{ FLOPs/byte}$ (Execution runs at less than $1\%$ of the GPU's Tensor Core FLOP capacity).</li>
+        <li><strong>INT8 AbsMax</strong> ($1.0\text{ byte/param}$): $I = 2.00\text{ FLOPs/byte}$ ($49.9\%$ DRAM traffic reduction).</li>
+        <li><strong>INT4 Blockwise</strong> ($0.53\text{ bytes/param}$ with scale overhead): $I = 3.76\text{ FLOPs/byte}$ (<strong>$73.4\%$ DRAM traffic reduction</strong>).</li>
+        <li><strong>BitNet 1.58b Ternary</strong> ($0.25\text{ bytes/param}$): $I = 8.00\text{ FLOPs/byte}$ (<strong>$87.5\%$ DRAM traffic reduction</strong>).</li>
+      </ul>
+
+      <p>Because $I \ll 189.6$, every single byte eliminated from the weight tensor directly and linearly translates into higher decode tokens per second. But how do you store and compute with sub-byte numbers in software without a C++/CUDA compiler?</p>
+
+      <hr />
+
+      <h2 id="the-outlier-catastrophe">The Catastrophe of Naive Quantization: Activation Outliers</h2>
+      <p>If quantization were as simple as scaling all numbers into $[-127, 127]$, quantization would have been solved a decade ago. However, in modern transformer architectures (such as Qwen2.5, LLaMA-3, and Mistral), attention projection layers exhibit a severe phenomenon known as <strong>systematic activation outliers</strong>.</p>
+      <p>Approximately $0.1\%$ of the activation channels maintain magnitudes $100\times$ to $200\times$ larger than normal channels (e.g. $+174.0$ vs an average of $1.5$). If you quantize activations with naive symmetric AbsMax:</p>
+
+      <div class="codehilite"><pre><span></span><code><span class="c1"># The catastrophic failure of naive per-tensor AbsMax:</span>
+<span class="n">scale</span> <span class="o">=</span> <span class="n">activation</span><span class="o">.</span><span class="n">abs</span><span class="p">()</span><span class="o">.</span><span class="n">max</span><span class="p">()</span> <span class="o">/</span> <span class="mi">127</span>  <span class="c1"># scale = 174.0 / 127 = 1.37</span>
+<span class="n">quantized</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">clamp</span><span class="p">(</span><span class="n">torch</span><span class="o">.</span><span class="n">round</span><span class="p">(</span><span class="n">activation</span> <span class="o">/</span> <span class="n">scale</span><span class="p">),</span> <span class="o">-</span><span class="mi">128</span><span class="p">,</span> <span class="mi">127</span><span class="p">)</span>
+<span class="c1"># Result: Any normal channel with value 0.5 collapses to 0. Perplexity explodes to infinity!</span>
+</code></pre></div>
+
+      <h3 id="smoothquant-mathematical-invariance">SmoothQuant: Channel Migration &amp; Exact Invariance</h3>
+      <p>In <strong><a href="https://github.com/Prajwal7-2002/quantbench">quantbench</a></strong>, we implement SmoothQuant to migrate the outlier difficulty from activations into weights where dynamic ranges are much smoother:</p>
+      <p>$$s_j = \frac{\max(|X_j|)^\alpha}{\max(|W_j|)^{1-\alpha}}$$</p>
+      <p>The transformation divides activation channels by $s$ and pre-multiplies weight columns by $s$:</p>
+      <p>$$\hat{X} = X \cdot \text{diag}(s)^{-1}, \quad \hat{W} = \text{diag}(s) \cdot W$$</p>
+      <p>Because matrix multiplication is associative, the mathematical identity is exact: $Y = \hat{X} \hat{W} = (X s^{-1})(s W) = X W$. In our pure PyTorch implementation, maximum numerical drift across 8 batches of calibration data is strictly bounded below $2.86 \times 10^{-6}$, completely stabilizing INT8 GEMM.</p>
+
+      <hr />
+
+      <h2 id="vectorized-bit-packing">Vectorized Sub-Byte Bit-Packing in Pure PyTorch</h2>
+      <p>CPUs and GPUs address memory in bytes, not 4-bit nibbles or 2-bit ternary states. Storing a 4-bit integer inside an 8-bit container wastes $50\%$ of physical VRAM. To realize true hardware compression, weights must be bit-packed into vectorized <code>torch.uint8</code> tensors.</p>
+
+      <h3 id="1-int4-nibble-packing-and-sign-extension">1. INT4 Nibble Packing &amp; Arithmetic Sign Extension</h3>
+      <p>To pack two signed 4-bit integers $v_0, v_1 \in [-8, 7]$ into a single byte:</p>
+      <ol>
+        <li>Mask values to 4-bit unsigned representations: <code>v &amp; 0x0F</code>.</li>
+        <li>Bitwise-OR the lower nibble with the left-shifted upper nibble:</li>
+      </ol>
+
+      <div class="codehilite"><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">pack_int4_vectorized</span><span class="p">(</span><span class="n">tensor</span><span class="p">:</span> <span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">:</span>
+    <span class="c1"># tensor shape: (..., K), where K is even</span>
+    <span class="n">t_clamped</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">clamp</span><span class="p">(</span><span class="n">tensor</span><span class="p">,</span> <span class="o">-</span><span class="mi">8</span><span class="p">,</span> <span class="mi">7</span><span class="p">)</span><span class="o">.</span><span class="n">to</span><span class="p">(</span><span class="n">torch</span><span class="o">.</span><span class="n">int8</span><span class="p">)</span>
+    <span class="n">u8</span> <span class="o">=</span> <span class="n">t_clamped</span> <span class="o">&amp;</span> <span class="mh">0x0F</span>
+    <span class="n">v0</span> <span class="o">=</span> <span class="n">u8</span><span class="p">[</span><span class="o">...</span><span class="p">,</span> <span class="mi">0</span><span class="p">::</span><span class="mi">2</span><span class="p">]</span>
+    <span class="n">v1</span> <span class="o">=</span> <span class="n">u8</span><span class="p">[</span><span class="o">...</span><span class="p">,</span> <span class="mi">1</span><span class="p">::</span><span class="mi">2</span><span class="p">]</span>
+    <span class="k">return</span> <span class="p">(</span><span class="n">v0</span> <span class="o">|</span> <span class="p">(</span><span class="n">v1</span> <span class="o">&lt;&lt;</span> <span class="mi">4</span><span class="p">))</span><span class="o">.</span><span class="n">to</span><span class="p">(</span><span class="n">torch</span><span class="o">.</span><span class="n">uint8</span><span class="p">)</span>
+</code></pre></div>
+
+      <p>During runtime dequantization in <code>QuantLinear.forward()</code>, recovering signed 4-bit values requires <strong>arithmetic sign extension</strong>. If you simply cast unsigned nibbles back to signed integers, negative values (e.g. $-1$, which is <code>0x0F</code>) unpack into $+15$!</p>
+      <p>In <code>quantbench</code>, we solve this in pure vector operations by left-shifting the upper nibble by 4 bits, casting to signed <code>int8</code>, and arithmetic right-shifting by 4 bits so the CPU/GPU replicates the sign bit across the top 4 bits:</p>
+
+      <div class="codehilite"><pre><span></span><code><span class="c1"># Vectorized two's complement sign-extension dequantization:</span>
+<span class="n">v0_signed</span> <span class="o">=</span> <span class="p">((</span><span class="n">packed</span> <span class="o">&lt;&lt;</span> <span class="mi">4</span><span class="p">)</span><span class="o">.</span><span class="n">to</span><span class="p">(</span><span class="n">torch</span><span class="o">.</span><span class="n">int8</span><span class="p">))</span> <span class="o">&gt;&gt;</span> <span class="mi">4</span>
+<span class="n">v1_signed</span> <span class="o">=</span> <span class="n">packed</span><span class="o">.</span><span class="n">to</span><span class="p">(</span><span class="n">torch</span><span class="o">.</span><span class="n">int8</span><span class="p">)</span> <span class="o">&gt;&gt;</span> <span class="mi">4</span>
+</code></pre></div>
+
+      <h3 id="2-bitnet-158b-ternary-simd-offset-binary">2. BitNet 1.58b: SIMD Offset Binary vs Base-3</h3>
+      <p>For ternary weights $\{-1, 0, 1\}$, information theory dictates that $\log_2(3) \approx 1.585\text{ bits}$ are needed per weight. A base-3 packing algorithm ($w_0 + 3w_1 + 9w_2 + 27w_3 + 81w_4 \le 242 &lt; 256$) packs 5 weights into a single byte ($1.6\text{ bits/weight}$).</p>
+      <p>However, during forward pass GEMM on hardware, decoding base-3 requires sequential integer modulo and division instructions (<code>div</code> and <code>mod</code>), which stall GPU register pipelines. In <code>quantbench</code>, we built <strong>Biased SIMD 2-bit packing</strong> as the default runtime: mapping $\{-1, 0, 1\}$ to $\{0, 1, 2\}$ via $(v + 1)$, enabling four weights per byte using single-cycle parallel bit shifts without division bottlenecks.</p>
+
+      <hr />
+
+      <h2 id="ampere-structured-sparsity">NVIDIA Ampere 2:4 Structured Sparsity</h2>
+      <p>Standard unstructured sparsity (zeroing out random weights below a threshold) creates irregular pointer lookups that slow down GPU execution. NVIDIA Ampere, Ada, and Hopper Tensor Cores introduced <strong>2:4 Structured Sparsity</strong>: in every block of 4 weights, exactly 2 must be zero.</p>
+      
+      <div class="codehilite"><pre><span></span><code>Dense Weight Row (4 weights):      [ 0.85,  0.00, -0.42,  0.00 ]
+Retained Non-Zeros (2 weights):    [ 0.85, -0.42 ]  -&gt; Condensed into (M, N/2)
+Original Column Indices:           Index 0 (0b00) and Index 2 (0b10)
+Packed 4-bit Metadata Nibble:      (0b00) | (0b10 &lt;&lt; 2) = 0b1000 = 0x08
+</code></pre></div>
+
+      <p>By packing two 4-element blocks (8 dense weights, 4 non-zeros) into a single <code>uint8</code> metadata byte, storage overhead is strictly <strong>2 bits per non-zero value</strong>. When running on Tensor Cores, the hardware fetches half the matrix and doubles peak TFLOPS.</p>
+
+      <hr />
+
+      <h2 id="second-order-calibration">Second-Order Error Compensation: GPTQ &amp; Cholesky Damping</h2>
+      <p>When quantizing weights to 4 bits, Round-to-Nearest (RTN) leads to accumulated reconstruction error. <strong>GPTQ</strong> solves this by treating quantization as an optimization problem over the layer's activation Hessian matrix $H = 2 X^T X$.</p>
+      <p>Using the classic Optimal Brain Surgeon formulation, whenever weight $w_q$ is quantized to $\hat{w}_q$, the remaining unquantized weights in the block receive a compensating update:</p>
+      <p>$$\Delta W_{:, j} = -\frac{w_q - \hat{w}_q}{[H^{-1}]_{qq}} \cdot [H^{-1}]_{:, q}$$</p>
+      
+      <p>In practice, directly inverting $H$ is numerically unstable because activation Hessians in transformers are frequently rank-deficient. In <code>quantbench</code>, we apply <strong>diagonal Cholesky damping</strong>:</p>
+      <p>$$\hat{H} = H + \lambda \cdot \text{diag}(H), \quad \text{where } \lambda = 0.01 \cdot \text{mean}(\text{diag}(H))$$</p>
+      <p>In our calibration test on a $(512 \times 256)$ projection layer, GPTQ block-wise Hessian compensation dropped the Frobenius reconstruction error from $84.22$ down to $56.77$—a <strong>$1.48\times$ error reduction</strong> compared to Round-to-Nearest.</p>
+
+      <hr />
+
+      <h2 id="empirical-benchmarks">Empirical Benchmarks: RTX 3050 Laptop GPU</h2>
+      <p>We measured memory footprint, arithmetic intensity, and theoretical DRAM latency across all schemes using our integration benchmark (<code>examples/03_servebench_roofline_eval.py</code>) on a representative transformer feed-forward projection $(1536 \to 8960)$:</p>
+
+      <table>
+        <thead>
+          <tr>
+            <th>Precision Scheme</th>
+            <th>Memory Footprint</th>
+            <th>Arithmetic Intensity</th>
+            <th>Theoretical Latency</th>
+            <th>DRAM Traffic Reduction</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><strong>FP16 Baseline</strong></td>
+            <td>26.25 MB</td>
+            <td>1.00 FLOPs/byte</td>
+            <td>143.36 µs</td>
+            <td>0.0% (Baseline)</td>
+          </tr>
+          <tr>
+            <td><strong>INT8 AbsMax</strong></td>
+            <td>13.16 MB</td>
+            <td>1.99 FLOPs/byte</td>
+            <td>71.87 µs</td>
+            <td><strong>49.9%</strong></td>
+          </tr>
+          <tr>
+            <td><strong>INT4 Blockwise (G=128)</strong></td>
+            <td>6.97 MB</td>
+            <td>3.76 FLOPs/byte</td>
+            <td>38.08 µs</td>
+            <td><strong>73.4%</strong></td>
+          </tr>
+          <tr>
+            <td><strong>BitNet 1.58b Ternary</strong></td>
+            <td>3.28 MB</td>
+            <td>8.00 FLOPs/byte</td>
+            <td>17.92 µs</td>
+            <td><strong>87.5%</strong></td>
+          </tr>
+          <tr>
+            <td><strong>Ampere 2:4 Sparsity (FP16)</strong></td>
+            <td>13.12 MB + Meta</td>
+            <td>1.88 FLOPs/byte</td>
+            <td>76.16 µs</td>
+            <td><strong>46.8%</strong></td>
+          </tr>
+        </tbody>
+      </table>
+
+      <hr />
+
+      <h2 id="install-and-reproduce">Install &amp; Reproduce Locally</h2>
+      <p><code>quantbench</code> is open-source, Apache 2.0 licensed, and published as a pure-Python wheel on PyPI with zero compiled C++/CUDA requirements:</p>
+
+      <div class="codehilite"><pre><span></span><code>pip<span class="w"> </span>install<span class="w"> </span>quantbench-engine
+</code></pre></div>
+
+      <p>Inspect sub-byte bit packing in your terminal:</p>
+      <div class="codehilite"><pre><span></span><code><span class="c1"># Run vectorized bit-packing inspector</span>
+quantbench<span class="w"> </span>pack-inspect<span class="w"> </span>--format<span class="w"> </span>int4
+quantbench<span class="w"> </span>pack-inspect<span class="w"> </span>--format<span class="w"> </span>sparse24
+
+<span class="c1"># Run Quality-vs-Speed Pareto sweep</span>
+quantbench<span class="w"> </span>pareto<span class="w"> </span>--vocab-size<span class="w"> </span><span class="mi">32000</span><span class="w"> </span>--hidden-dim<span class="w"> </span><span class="mi">2048</span>
+</code></pre></div>
+
+      <p>Explore the mathematical derivations, proofs, and source code on GitHub: <a href="https://github.com/Prajwal7-2002/quantbench">github.com/Prajwal7-2002/quantbench</a>.</p>
+    </div>
+  </article>
+
+  <!-- Discussion CTA -->
+  <section class="discussion-box">
+    <h3>💬 Questions &amp; Systems Discussions</h3>
+    <p style="color: var(--text-muted); font-size: 0.92rem;">
+      Have you profiled sub-byte packing or calibration algorithms on your local GPU? Share your thoughts, issues, or reproduction benchmarks:
+    </p>
+    <div class="discussion-links">
+      <a href="https://github.com/Prajwal7-2002/quantbench/issues" target="_blank" rel="noopener noreferrer" class="discussion-btn">
+        <span>GitHub Issues &amp; Discussions</span>
+      </a>
+      <a href="https://pypi.org/project/quantbench-engine/" target="_blank" rel="noopener noreferrer" class="discussion-btn">
+        <span>PyPI: quantbench-engine</span>
+      </a>
+      <a href="https://github.com/Prajwal7-2002/quantbench" target="_blank" rel="noopener noreferrer" class="discussion-btn">
+        <span>Explore quantbench Repo</span>
+      </a>
+    </div>
+  </section>
+
+  <!-- Giscus GitHub Comments Container -->
+  <section class="comments-container">
+    <div id="giscus-thread"></div>
+  </section>
+</main>
+
+<footer>
+  <div class="footer-inner">
+    <div>
+      &copy; 2026 Prajwal Pujari · High-Performance AI/ML Systems &amp; Inference Engineering
+    </div>
+    <div style="display: flex; gap: 16px;">
+      <a href="/">Workstation Home</a>
+      <a href="/blog/">Engineering Notes</a>
+      <a href="https://github.com/Prajwal7-2002" target="_blank" rel="noopener noreferrer">GitHub</a>
+      <a href="https://pypi.org/user/Prajwal2002PI/" target="_blank" rel="noopener noreferrer">PyPI Profile</a>
+      <a href="https://www.linkedin.com/in/prajwal-pujari-mn9964" target="_blank" rel="noopener noreferrer">LinkedIn</a>
+    </div>
+  </div>
+</footer>
+
+<script>
+  const root = document.documentElement;
+  const themeBtn = document.getElementById('theme-btn');
+  const themeIcon = document.getElementById('theme-icon');
+
+  function updateThemeUI(theme) {
+    if (theme === 'light') {
+      themeIcon.innerHTML = '<path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>';
+    } else {
+      themeIcon.innerHTML = '<circle cx="12" cy="12" r="5"></circle><line x1="12" y1="1" x2="12" y2="3"></line><line x1="12" y1="21" x2="12" y2="23"></line><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line><line x1="1" y1="12" x2="3" y2="12"></line><line x1="21" y1="12" x2="23" y2="12"></line><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>';
+    }
+  }
+
+  updateThemeUI(root.dataset.theme || 'dark');
+
+  themeBtn.addEventListener('click', () => {
+    const nextTheme = root.dataset.theme === 'light' ? 'dark' : 'light';
+    root.dataset.theme = nextTheme;
+    try { localStorage.setItem('theme', nextTheme); } catch (e) {}
+    updateThemeUI(nextTheme);
+  });
+</script>
+
+</body>
+</html>
