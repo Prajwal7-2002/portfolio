@@ -428,9 +428,9 @@
 <div class="telemetry-topbar">
   <div class="telemetry-topbar-inner">
     <div class="telemetry-topbar-left">
-      <span class="telemetry-item"><span class="telemetry-dot"></span> ⚡ RUNTIME: mini-infer v0.2.4</span>
+      <span class="telemetry-item"><span class="telemetry-dot"></span> ⚡ RUNTIME: quantbench-engine v0.1.0</span>
       <span class="telemetry-item">🛡️ SIGSTORE: Cryptographically Attested</span>
-      <span class="telemetry-item">🧪 TESTS: 174/174 Pass (100% CI)</span>
+      <span class="telemetry-item">🧪 TESTS: 270/270 Pass (100% CI)</span>
     </div>
     <div class="telemetry-topbar-right">
       <a href="https://github.com/Prajwal7-2002" target="_blank" rel="noopener noreferrer">GitHub ↗</a>
@@ -484,6 +484,25 @@
   </div>
 
   <div class="posts-list" id="posts-container">
+
+    <a href="/blog/posts/quantbench-bit-packing-sparsity.html" class="post-card">
+      <div class="post-meta">
+        <span class="project-badge">quantbench-engine</span>
+        <span>•</span>
+        <span>OCTOBER 27, 2026</span>
+        <span>•</span>
+        <span>8 MIN READ</span>
+      </div>
+      <h2 class="post-card-title">From Scratch: Vectorized INT4 Bit-Packing, Ampere 2:4 Sparsity, and Second-Order Hessian Calibration in Pure PyTorch</h2>
+      <p class="post-card-excerpt">Why naive quantization collapses under activation outliers, how two 4-bit signed nibbles pack into uint8 vectors, and how slashing DRAM traffic by 73.4% scales autoregressive decode throughput on consumer GPUs.</p>
+      <div class="post-metrics-strip">
+        <span class="post-metric-tag">scheme: INT4 Blockwise (G=128)</span>
+        <span class="post-metric-tag">dram traffic saved: 73.4%</span>
+        <span class="post-metric-tag">sqnr: 22.97 dB</span>
+        <span class="post-metric-tag">gptq error cut: 1.48x</span>
+        <span class="post-metric-tag">silicon: RTX 3050 6GB Laptop GPU</span>
+      </div>
+    </a>
 
     <a href="/blog/posts/roofline-serving-benchmarks.html" class="post-card">
       <div class="post-meta">
