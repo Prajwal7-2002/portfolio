@@ -1237,7 +1237,7 @@
 <div class="telemetry-topbar">
   <div class="telemetry-topbar-inner">
     <div class="telemetry-topbar-left">
-      <span class="telemetry-item"><span class="telemetry-dot"></span> ⚡ SYSTEMS: 5 Flagships (mini-infer · servebench · sched-sim · quantbench · EdgeSLM)</span>
+      <span class="telemetry-item"><span class="telemetry-dot"></span> ⚡ SYSTEMS: 5 Flagship Engines (mini-infer • servebench • sched-sim • quantbench • infersize)</span>
       <span class="telemetry-item">🛡️ SIGSTORE: Cryptographically Attested</span>
       <span class="telemetry-item">🧪 TESTS: 270/270 Pass (100% CI across 5 Flagships)</span>
     </div>
@@ -1704,28 +1704,53 @@
       </div>
     </div>
 
+  
+    <!-- FLAGSHIP 5: infersize -->
+    <div class="flagship-card">
+      <div class="flagship-top">
+        <div class="flagship-header-row">
+          <a href="https://github.com/Prajwal7-2002/infersize" target="_blank" rel="noopener noreferrer" class="flagship-title">
+            infersize
+            <span style="font-size: 0.8rem; color: var(--text-dim); font-family: 'JetBrains Mono', monospace;">v0.2.0</span>
+          </a>
+          <span class="provenance-pill">GitHub · Capacity CAD</span>
+        </div>
+        <p class="flagship-desc">
+          First-principles <strong>analytical performance modeling, multi-GPU comparison matrix &amp; cloud TCO sizer</strong>. Predicts exact parameter footprints, memory-bandwidth decode throughput, and $/1M tokens before downloading weights or renting clusters.
+        </p>
+        <ul class="flagship-features">
+          <li><span>[VRAM Physics]</span> Exact SwiGLU 3x parameter accounting, GQA sub-byte KV scaling, and FlashAttention linear buffer modeling.</li>
+          <li><span>[Hardware Matrix]</span> Multi-accelerator side-by-side evaluation with automated Right-Sized vs Peak Throughput recommendations.</li>
+          <li><span>[Cloud Economics]</span> Roofline decode throughput (tok/s), TPOT latency, $/1M tokens, and Architecture RFC export across RunPod, Lambda, AWS, and GCP.</li>
+        </ul>
+      </div>
+
+      <div style="display: flex; flex-direction: column; gap: 12px;">
+        <div class="flagship-stat-strip">
+          <span>Tests: <span class="metric">28/28 Pass (95%)</span></span>
+          <span>Runtime: <span class="metric">&lt; 10ms (CPU)</span></span>
+          <span>Compute: <span class="metric">Zero GPU Required</span></span>
+        </div>
+
+        <div class="flagship-footer-row">
+          <div class="flagship-links">
+            <a href="https://github.com/Prajwal7-2002/infersize" target="_blank" rel="noopener noreferrer" class="flagship-link">
+              GitHub ↗
+            </a>
+            <a href="https://github.com/Prajwal7-2002/infersize#quickstart" target="_blank" rel="noopener noreferrer" class="flagship-link">
+              Docs &amp; RFCs ↗
+            </a>
+          </div>
+          <button class="copy-btn" onclick="copySnippet('pip install infersize', this)">
+            $ pip install infersize
+          </button>
+        </div>
+      </div>
+    </div>
+
   </section>
 
-  <!-- HORIZON FLAGSHIP 5 (PREVIEW & ARCHITECTURE BLUEPRINT) -->
-  <div class="horizon-card">
-    <div class="horizon-header">
-      <div style="display: flex; align-items: center; gap: 10px;">
-        <span class="tile-label" style="color: var(--telemetry-cyan);">HORIZON FLAGSHIP #5 // ARCHITECTURE BLUEPRINT</span>
-        <span class="tile-badge">NEXT ROADMAP ENGINE</span>
-      </div>
-      <span class="provenance-pill" style="color: var(--telemetry-cyan); background: var(--telemetry-cyan-tint); border-color: rgba(56, 189, 248, 0.3);">
-        Roofline Modeling · Capacity Sizing
-      </span>
-    </div>
-    <div>
-      <h3 style="font-size: 1.15rem; font-weight: 700; color: var(--text); margin-bottom: 6px;">
-        llm-perfmodel: First-Principles Roofline Predictor &amp; VRAM Sizer
-      </h3>
-      <p style="font-size: 0.9rem; color: var(--text-muted); line-height: 1.55;">
-        Analytical compute &amp; DRAM bandwidth roofline latency model predicting decode tok/s, TTFT latency, and KV-cache capacity before downloading model weights. Calibrated and empirically validated against <code>servebench</code> and <code>sched-sim</code> physical measurements.
-      </p>
-    </div>
-  </div>
+
 
   <!-- SECTION LABEL: APPLIED RAG & EDGE SYSTEMS (Style B) -->
   <div class="section-label-row" id="rag">
