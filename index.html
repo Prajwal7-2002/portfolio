@@ -945,7 +945,14 @@
     text-decoration: none;
     display: inline-flex;
     align-items: center;
-    gap: 6px;
+    gap: 10px;
+  }
+
+  .flagship-icon {
+    width: 28px;
+    height: 28px;
+    border-radius: 6px;
+    flex-shrink: 0;
   }
 
   .flagship-title:hover {
@@ -1239,7 +1246,7 @@
     <div class="telemetry-topbar-left">
       <span class="telemetry-item"><span class="telemetry-dot"></span> ⚡ SYSTEMS: 5 Flagship Engines (mini-infer • servebench • sched-sim • quantbench • infersize)</span>
       <span class="telemetry-item">🛡️ SIGSTORE: Cryptographically Attested</span>
-      <span class="telemetry-item">🧪 TESTS: 270/270 Pass (100% CI across 5 Flagships)</span>
+      <span class="telemetry-item">🧪 TESTS: 319/319 Pass (100% CI across 5 Flagships)</span>
     </div>
     <div class="telemetry-topbar-right">
       <a href="https://github.com/Prajwal7-2002" target="_blank" rel="noopener noreferrer">GitHub ↗</a>
@@ -1534,6 +1541,7 @@
       <div class="flagship-top">
         <div class="flagship-header-row">
           <a href="https://github.com/Prajwal7-2002/mini-infer" target="_blank" rel="noopener noreferrer" class="flagship-title">
+            <img src="./assets/logos/mini-infer.svg" alt="mini-infer logo" class="flagship-icon" />
             mini-infer
             <span style="font-size: 0.8rem; color: var(--text-dim); font-family: 'JetBrains Mono', monospace;">v0.2.4</span>
           </a>
@@ -1552,7 +1560,7 @@
       <div style="display: flex; flex-direction: column; gap: 12px;">
         <div class="flagship-stat-strip">
           <span>Throughput: <span class="metric">27.0 tok/s</span></span>
-          <span>Tests: <span class="metric">22/22 Pass</span></span>
+          <span>Tests: <span class="metric">42/42 Pass</span></span>
           <span>Target: <span class="metric">Qwen2.5 / SmolLM2</span></span>
         </div>
 
@@ -1577,6 +1585,7 @@
       <div class="flagship-top">
         <div class="flagship-header-row">
           <a href="https://github.com/Prajwal7-2002/servebench" target="_blank" rel="noopener noreferrer" class="flagship-title">
+            <img src="./assets/logos/servebench.svg" alt="servebench logo" class="flagship-icon" />
             servebench
             <span style="font-size: 0.8rem; color: var(--text-dim); font-family: 'JetBrains Mono', monospace;">v1.1.2</span>
           </a>
@@ -1620,6 +1629,7 @@
       <div class="flagship-top">
         <div class="flagship-header-row">
           <a href="https://github.com/Prajwal7-2002/sched-sim" target="_blank" rel="noopener noreferrer" class="flagship-title">
+            <img src="./assets/logos/sched-sim.svg" alt="sched-sim logo" class="flagship-icon" />
             sched-sim
             <span style="font-size: 0.8rem; color: var(--text-dim); font-family: 'JetBrains Mono', monospace;">v0.2.0</span>
           </a>
@@ -1637,7 +1647,7 @@
 
       <div style="display: flex; flex-direction: column; gap: 12px;">
         <div class="flagship-stat-strip">
-          <span>Tests: <span class="metric">34/34 Pass</span></span>
+          <span>Tests: <span class="metric">42/42 Pass</span></span>
           <span>Policies: <span class="metric">6 Schedulers</span></span>
           <span>Silicon Error: <span class="metric">&lt;8% vs RTX 3050</span></span>
         </div>
@@ -1663,6 +1673,7 @@
       <div class="flagship-top">
         <div class="flagship-header-row">
           <a href="https://github.com/Prajwal7-2002/quantbench" target="_blank" rel="noopener noreferrer" class="flagship-title">
+            <img src="./assets/logos/quantbench.svg" alt="quantbench logo" class="flagship-icon" />
             quantbench
             <span style="font-size: 0.8rem; color: var(--text-dim); font-family: 'JetBrains Mono', monospace;">v0.1.0</span>
           </a>
@@ -1710,10 +1721,11 @@
       <div class="flagship-top">
         <div class="flagship-header-row">
           <a href="https://github.com/Prajwal7-2002/infersize" target="_blank" rel="noopener noreferrer" class="flagship-title">
+            <img src="./assets/logos/infersize.svg" alt="infersize logo" class="flagship-icon" />
             infersize
             <span style="font-size: 0.8rem; color: var(--text-dim); font-family: 'JetBrains Mono', monospace;">v0.2.0</span>
           </a>
-          <span class="provenance-pill">GitHub · Capacity CAD</span>
+          <span class="provenance-pill">PyPI · Capacity CAD</span>
         </div>
         <p class="flagship-desc">
           First-principles <strong>analytical performance modeling, multi-GPU comparison matrix &amp; cloud TCO sizer</strong>. Predicts exact parameter footprints, memory-bandwidth decode throughput, and $/1M tokens before downloading weights or renting clusters.
@@ -1736,6 +1748,9 @@
           <div class="flagship-links">
             <a href="https://github.com/Prajwal7-2002/infersize" target="_blank" rel="noopener noreferrer" class="flagship-link">
               GitHub ↗
+            </a>
+            <a href="https://pypi.org/project/infersize/" target="_blank" rel="noopener noreferrer" class="flagship-link">
+              PyPI Package ↗
             </a>
             <a href="https://github.com/Prajwal7-2002/infersize#quickstart" target="_blank" rel="noopener noreferrer" class="flagship-link">
               Docs &amp; RFCs ↗
