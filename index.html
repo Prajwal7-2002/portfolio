@@ -1246,7 +1246,7 @@
     <div class="telemetry-topbar-left">
       <span class="telemetry-item"><span class="telemetry-dot"></span> ⚡ SYSTEMS: 5 Flagship Engines (mini-infer • servebench • sched-sim • quantbench • infersize)</span>
       <span class="telemetry-item">🛡️ SIGSTORE: Cryptographically Attested</span>
-      <span class="telemetry-item">🧪 TESTS: 319/319 Pass (100% CI across 5 Flagships)</span>
+      <span class="telemetry-item">🧪 TESTS: 328/328 Pass (100% CI across 5 Flagships)</span>
     </div>
     <div class="telemetry-topbar-right">
       <a href="https://github.com/Prajwal7-2002" target="_blank" rel="noopener noreferrer">GitHub ↗</a>
@@ -1446,9 +1446,9 @@
         <!-- Copyable CLI Command -->
         <div class="cli-snippet-box">
           <div class="cli-code" id="cli-q-display">
-            <span class="prompt">$</span> pip install quantbench &amp;&amp; quantbench pack-inspect --scheme int4
+            <span class="prompt">$</span> pip install quantbench-engine &amp;&amp; quantbench pack-inspect --format int4
           </div>
-          <button class="copy-btn" onclick="copySnippet('pip install quantbench && quantbench pack-inspect --scheme int4', this)">
+          <button class="copy-btn" onclick="copySnippet('pip install quantbench-engine && quantbench pack-inspect --format int4', this)">
             Copy CLI
           </button>
         </div>
@@ -1739,7 +1739,7 @@
 
       <div style="display: flex; flex-direction: column; gap: 12px;">
         <div class="flagship-stat-strip">
-          <span>Tests: <span class="metric">36/36 Pass (95%)</span></span>
+          <span>Tests: <span class="metric">45/45 Pass (95%)</span></span>
           <span>Runtime: <span class="metric">&lt; 10ms (CPU)</span></span>
           <span>Compute: <span class="metric">Zero GPU Required</span></span>
         </div>
@@ -2056,7 +2056,7 @@
       comp: "3.5x Ratio", sqnr: "26.8 dB", ppl: "+0.12 ΔPPL", simd: "2x uint8",
       title: "INT4 VECTORIZED NIBBLE PACKING (UINT8 STREAM)",
       desc: "2x 4-BIT SIGNED/UNSIGNED NIBBLES CONDENSED PER BYTE",
-      cmd: "pip install quantbench && quantbench pack-inspect --scheme int4",
+      cmd: "pip install quantbench-engine && quantbench pack-inspect --format int4",
       bytes: [
         { byte: "0x3F", b0: "15", b1: "3", bits0: "1111", bits1: "0011" },
         { byte: "0x1A", b0: "10", b1: "1", bits0: "1010", bits1: "0001" },
@@ -2068,7 +2068,7 @@
       comp: "2.0x Condense", sqnr: "32.1 dB", ppl: "+0.08 ΔPPL", simd: "Ampere 2:4",
       title: "AMPERE 2:4 STRUCTURED SPARSITY CONDENSATION",
       desc: "50% ZERO PRUNING + 2-BIT COLUMN METADATA NIBBLE",
-      cmd: "pip install quantbench && quantbench pack-inspect --scheme sparse",
+      cmd: "pip install quantbench-engine && quantbench pack-inspect --format sparse24",
       bytes: [
         { byte: "Meta 0xE4", b0: "Idx [0,2]", b1: "Idx [1,3]", bits0: "1110", bits1: "0100" },
         { byte: "Vals #1",  b0: "+0.84",      b1: "-1.12",      bits0: "W[0]",  bits1: "W[2]" },
@@ -2080,7 +2080,7 @@
       comp: "7.5x Extreme", sqnr: "14.3 dB", ppl: "+0.45 ΔPPL", simd: "BitNet 1.58b",
       title: "BITNET 1.58B 2-BIT TERNARY PACKING {-1, 0, +1}",
       desc: "4x WEIGHTS CONDENSED INTO 1 BYTE VIA 2-BIT BIASED ENCODING",
-      cmd: "pip install quantbench && quantbench pack-inspect --scheme ternary",
+      cmd: "pip install quantbench-engine && quantbench pack-inspect --format ternary",
       bytes: [
         { byte: "0x96", b0: "+1, -1", b1: "0, +1", bits0: "10 01", bits1: "00 10" },
         { byte: "0x4A", b0: "-1, 0",  b1: "-1, +1", bits0: "01 00", bits1: "01 10" },
@@ -2092,7 +2092,7 @@
       comp: "2.0x Fast", sqnr: "46.2 dB", ppl: "+0.02 ΔPPL", simd: "OCP E4M3FN",
       title: "OCP FP8 E4M3FN ANALYTICAL EMULATION",
       desc: "1 SIGN + 4 EXPONENT + 3 MANTISSA (BIAS=7, NO INF)",
-      cmd: "pip install quantbench && quantbench eval --shape 1024x1024",
+      cmd: "pip install quantbench-engine && quantbench eval --shape 1024x1024",
       bytes: [
         { byte: "0x48", b0: "M: 000", b1: "E: 1001", bits0: "Sign 0", bits1: "+2.0" },
         { byte: "0x3F", b0: "M: 111", b1: "E: 0111", bits0: "Sign 0", bits1: "+1.875" },
