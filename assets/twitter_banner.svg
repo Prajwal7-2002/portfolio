@@ -1,0 +1,550 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1500 500" width="1500" height="500">
+  <defs>
+    <!-- Background Gradient -->
+    <linearGradient id="bgCanvas" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#060913" />
+      <stop offset="50%" stop-color="#090e1a" />
+      <stop offset="100%" stop-color="#04070f" />
+    </linearGradient>
+
+    <!-- Card Background Gradient -->
+    <linearGradient id="cardBg" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" stop-color="#0d1527" stop-opacity="0.85" />
+      <stop offset="100%" stop-color="#080d19" stop-opacity="0.9" />
+    </linearGradient>
+
+    <!-- Glowing Accent Gradients -->
+    <linearGradient id="cyanGrad" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" stop-color="#38bdf8" />
+      <stop offset="100%" stop-color="#0284c7" />
+    </linearGradient>
+
+    <linearGradient id="emeraldGrad" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" stop-color="#34d399" />
+      <stop offset="100%" stop-color="#059669" />
+    </linearGradient>
+
+    <linearGradient id="violetGrad" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" stop-color="#a78bfa" />
+      <stop offset="100%" stop-color="#6d28d9" />
+    </linearGradient>
+
+    <linearGradient id="amberGrad" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" stop-color="#fbbf24" />
+      <stop offset="100%" stop-color="#d97706" />
+    </linearGradient>
+
+    <linearGradient id="rooflineSlopeGrad" x1="0%" y1="100%" x2="100%" y2="0%">
+      <stop offset="0%" stop-color="#38bdf8" />
+      <stop offset="100%" stop-color="#818cf8" />
+    </linearGradient>
+
+    <linearGradient id="rooflineCeilGrad" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" stop-color="#818cf8" />
+      <stop offset="100%" stop-color="#ec4899" />
+    </linearGradient>
+
+    <linearGradient id="cardBorderCyan" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#38bdf8" stop-opacity="0.4" />
+      <stop offset="50%" stop-color="#1e293b" stop-opacity="0.2" />
+      <stop offset="100%" stop-color="#38bdf8" stop-opacity="0.1" />
+    </linearGradient>
+
+    <linearGradient id="cardBorderEmerald" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#10b981" stop-opacity="0.4" />
+      <stop offset="50%" stop-color="#1e293b" stop-opacity="0.2" />
+      <stop offset="100%" stop-color="#10b981" stop-opacity="0.1" />
+    </linearGradient>
+
+    <!-- Filters -->
+    <filter id="glowCyan" x="-20%" y="-20%" width="140%" height="140%">
+      <feGaussianBlur stdDeviation="4" result="blur" />
+      <feComposite in="SourceGraphic" in2="blur" operator="over" />
+    </filter>
+
+    <filter id="glowEmerald" x="-20%" y="-20%" width="140%" height="140%">
+      <feGaussianBlur stdDeviation="4" result="blur" />
+      <feComposite in="SourceGraphic" in2="blur" operator="over" />
+    </filter>
+
+    <filter id="glowViolet" x="-20%" y="-20%" width="140%" height="140%">
+      <feGaussianBlur stdDeviation="4" result="blur" />
+      <feComposite in="SourceGraphic" in2="blur" operator="over" />
+    </filter>
+
+    <!-- Subtle CAD Grid Pattern -->
+    <pattern id="cadGrid" width="40" height="40" patternUnits="userSpaceOnUse">
+      <path d="M 40 0 L 0 0 0 40" fill="none" stroke="#1e293b" stroke-width="0.75" stroke-opacity="0.35" />
+      <circle cx="0" cy="0" r="1" fill="#38bdf8" fill-opacity="0.25" />
+    </pattern>
+
+    <pattern id="dotSubgrid" width="10" height="10" patternUnits="userSpaceOnUse">
+      <circle cx="5" cy="5" r="0.6" fill="#334155" fill-opacity="0.2" />
+    </pattern>
+  </defs>
+
+  <!-- Background Base Layer -->
+  <rect width="1500" height="500" fill="url(#bgCanvas)" />
+  <rect width="1500" height="500" fill="url(#dotSubgrid)" />
+  <rect width="1500" height="500" fill="url(#cadGrid)" />
+
+  <!-- Ambient Glow Cones / Hardware Backlight -->
+  <circle cx="200" cy="80" r="280" fill="#0284c7" fill-opacity="0.07" filter="url(#glowCyan)" />
+  <circle cx="800" cy="220" r="320" fill="#6d28d9" fill-opacity="0.06" filter="url(#glowViolet)" />
+  <circle cx="1300" cy="380" r="260" fill="#059669" fill-opacity="0.05" filter="url(#glowEmerald)" />
+
+  <!-- Outer Viewport Framing / Corner Reticles -->
+  <rect x="12" y="12" width="1476" height="476" rx="8" fill="none" stroke="#334155" stroke-width="1" stroke-opacity="0.4" />
+  <path d="M 12 32 L 12 12 L 32 12 M 1468 12 L 1488 12 L 1488 32 M 12 468 L 12 488 L 32 488 M 1488 468 L 1488 488 L 1468 488" fill="none" stroke="#38bdf8" stroke-width="2" stroke-opacity="0.8" />
+
+  <!-- ========================================================================= -->
+  <!-- TOP TELEMETRY STRIP (x=40..1460, y=26)                                     -->
+  <!-- ========================================================================= -->
+  <g transform="translate(40, 26)">
+    <!-- Engine Status Pill -->
+    <circle cx="6" cy="4" r="3.5" fill="#10b981" filter="url(#glowEmerald)" />
+    <text x="18" y="8" fill="#10b981" font-family="'JetBrains Mono', Consolas, monospace" font-size="11" font-weight="700" letter-spacing="1.5">SYS_ONLINE</text>
+    <text x="110" y="8" fill="#475569" font-family="'JetBrains Mono', Consolas, monospace" font-size="11">|</text>
+    <text x="125" y="8" fill="#94a3b8" font-family="'JetBrains Mono', Consolas, monospace" font-size="11">TARGET: <tspan fill="#f1f5f9" font-weight="600">NVIDIA CUDA / GA107 &amp; T4</tspan></text>
+    <text x="360" y="8" fill="#475569" font-family="'JetBrains Mono', Consolas, monospace" font-size="11">|</text>
+    <text x="375" y="8" fill="#94a3b8" font-family="'JetBrains Mono', Consolas, monospace" font-size="11">ENGINE: <tspan fill="#38bdf8" font-weight="600">mini-infer v0.4 (CONTINUOUS_BATCH)</tspan></text>
+    <text x="690" y="8" fill="#475569" font-family="'JetBrains Mono', Consolas, monospace" font-size="11">|</text>
+    <text x="705" y="8" fill="#94a3b8" font-family="'JetBrains Mono', Consolas, monospace" font-size="11">EVAL_HARNESS: <tspan fill="#a78bfa" font-weight="600">servebench + infersize</tspan></text>
+
+    <!-- Right-aligned Benchmark Stats -->
+    <text x="1420" y="8" fill="#cbd5e1" font-family="'JetBrains Mono', Consolas, monospace" font-size="11" text-anchor="end">
+      MBU: <tspan fill="#38bdf8" font-weight="700">51.0%</tspan> • TTFT: <tspan fill="#10b981" font-weight="700">48.2ms</tspan> • TPOT: <tspan fill="#fbbf24" font-weight="700">14.1ms</tspan> • RADIX_HIT: <tspan fill="#a78bfa" font-weight="700">77.8%</tspan>
+    </text>
+  </g>
+
+  <!-- Divider Line -->
+  <line x1="40" y1="42" x2="1460" y2="42" stroke="#1e293b" stroke-width="1" />
+
+  <!-- ========================================================================= -->
+  <!-- ZONE 1: LEFT IDENTITY & CORE SYSTEMS (x=50..530)                          -->
+  <!-- ========================================================================= -->
+
+  <!-- Identity Group -->
+  <g transform="translate(50, 62)">
+    <!-- Small Category Kicker -->
+    <text x="0" y="16" fill="#38bdf8" font-family="'JetBrains Mono', Consolas, monospace" font-size="12" font-weight="700" letter-spacing="2.5">
+      // SYSTEM_ARCHITECT &amp; RUNTIME_ENGINEER
+    </text>
+
+    <!-- Main Name Header -->
+    <text x="0" y="58" fill="#ffffff" font-family="'Inter', -apple-system, 'Segoe UI', sans-serif" font-size="42" font-weight="800" letter-spacing="-0.8">
+      Prajwal Pujari
+    </text>
+
+    <!-- Core Subhead -->
+    <text x="0" y="86" fill="#38bdf8" font-family="'JetBrains Mono', Consolas, monospace" font-size="16" font-weight="700" letter-spacing="1.5">
+      LLM INFERENCE &amp; HARDWARE SYSTEMS
+    </text>
+
+    <!-- Concise Mission / Scope -->
+    <text x="0" y="114" fill="#94a3b8" font-family="'Inter', -apple-system, 'Segoe UI', sans-serif" font-size="13" font-weight="400">
+      First-principles serving runtimes, memory hierarchy optimization,
+    </text>
+    <text x="0" y="132" fill="#94a3b8" font-family="'Inter', -apple-system, 'Segoe UI', sans-serif" font-size="13" font-weight="400">
+      continuous batching, and empirical GPU roofline benchmarking.
+    </text>
+
+    <!-- System Repo Stack Badges -->
+    <g transform="translate(0, 150)">
+      <!-- mini-infer badge -->
+      <g transform="translate(0, 0)">
+        <rect width="112" height="26" rx="5" fill="#1e1b4b" stroke="#8b5cf6" stroke-width="1.2" />
+        <circle cx="12" cy="13" r="3.5" fill="#a78bfa" />
+        <text x="24" y="17" fill="#f5f3ff" font-family="'JetBrains Mono', Consolas, monospace" font-size="11" font-weight="700">mini-infer</text>
+      </g>
+
+      <!-- servebench badge -->
+      <g transform="translate(118, 0)">
+        <rect width="118" height="26" rx="5" fill="#064e3b" stroke="#10b981" stroke-width="1.2" />
+        <circle cx="12" cy="13" r="3.5" fill="#34d399" />
+        <text x="24" y="17" fill="#ecfdf5" font-family="'JetBrains Mono', Consolas, monospace" font-size="11" font-weight="700">servebench</text>
+      </g>
+
+      <!-- infersize badge -->
+      <g transform="translate(242, 0)">
+        <rect width="108" height="26" rx="5" fill="#082f49" stroke="#0ea5e9" stroke-width="1.2" />
+        <circle cx="12" cy="13" r="3.5" fill="#38bdf8" />
+        <text x="24" y="17" fill="#f0f9ff" font-family="'JetBrains Mono', Consolas, monospace" font-size="11" font-weight="700">infersize</text>
+      </g>
+
+      <!-- sched-sim badge -->
+      <g transform="translate(356, 0)">
+        <rect width="112" height="26" rx="5" fill="#451a03" stroke="#f59e0b" stroke-width="1.2" />
+        <circle cx="12" cy="13" r="3.5" fill="#fbbf24" />
+        <text x="24" y="17" fill="#fffbeb" font-family="'JetBrains Mono', Consolas, monospace" font-size="11" font-weight="700">sched-sim</text>
+      </g>
+    </g>
+  </g>
+
+  <!-- Bottom-Left Avatar Safe Zone HUD & Real Systems Telemetry -->
+  <!-- Twitter Desktop / Mobile Avatar Overlays roughly at x=60..240, y=320..500. -->
+  <!-- We place a calibrated radar / target reticle right there so it looks like an engineered UI HUD rather than empty dead space! -->
+  <g transform="translate(60, 310)">
+    <!-- Radar Reticle Base -->
+    <g transform="translate(90, 85)">
+      <!-- Outer HUD Ring -->
+      <circle cx="0" cy="0" r="76" fill="none" stroke="#334155" stroke-width="1" stroke-dasharray="4,4" />
+      <circle cx="0" cy="0" r="54" fill="#0b1324" fill-opacity="0.4" stroke="#1e293b" stroke-width="1.5" />
+      <circle cx="0" cy="0" r="28" fill="none" stroke="#38bdf8" stroke-opacity="0.3" stroke-width="1" />
+      <circle cx="0" cy="0" r="3" fill="#38bdf8" filter="url(#glowCyan)" />
+
+      <!-- Crosshairs -->
+      <line x1="-84" y1="0" x2="84" y2="0" stroke="#334155" stroke-width="0.8" />
+      <line x1="0" y1="-84" x2="0" y2="84" stroke="#334155" stroke-width="0.8" />
+
+      <!-- Angle Markings -->
+      <text x="0" y="-60" fill="#475569" font-family="'JetBrains Mono', Consolas, monospace" font-size="8" text-anchor="middle">000°</text>
+      <text x="66" y="3" fill="#475569" font-family="'JetBrains Mono', Consolas, monospace" font-size="8">090°</text>
+      <text x="0" y="68" fill="#475569" font-family="'JetBrains Mono', Consolas, monospace" font-size="8" text-anchor="middle">180°</text>
+      <text x="-66" y="3" fill="#475569" font-family="'JetBrains Mono', Consolas, monospace" font-size="8" text-anchor="end">270°</text>
+
+      <text x="0" y="-12" fill="#38bdf8" font-family="'JetBrains Mono', Consolas, monospace" font-size="9" font-weight="700" text-anchor="middle" letter-spacing="1">AVATAR_ZONE</text>
+      <text x="0" y="16" fill="#64748b" font-family="'JetBrains Mono', Consolas, monospace" font-size="8" text-anchor="middle">SAFE_CADENCE</text>
+    </g>
+
+    <!-- First-Principles Telemetry Stats Box (x=210..470) -->
+    <g transform="translate(195, 10)">
+      <rect width="275" height="152" rx="6" fill="url(#cardBg)" stroke="url(#cardBorderCyan)" stroke-width="1" />
+      
+      <!-- Card Mini Header -->
+      <rect x="0" y="0" width="275" height="26" rx="6" fill="#0f172a" fill-opacity="0.8" />
+      <circle cx="12" cy="13" r="3" fill="#38bdf8" />
+      <text x="22" y="17" fill="#94a3b8" font-family="'JetBrains Mono', Consolas, monospace" font-size="10" font-weight="700" letter-spacing="1">HARDWARE_PROFILE // GA107</text>
+
+      <!-- Stat Rows -->
+      <g transform="translate(12, 38)">
+        <!-- Row 1 -->
+        <text x="0" y="12" fill="#64748b" font-family="'JetBrains Mono', Consolas, monospace" font-size="10">DRAM BUS WIDTH</text>
+        <text x="250" y="12" fill="#f1f5f9" font-family="'JetBrains Mono', Consolas, monospace" font-size="10" font-weight="700" text-anchor="end">128-bit GDDR6</text>
+
+        <!-- Row 2 -->
+        <text x="0" y="32" fill="#64748b" font-family="'JetBrains Mono', Consolas, monospace" font-size="10">PEAK BANDWIDTH</text>
+        <text x="250" y="32" fill="#38bdf8" font-family="'JetBrains Mono', Consolas, monospace" font-size="10" font-weight="700" text-anchor="end">192.0 GB/s</text>
+
+        <!-- Row 3 -->
+        <text x="0" y="52" fill="#64748b" font-family="'JetBrains Mono', Consolas, monospace" font-size="10">EMPIRICAL MBU (η)</text>
+        <text x="250" y="52" fill="#10b981" font-family="'JetBrains Mono', Consolas, monospace" font-size="10" font-weight="700" text-anchor="end">51.0% MEASURED</text>
+
+        <!-- Row 4 -->
+        <text x="0" y="72" fill="#64748b" font-family="'JetBrains Mono', Consolas, monospace" font-size="10">PAGE BLOCK SIZE</text>
+        <text x="250" y="72" fill="#a78bfa" font-family="'JetBrains Mono', Consolas, monospace" font-size="10" font-weight="700" text-anchor="end">16 TOKENS (ZERO-FRAG)</text>
+
+        <!-- Row 5 -->
+        <text x="0" y="92" fill="#64748b" font-family="'JetBrains Mono', Consolas, monospace" font-size="10">MLA KV REDUCTION</text>
+        <text x="250" y="92" fill="#fbbf24" font-family="'JetBrains Mono', Consolas, monospace" font-size="10" font-weight="700" text-anchor="end">98.2% (d_c=512)</text>
+      </g>
+    </g>
+  </g>
+
+  <!-- ========================================================================= -->
+  <!-- ZONE 2: CENTER ROOFLINE MODEL CARD (x=550..1020, y=55..472)               -->
+  <!-- ========================================================================= -->
+  <g transform="translate(550, 55)">
+    <!-- Card Frame -->
+    <rect width="470" height="416" rx="8" fill="url(#cardBg)" stroke="url(#cardBorderCyan)" stroke-width="1.2" />
+
+    <!-- Card Header Strip -->
+    <rect x="0" y="0" width="470" height="34" rx="8" fill="#0f172a" fill-opacity="0.9" />
+    <circle cx="16" cy="17" r="4" fill="#38bdf8" filter="url(#glowCyan)" />
+    <text x="28" y="21" fill="#f8fafc" font-family="'JetBrains Mono', Consolas, monospace" font-size="12" font-weight="800" letter-spacing="1.2">
+      EMPIRICAL HARDWARE ROOFLINE MODEL
+    </text>
+    <text x="454" y="21" fill="#64748b" font-family="'JetBrains Mono', Consolas, monospace" font-size="10" text-anchor="end">
+      LOG-LOG SPECTRA
+    </text>
+
+    <!-- Roofline Plot Area (x=50..440, y=50..330) -->
+    <g transform="translate(48, 48)">
+      <!-- Subtitle & Specs -->
+      <text x="0" y="10" fill="#94a3b8" font-family="'JetBrains Mono', Consolas, monospace" font-size="10">
+        PEAK FP16: <tspan fill="#ec4899" font-weight="700">14.6 TFLOP/s</tspan> | DRAM BW: <tspan fill="#38bdf8" font-weight="700">192 GB/s</tspan>
+      </text>
+
+      <!-- Plot Grid Box -->
+      <rect x="30" y="24" width="370" height="240" fill="#050811" fill-opacity="0.7" stroke="#1e293b" stroke-width="1" />
+
+      <!-- Horizontal Grid Lines (Log Scale: 0.1, 1.0, 10, 14.6 TFLOP/s) -->
+      <!-- y=264 is 0.01, y=200 is 0.1, y=136 is 1.0, y=72 is 10, y=52 is 14.6 -->
+      <line x1="30" y1="200" x2="400" y2="200" stroke="#1e293b" stroke-width="0.8" stroke-dasharray="3,3" />
+      <line x1="30" y1="136" x2="400" y2="136" stroke="#1e293b" stroke-width="0.8" stroke-dasharray="3,3" />
+      <line x1="30" y1="72" x2="400" y2="72" stroke="#1e293b" stroke-width="0.8" stroke-dasharray="3,3" />
+      <line x1="30" y1="52" x2="400" y2="52" stroke="#ec4899" stroke-width="0.9" stroke-dasharray="4,2" stroke-opacity="0.6" />
+
+      <!-- Vertical Grid Lines (Log Scale: 0.1, 1.0, 10, 76.0 (Ridge), 100, 1000 FLOP/Byte) -->
+      <!-- x=30 is 0.1, x=90 is 1.0, x=150 is 10, x=210 is 76 (Ridge), x=270 is 100, x=330 is 1000 -->
+      <line x1="90" y1="24" x2="90" y2="264" stroke="#1e293b" stroke-width="0.8" stroke-dasharray="3,3" />
+      <line x1="150" y1="24" x2="150" y2="264" stroke="#1e293b" stroke-width="0.8" stroke-dasharray="3,3" />
+      <line x1="210" y1="24" x2="210" y2="264" stroke="#818cf8" stroke-width="0.9" stroke-dasharray="3,3" stroke-opacity="0.6" />
+      <line x1="270" y1="24" x2="270" y2="264" stroke="#1e293b" stroke-width="0.8" stroke-dasharray="3,3" />
+      <line x1="330" y1="24" x2="330" y2="264" stroke="#1e293b" stroke-width="0.8" stroke-dasharray="3,3" />
+
+      <!-- Axes Labels -->
+      <text x="25" y="204" fill="#64748b" font-family="'JetBrains Mono', Consolas, monospace" font-size="8" text-anchor="end">0.1</text>
+      <text x="25" y="140" fill="#64748b" font-family="'JetBrains Mono', Consolas, monospace" font-size="8" text-anchor="end">1.0</text>
+      <text x="25" y="76" fill="#64748b" font-family="'JetBrains Mono', Consolas, monospace" font-size="8" text-anchor="end">10</text>
+      <text x="25" y="55" fill="#ec4899" font-family="'JetBrains Mono', Consolas, monospace" font-size="8" font-weight="700" text-anchor="end">14.6</text>
+
+      <text x="90" y="276" fill="#64748b" font-family="'JetBrains Mono', Consolas, monospace" font-size="8" text-anchor="middle">1</text>
+      <text x="150" y="276" fill="#64748b" font-family="'JetBrains Mono', Consolas, monospace" font-size="8" text-anchor="middle">10</text>
+      <text x="210" y="276" fill="#818cf8" font-family="'JetBrains Mono', Consolas, monospace" font-size="8" font-weight="700" text-anchor="middle">I*=76</text>
+      <text x="270" y="276" fill="#64748b" font-family="'JetBrains Mono', Consolas, monospace" font-size="8" text-anchor="middle">100</text>
+      <text x="330" y="276" fill="#64748b" font-family="'JetBrains Mono', Consolas, monospace" font-size="8" text-anchor="middle">1000</text>
+
+      <!-- Roofline Curve Itself -->
+      <!-- Shaded Attainable Performance Region -->
+      <polygon points="30,250 90,186 210,52 400,52 400,264 30,264" fill="#38bdf8" fill-opacity="0.04" />
+
+      <!-- Memory Bandwidth Sloped Bound Line -->
+      <line x1="30" y1="250" x2="210" y2="52" stroke="url(#rooflineSlopeGrad)" stroke-width="3" stroke-linecap="round" filter="url(#glowCyan)" />
+
+      <!-- Compute Bound Ceiling Horizontal Line -->
+      <line x1="210" y1="52" x2="400" y2="52" stroke="url(#rooflineCeilGrad)" stroke-width="3" stroke-linecap="round" filter="url(#glowCyan)" />
+
+      <!-- Memory-Bound Slanted Text Annotation -->
+      <text x="95" y="145" transform="rotate(-33 95 145)" fill="#38bdf8" font-family="'JetBrains Mono', Consolas, monospace" font-size="10" font-weight="700" letter-spacing="1">
+        DRAM BW = 192 GB/s
+      </text>
+
+      <!-- Compute-Bound Horizontal Text Annotation -->
+      <text x="245" y="44" fill="#ec4899" font-family="'JetBrains Mono', Consolas, monospace" font-size="9" font-weight="700" letter-spacing="0.8">
+        PEAK TENSOR COMPUTE: 14.6 TF
+      </text>
+
+      <!-- Ridge Point Pin & Tooltip -->
+      <circle cx="210" cy="52" r="5" fill="#818cf8" filter="url(#glowViolet)" />
+      <circle cx="210" cy="52" r="2" fill="#ffffff" />
+      <line x1="210" y1="52" x2="210" y2="92" stroke="#818cf8" stroke-width="1.2" stroke-dasharray="2,2" />
+      <rect x="145" y="92" width="130" height="22" rx="4" fill="#1e1b4b" stroke="#818cf8" stroke-width="1" />
+      <text x="210" y="106" fill="#c4b5fd" font-family="'JetBrains Mono', Consolas, monospace" font-size="9" font-weight="700" text-anchor="middle">
+        RIDGE I* = 76 FLOP/B
+      </text>
+
+      <!-- OPERATING POINT 1: DECODE (BATCH=1) -> Pure Memory Bound -->
+      <g transform="translate(100, 195)">
+        <circle cx="0" cy="0" r="12" fill="#38bdf8" fill-opacity="0.15" />
+        <circle cx="0" cy="0" r="5" fill="#38bdf8" filter="url(#glowCyan)" />
+        <circle cx="0" cy="0" r="2" fill="#ffffff" />
+        <!-- Callout Box -->
+        <path d="M 0 0 L 15 25 L 35 25" fill="none" stroke="#38bdf8" stroke-width="1" />
+        <rect x="35" y="12" width="145" height="34" rx="4" fill="#082f49" stroke="#38bdf8" stroke-width="1" />
+        <text x="42" y="25" fill="#38bdf8" font-family="'JetBrains Mono', Consolas, monospace" font-size="9" font-weight="800">
+          ● DECODE (Batch=1)
+        </text>
+        <text x="42" y="38" fill="#94a3b8" font-family="'JetBrains Mono', Consolas, monospace" font-size="8">
+          I ≈ 1.1 FLOP/B [MEMORY-BOUND]
+        </text>
+      </g>
+
+      <!-- OPERATING POINT 2: PREFILL (PROMPT=2048) -> Compute Bound -->
+      <g transform="translate(320, 52)">
+        <circle cx="0" cy="0" r="12" fill="#10b981" fill-opacity="0.15" />
+        <circle cx="0" cy="0" r="5" fill="#10b981" filter="url(#glowEmerald)" />
+        <circle cx="0" cy="0" r="2" fill="#ffffff" />
+        <!-- Callout Box -->
+        <path d="M 0 0 L -15 32 L -35 32" fill="none" stroke="#10b981" stroke-width="1" />
+        <rect x="-170" y="20" width="135" height="34" rx="4" fill="#064e3b" stroke="#10b981" stroke-width="1" />
+        <text x="-163" y="33" fill="#34d399" font-family="'JetBrains Mono', Consolas, monospace" font-size="9" font-weight="800">
+          ● PREFILL (Ctx=2048)
+        </text>
+        <text x="-163" y="46" fill="#a7f3d0" font-family="'JetBrains Mono', Consolas, monospace" font-size="8">
+          GEMM BOUND [94% TENSOR]
+        </text>
+      </g>
+
+      <!-- X-Axis Label -->
+      <text x="215" y="295" fill="#94a3b8" font-family="'JetBrains Mono', Consolas, monospace" font-size="9" font-weight="700" text-anchor="middle">
+        ARITHMETIC INTENSITY: FLOPs / Byte (DRAM Access)
+      </text>
+    </g>
+
+    <!-- Bottom Roofline Takeaway Footer -->
+    <g transform="translate(16, 360)">
+      <rect width="438" height="42" rx="5" fill="#090e1a" stroke="#1e293b" stroke-width="1" />
+      <text x="14" y="18" fill="#cbd5e1" font-family="'JetBrains Mono', Consolas, monospace" font-size="10" font-weight="600">
+        ROOFLINE DIAGNOSTIC: <tspan fill="#38bdf8">Decode bound by 192 GB/s DRAM bus.</tspan>
+      </text>
+      <text x="14" y="32" fill="#94a3b8" font-family="'JetBrains Mono', Consolas, monospace" font-size="9">
+        Prefill saturates Tensor Cores. Sched-Sim mandates chunked prefill + disagg.
+      </text>
+    </g>
+  </g>
+
+  <!-- ========================================================================= -->
+  <!-- ZONE 3: RIGHT SYSTEMS CARDS (x=1035..1460)                                -->
+  <!-- ========================================================================= -->
+
+  <!-- Top Right Card: Paged KV-Cache & Radix Prefix Hierarchy (y=55..250) -->
+  <g transform="translate(1035, 55)">
+    <!-- Card Frame -->
+    <rect width="425" height="198" rx="8" fill="url(#cardBg)" stroke="url(#cardBorderEmerald)" stroke-width="1.2" />
+
+    <!-- Card Header -->
+    <rect x="0" y="0" width="425" height="30" rx="8" fill="#0f172a" fill-opacity="0.9" />
+    <circle cx="14" cy="15" r="3.5" fill="#10b981" filter="url(#glowEmerald)" />
+    <text x="26" y="19" fill="#f8fafc" font-family="'JetBrains Mono', Consolas, monospace" font-size="11" font-weight="800" letter-spacing="1">
+      PAGED KV-CACHE &amp; RADIX PREFIX SHARING
+    </text>
+    <text x="412" y="19" fill="#10b981" font-family="'JetBrains Mono', Consolas, monospace" font-size="9" font-weight="700" text-anchor="end">
+      0% FRAGMENTATION
+    </text>
+
+    <!-- Block Manager Visual Map -->
+    <g transform="translate(14, 42)">
+      <!-- Logical Blocks to Physical Blocks Table -->
+      <!-- Request A Blocks -->
+      <text x="0" y="12" fill="#94a3b8" font-family="'JetBrains Mono', Consolas, monospace" font-size="9" font-weight="700">REQ_0 (VIRTUAL)</text>
+      
+      <rect x="95" y="2" width="60" height="20" rx="4" fill="#1e1b4b" stroke="#8b5cf6" stroke-width="1" />
+      <text x="125" y="15" fill="#c4b5fd" font-family="'JetBrains Mono', Consolas, monospace" font-size="8" text-anchor="middle">V_BLK 0</text>
+      
+      <text x="162" y="15" fill="#64748b" font-family="'JetBrains Mono', Consolas, monospace" font-size="10">→</text>
+
+      <rect x="178" y="2" width="90" height="20" rx="4" fill="#064e3b" stroke="#10b981" stroke-width="1" />
+      <text x="223" y="15" fill="#6ee7b7" font-family="'JetBrains Mono', Consolas, monospace" font-size="8" font-weight="700" text-anchor="middle">P_BLK #04 (DRAM)</text>
+
+      <rect x="274" y="2" width="120" height="20" rx="4" fill="#0f172a" stroke="#334155" stroke-width="1" />
+      <text x="334" y="15" fill="#94a3b8" font-family="'JetBrains Mono', Consolas, monospace" font-size="8" text-anchor="middle">16 TOKENS (ALLOC)</text>
+
+      <!-- Request B (Shared Prefix via Radix Tree) -->
+      <text x="0" y="38" fill="#94a3b8" font-family="'JetBrains Mono', Consolas, monospace" font-size="9" font-weight="700">REQ_1 (RADIX)</text>
+
+      <rect x="95" y="28" width="60" height="20" rx="4" fill="#1e1b4b" stroke="#8b5cf6" stroke-width="1" />
+      <text x="125" y="41" fill="#c4b5fd" font-family="'JetBrains Mono', Consolas, monospace" font-size="8" text-anchor="middle">V_BLK 0</text>
+
+      <text x="162" y="41" fill="#10b981" font-family="'JetBrains Mono', Consolas, monospace" font-size="10">→</text>
+
+      <rect x="178" y="28" width="90" height="20" rx="4" fill="#064e3b" stroke="#10b981" stroke-width="1" />
+      <text x="223" y="41" fill="#34d399" font-family="'JetBrains Mono', Consolas, monospace" font-size="8" font-weight="700" text-anchor="middle">P_BLK #04 (HIT!)</text>
+
+      <rect x="274" y="28" width="120" height="20" rx="4" fill="#14532d" stroke="#22c55e" stroke-width="1" />
+      <text x="334" y="41" fill="#86efac" font-family="'JetBrains Mono', Consolas, monospace" font-size="8" font-weight="700" text-anchor="middle">0ms ALLOC (SHARED)</text>
+
+      <!-- Memory Physical Blocks Grid (Visual VRAM Array) -->
+      <g transform="translate(0, 60)">
+        <text x="0" y="12" fill="#64748b" font-family="'JetBrains Mono', Consolas, monospace" font-size="9">PHYSICAL VRAM POOL (PAGE_SIZE = 16 TOKENS):</text>
+
+        <!-- Block Grid (8 mini blocks) -->
+        <g transform="translate(0, 20)">
+          <!-- Block 0 -->
+          <rect x="0" y="0" width="44" height="24" rx="3" fill="#1e293b" stroke="#334155" stroke-width="1" />
+          <text x="22" y="15" fill="#64748b" font-family="'JetBrains Mono', Consolas, monospace" font-size="8" text-anchor="middle">#00</text>
+
+          <!-- Block 1 (Shared Radix) -->
+          <rect x="50" y="0" width="44" height="24" rx="3" fill="#064e3b" stroke="#10b981" stroke-width="1.5" filter="url(#glowEmerald)" />
+          <text x="72" y="15" fill="#34d399" font-family="'JetBrains Mono', Consolas, monospace" font-size="8" font-weight="700" text-anchor="middle">#01 [S]</text>
+
+          <!-- Block 2 (Alloc) -->
+          <rect x="100" y="0" width="44" height="24" rx="3" fill="#082f49" stroke="#0ea5e9" stroke-width="1" />
+          <text x="122" y="15" fill="#38bdf8" font-family="'JetBrains Mono', Consolas, monospace" font-size="8" text-anchor="middle">#02</text>
+
+          <!-- Block 3 -->
+          <rect x="150" y="0" width="44" height="24" rx="3" fill="#1e293b" stroke="#334155" stroke-width="1" />
+          <text x="172" y="15" fill="#64748b" font-family="'JetBrains Mono', Consolas, monospace" font-size="8" text-anchor="middle">#03</text>
+
+          <!-- Block 4 (Shared Radix) -->
+          <rect x="200" y="0" width="44" height="24" rx="3" fill="#064e3b" stroke="#10b981" stroke-width="1.5" filter="url(#glowEmerald)" />
+          <text x="222" y="15" fill="#34d399" font-family="'JetBrains Mono', Consolas, monospace" font-size="8" font-weight="700" text-anchor="middle">#04 [S]</text>
+
+          <!-- Block 5 (Alloc) -->
+          <rect x="250" y="0" width="44" height="24" rx="3" fill="#082f49" stroke="#0ea5e9" stroke-width="1" />
+          <text x="272" y="15" fill="#38bdf8" font-family="'JetBrains Mono', Consolas, monospace" font-size="8" text-anchor="middle">#05</text>
+
+          <!-- Block 6 (Speculative Draft Hit) -->
+          <rect x="300" y="0" width="44" height="24" rx="3" fill="#451a03" stroke="#f59e0b" stroke-width="1" />
+          <text x="322" y="15" fill="#fbbf24" font-family="'JetBrains Mono', Consolas, monospace" font-size="8" font-weight="700" text-anchor="middle">#06 [D]</text>
+
+          <!-- Block 7 (Free) -->
+          <rect x="350" y="0" width="44" height="24" rx="3" fill="#0f172a" stroke="#334155" stroke-dasharray="2,2" stroke-width="1" />
+          <text x="372" y="15" fill="#475569" font-family="'JetBrains Mono', Consolas, monospace" font-size="8" text-anchor="middle">FREE</text>
+        </g>
+      </g>
+
+      <!-- Bottom Efficiency Tag -->
+      <text x="0" y="138" fill="#cbd5e1" font-family="'JetBrains Mono', Consolas, monospace" font-size="9">
+        PREFIX CACHE SPEEDUP: <tspan fill="#10b981" font-weight="700">4.2× TTFT Reduction</tspan> (793ms vs 23.5s Cold)
+      </text>
+    </g>
+  </g>
+
+  <!-- Bottom Right Card: First-Principles Serving Formula & Live Pipeline (y=265..471) -->
+  <g transform="translate(1035, 265)">
+    <!-- Card Frame -->
+    <rect width="425" height="206" rx="8" fill="url(#cardBg)" stroke="url(#cardBorderCyan)" stroke-width="1.2" />
+
+    <!-- Card Header -->
+    <rect x="0" y="0" width="425" height="30" rx="8" fill="#0f172a" fill-opacity="0.9" />
+    <circle cx="14" cy="15" r="3.5" fill="#38bdf8" filter="url(#glowCyan)" />
+    <text x="26" y="19" fill="#f8fafc" font-family="'JetBrains Mono', Consolas, monospace" font-size="11" font-weight="800" letter-spacing="1">
+      FIRST-PRINCIPLES SERVING FORMULA &amp; SCHEDULER
+    </text>
+    <text x="412" y="19" fill="#38bdf8" font-family="'JetBrains Mono', Consolas, monospace" font-size="9" font-weight="700" text-anchor="end">
+      infersize
+    </text>
+
+    <!-- Formula Box -->
+    <g transform="translate(14, 38)">
+      <rect width="396" height="34" rx="5" fill="#060b17" stroke="#1e293b" stroke-width="1" />
+      <text x="198" y="21" fill="#f8fafc" font-family="'JetBrains Mono', Consolas, monospace" font-size="11" font-weight="700" text-anchor="middle">
+        TPOT = (W<tspan font-size="9" dy="2">active</tspan><tspan dy="-2"> + KV</tspan><tspan font-size="9" dy="2">cache</tspan><tspan dy="-2">) / (BW</tspan><tspan font-size="9" dy="2">DRAM</tspan><tspan dy="-2"> · η</tspan><tspan font-size="9" dy="2">MBU</tspan><tspan dy="-2">)</tspan>
+      </text>
+    </g>
+
+    <!-- Live Continuous Batching Telemetry Stream -->
+    <g transform="translate(14, 82)">
+      <text x="0" y="10" fill="#64748b" font-family="'JetBrains Mono', Consolas, monospace" font-size="9" font-weight="700">CONTINUOUS BATCHING PIPELINE (SLOT ITERATION):</text>
+
+      <!-- Slot 0 -->
+      <g transform="translate(0, 18)">
+        <rect width="396" height="18" rx="3" fill="#0f172a" stroke="#1e293b" stroke-width="1" />
+        <rect width="18" height="18" rx="3" fill="#064e3b" />
+        <text x="9" y="12" fill="#34d399" font-family="'JetBrains Mono', Consolas, monospace" font-size="8" font-weight="700" text-anchor="middle">0</text>
+        <text x="26" y="12" fill="#34d399" font-family="'JetBrains Mono', Consolas, monospace" font-size="8" font-weight="700">DECODE</text>
+        <text x="80" y="12" fill="#cbd5e1" font-family="'JetBrains Mono', Consolas, monospace" font-size="8">req_id: #904 | step: 184/512</text>
+        <text x="390" y="12" fill="#10b981" font-family="'JetBrains Mono', Consolas, monospace" font-size="8" font-weight="700" text-anchor="end">TPOT: 14.1 ms</text>
+      </g>
+
+      <!-- Slot 1 -->
+      <g transform="translate(0, 40)">
+        <rect width="396" height="18" rx="3" fill="#0f172a" stroke="#1e293b" stroke-width="1" />
+        <rect width="18" height="18" rx="3" fill="#064e3b" />
+        <text x="9" y="12" fill="#34d399" font-family="'JetBrains Mono', Consolas, monospace" font-size="8" font-weight="700" text-anchor="middle">1</text>
+        <text x="26" y="12" fill="#34d399" font-family="'JetBrains Mono', Consolas, monospace" font-size="8" font-weight="700">DECODE</text>
+        <text x="80" y="12" fill="#cbd5e1" font-family="'JetBrains Mono', Consolas, monospace" font-size="8">req_id: #908 | step: 42/256</text>
+        <text x="390" y="12" fill="#10b981" font-family="'JetBrains Mono', Consolas, monospace" font-size="8" font-weight="700" text-anchor="end">TPOT: 14.2 ms</text>
+      </g>
+
+      <!-- Slot 2 -->
+      <g transform="translate(0, 62)">
+        <rect width="396" height="18" rx="3" fill="#0f172a" stroke="#1e293b" stroke-width="1" />
+        <rect width="18" height="18" rx="3" fill="#082f49" />
+        <text x="9" y="12" fill="#38bdf8" font-family="'JetBrains Mono', Consolas, monospace" font-size="8" font-weight="700" text-anchor="middle">2</text>
+        <text x="26" y="12" fill="#38bdf8" font-family="'JetBrains Mono', Consolas, monospace" font-size="8" font-weight="700">PREFILL</text>
+        <text x="80" y="12" fill="#cbd5e1" font-family="'JetBrains Mono', Consolas, monospace" font-size="8">req_id: #911 | chunk: 512 tok</text>
+        <text x="390" y="12" fill="#38bdf8" font-family="'JetBrains Mono', Consolas, monospace" font-size="8" font-weight="700" text-anchor="end">TTFT: 48.2 ms</text>
+      </g>
+
+      <!-- Slot 3 -->
+      <g transform="translate(0, 84)">
+        <rect width="396" height="18" rx="3" fill="#0f172a" stroke="#1e293b" stroke-width="1" />
+        <rect width="18" height="18" rx="3" fill="#451a03" />
+        <text x="9" y="12" fill="#fbbf24" font-family="'JetBrains Mono', Consolas, monospace" font-size="8" font-weight="700" text-anchor="middle">3</text>
+        <text x="26" y="12" fill="#fbbf24" font-family="'JetBrains Mono', Consolas, monospace" font-size="8" font-weight="700">SPEC_VER</text>
+        <text x="80" y="12" fill="#cbd5e1" font-family="'JetBrains Mono', Consolas, monospace" font-size="8">draft: Qwen-0.5B | γ=4 tokens</text>
+        <text x="390" y="12" fill="#fbbf24" font-family="'JetBrains Mono', Consolas, monospace" font-size="8" font-weight="700" text-anchor="end">ACCEPT: 77.8%</text>
+      </g>
+    </g>
+
+    <!-- Bottom Health Pill -->
+    <g transform="translate(14, 186)">
+      <text x="0" y="10" fill="#64748b" font-family="'JetBrains Mono', Consolas, monospace" font-size="8">
+        CYCLE_TIME: <tspan fill="#f1f5f9" font-weight="700">14.1 ms</tspan> | SCHED_OVERHEAD: <tspan fill="#10b981" font-weight="700">&lt; 0.4 ms</tspan> | ZERO_PYTHON_GIL_STALL
+      </text>
+    </g>
+  </g>
+
+</svg>
