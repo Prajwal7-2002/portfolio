@@ -424,9 +424,9 @@
 <div class="telemetry-topbar">
   <div class="telemetry-topbar-inner">
     <div class="telemetry-topbar-left">
-      <span class="telemetry-item"><span class="telemetry-dot"></span> ⚡ RUNTIME: mini-infer v0.2.4</span>
+      <span class="telemetry-item"><span class="telemetry-dot"></span> ⚡ RUNTIME: mini-infer v0.2.9 (re-measured 2026-11-05)</span>
       <span class="telemetry-item">🛡️ SIGSTORE: Cryptographically Attested</span>
-      <span class="telemetry-item">🧪 TESTS: 174/174 Pass (100% CI)</span>
+      <span class="telemetry-item">🧪 TESTS: 49/49 Pass (CI: Windows, macOS, Linux)</span>
     </div>
     <div class="telemetry-topbar-right">
       <a href="https://github.com/Prajwal7-2002" target="_blank" rel="noopener noreferrer">GitHub ↗</a>
@@ -487,15 +487,32 @@
         Most engineers treat LLM serving as an opaque black box—guessing thread counts, setting arbitrary batch sizes, and hoping VRAM doesn't crash. Here is how empirical roofline modeling and batched paged KV-cache gather eliminated DRAM memory bandwidth waste.
       </p>
       <div class="metrics-strip">
-        <span class="metric-pill">c=1 throughput: 13.6 tok/s</span>
-        <span class="metric-pill">c=4 throughput: 27.0 tok/s (+130.8%)</span>
-        <span class="metric-pill">energy: 2.04 Tok/Joule</span>
-        <span class="metric-pill">dram power: 13.2 W</span>
+        <span class="metric-pill">c=1 throughput: 8.5 tok/s</span>
+        <span class="metric-pill">c=4 throughput: 26.4 tok/s (3.1×)</span>
+        <span class="metric-pill">energy: 1.77 Tok/Joule (GPU power)</span>
+        <span class="metric-pill">gpu power: 14.9 W</span>
         <span class="metric-pill">gpu: RTX 3050 6GB Laptop</span>
       </div>
     </header>
 
     <div class="prose">
+      <blockquote>
+        <p><strong>Update (2026-11-05).</strong> The original results in section 3 were measured on mini-infer v0.2.1, which had two bugs I have since fixed:</p>
+        <ul>
+          <li>Prefix-cache hits produced wrong output (fixed in v0.2.8).</li>
+          <li>Cached prompts were never evicted, so a long-running server eventually ran out of KV memory and dropped requests (fixed in v0.2.9).</li>
+        </ul>
+        <p>The original 12-request runs were too short to hit the second bug. I re-measured v0.2.9 with 24 requests per level, ~286-token prompts and 128 output tokens. Results are in section 3:</p>
+        <ul>
+          <li>Throughput: <strong>8.5 / 15.3 / 26.4 tok/s</strong> at 1 / 2 / 4 users, 24/24 requests OK.</li>
+          <li>Energy: <strong>1.77 tokens per joule</strong> at 4 users (GPU power only).</li>
+        </ul>
+        <p>Two corrections:</p>
+        <ul>
+          <li><strong>Bandwidth:</strong> the 6 GB RTX 3050 laptop GPU has a 96-bit memory bus, so it peaks at 168 GB/s, not 192. My unit runs its memory at 10.8 Gbps, about 130 GB/s (121.5 GB/s measured with a copy benchmark).</li>
+          <li><strong>Energy:</strong> I removed an unsupported comparison with cloud instances.</li>
+        </ul>
+      </blockquote>
       <h2>1. The Fundamental Memory-Bandwidth Bottleneck</h2>
       <p>
         Autoregressive LLM generation is overwhelmingly <strong>memory-bandwidth bound</strong>. During single-token decoding, every forward pass reads the model's entire weight matrix from GPU DRAM into on-chip cache just to emit a single token:
@@ -504,9 +521,9 @@
         $$\text{Arithmetic Intensity} \approx \frac{2 \times P \text{ FLOPs}}{2 \times P \text{ Bytes}} \approx 1 \text{ FLOP / Byte}$$
       </blockquote>
       <p>
-        On an entry-level consumer laptop GPU like the <strong>NVIDIA GeForce RTX 3050 (192 GB/s memory bandwidth)</strong>, theoretical peak decode speed for a 0.5B model in <code>bfloat16</code> (1 GB of weights) is strictly capped by how fast weights stream from DRAM:
+        On an entry-level consumer laptop GPU like the <strong>NVIDIA GeForce RTX 3050 6GB Laptop (96-bit GDDR6: at most 168 GB/s; about 130 GB/s on my unit)</strong>, theoretical peak decode speed for a 0.5B model in <code>bfloat16</code> (1 GB of weights) is strictly capped by how fast weights stream from DRAM:
       </p>
-      <pre><code>Theoretical Max Decode = 192 GB/s / 1.0 GB ≈ 192 tokens / second (unbatched upper limit)</code></pre>
+      <pre><code>Theoretical Max Decode ≈ 130-168 GB/s / 1.0 GB ≈ 130-168 tokens / second (unbatched upper limit)</code></pre>
       <p>
         However, in naive Python serving runtimes, request concurrency often tanks generation speed rather than accelerating it. Why?
       </p>
@@ -533,8 +550,9 @@ logits = model(tokens_batch, k_all, v_all, mask)</code></pre>
 
       <h2>3. Empirical Load Testing with servebench</h2>
       <p>
-        We load-tested the engine using <a href="https://github.com/Prajwal7-2002/servebench">servebench 1.1.2</a> on an RTX 3050 6GB Laptop GPU running <code>Qwen2.5-0.5B-Instruct</code> across concurrency levels <code>c = 1, 2, 4</code>:
+        We load-tested the engine using <a href="https://github.com/Prajwal7-2002/servebench">servebench 1.1.2</a> on an RTX 3050 6GB Laptop GPU running <code>Qwen2.5-0.5B-Instruct</code> across concurrency levels <code>c = 1, 2, 4</code>.
       </p>
+      <h3>Original run on mini-infer v0.2.1 (2026-10-23, 12 requests per level)</h3>
 
       <table>
         <thead>
@@ -587,10 +605,37 @@ logits = model(tokens_batch, k_all, v_all, mask)</code></pre>
         </tbody>
       </table>
 
+      <h3>Re-measured on mini-infer v0.2.9 (2026-11-05)</h3>
+      <p>
+        Same laptop and model, with servebench 1.1.3: 24 requests per level, ~286-token prompts, 128 output tokens:
+      </p>
+      <table>
+        <thead>
+          <tr>
+            <th>Concurrency</th>
+            <th>OK / Fail</th>
+            <th>Throughput</th>
+            <th>TTFT p50</th>
+            <th>TPOT p50</th>
+            <th>Power Avg</th>
+            <th>Tok/Joule</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr><td><strong>c = 1</strong></td><td>24 / 0</td><td>8.5 tok/s</td><td>118 ms</td><td>117 ms</td><td>14.1 W</td><td>0.60</td></tr>
+          <tr><td><strong>c = 2</strong></td><td>24 / 0</td><td>15.3 tok/s</td><td>255 ms</td><td>146 ms</td><td>14.2 W</td><td>1.07</td></tr>
+          <tr><td><strong>c = 4</strong></td><td>24 / 0</td><td><strong>26.4 tok/s</strong></td><td>756 ms</td><td>151 ms</td><td>14.9 W</td><td><strong>1.77</strong></td></tr>
+        </tbody>
+      </table>
+      <p>
+        Single-user speed is lower than in the original run, and varies from run to run (an earlier run that day measured 14.9 tok/s at c=1). mini-infer is <strong>CPU-bound</strong>: the GPU is only ~32% busy and clocks down to ~810 MHz. Each decode step launches many small PyTorch operations from Python, so CPU speed and the laptop's power state decide the result. For comparison, Ollama (llama.cpp) serves the 4-bit version of this model at ~190 tok/s on the same GPU.
+      </p>
+
       <h2>4. Key Systems Takeaways</h2>
       <ul>
-        <li><strong>Unified Batched Gather Doubled Concurrency Speed</strong>: Concurrency 4 throughput leaped from 11.7 tok/s to <strong>27.0 tok/s</strong> (+130.8%) because weights are streamed from DRAM once per step.</li>
-        <li><strong>Extreme Energy Scaling (2.04 Tokens / Joule)</strong>: Generating 27 tok/s while drawing only 13.2 Watts makes consumer laptop inference over 2× more energy-efficient than idle cloud instances.</li>
+        <li><strong>Unified Batched Gather Pays Off Under Load</strong>: 4 concurrent users get <strong>3.1× the throughput</strong> of 1 user (8.5 → 26.4 tok/s), while each user's TPOT rises only 29%, because weights are streamed from DRAM once per step instead of once per sequence.</li>
+        <li><strong>Energy Scales With Batching (1.77 Tokens / Joule)</strong>: GPU power stays near 14-15 W from 1 to 4 users, so tokens per joule rise almost 3× with batching (GPU power only; the rest of the laptop is not counted).</li>
+        <li><strong>The Next Bottleneck Is Python, Not DRAM</strong>: at ~32% GPU utilisation, the gap to the 130-168 tok/s bandwidth ceiling is dispatch overhead. Fusing the per-layer paged-KV gathers (or CUDA graphs) is the next step.</li>
         <li><strong>Automated Auto-Tuning</strong>: Using <code>servebench tune</code>, developers can detect saturation knees automatically and prevent latency degradation before deploying to production.</li>
       </ul>
     </div>
