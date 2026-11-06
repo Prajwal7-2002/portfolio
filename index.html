@@ -1244,9 +1244,9 @@
 <div class="telemetry-topbar">
   <div class="telemetry-topbar-inner">
     <div class="telemetry-topbar-left">
-      <span class="telemetry-item"><span class="telemetry-dot"></span> ⚡ SYSTEMS: 5 Flagship Engines (mini-infer • servebench • sched-sim • quantbench • infersize)</span>
+      <span class="telemetry-item"><span class="telemetry-dot"></span> ⚡ SYSTEMS: 6 Flagship Engines (mini-infer • servebench • sched-sim • quantbench • infersize • runsonmine)</span>
       <span class="telemetry-item">🛡️ SIGSTORE: Cryptographically Attested</span>
-      <span class="telemetry-item">🧪 TESTS: 329/329 Pass (100% CI across 5 Flagships)</span>
+      <span class="telemetry-item">🧪 TESTS: 356/356 Pass (100% CI across 6 Flagships)</span>
     </div>
     <div class="telemetry-topbar-right">
       <a href="https://github.com/Prajwal7-2002" target="_blank" rel="noopener noreferrer">GitHub ↗</a>
@@ -1330,7 +1330,7 @@
     <!-- LEFT: INTERACTIVE SYSTEMS SIMULATOR (Style A) -->
     <div class="bento-tile">
       <div class="tile-header">
-        <span class="tile-label" id="sim-main-title">⚡ RUNTIME SIMULATOR // mini-infer v0.2.4</span>
+        <span class="tile-label" id="sim-main-title">⚡ RUNTIME SIMULATOR // mini-infer v0.4.0</span>
         <span class="tile-badge">INTERACTIVE WORKSTATION</span>
       </div>
 
@@ -1354,19 +1354,19 @@
         <div class="sim-gauges">
           <div class="sim-gauge">
             <span class="sim-gauge-label">Throughput</span>
-            <span class="sim-gauge-val highlight" id="gauge-toks">27.0 tok/s</span>
+            <span class="sim-gauge-val highlight" id="gauge-toks">26.4 tok/s</span>
           </div>
           <div class="sim-gauge">
             <span class="sim-gauge-label">TTFT Latency</span>
-            <span class="sim-gauge-val" id="gauge-ttft">48.2 ms</span>
+            <span class="sim-gauge-val" id="gauge-ttft">756 ms</span>
           </div>
           <div class="sim-gauge">
             <span class="sim-gauge-label">Inter-Token</span>
-            <span class="sim-gauge-val" id="gauge-itl">37.0 ms</span>
+            <span class="sim-gauge-val" id="gauge-itl">151 ms</span>
           </div>
           <div class="sim-gauge">
             <span class="sim-gauge-label">VRAM Peak</span>
-            <span class="sim-gauge-val" id="gauge-vram">1.82 GB</span>
+            <span class="sim-gauge-val" id="gauge-vram">1.50 GB</span>
           </div>
         </div>
 
@@ -1476,45 +1476,52 @@
           </thead>
           <tbody>
             <tr class="highlight-row">
-              <td>mini-infer v0.2.4</td>
-              <td>PagedAttention</td>
-              <td>27.0</td>
-              <td>1.82 GB</td>
-              <td><span class="provenance-pill">✓ Sigstore Verified</span></td>
+              <td>mini-infer v0.4.0</td>
+              <td>PagedAttention (PyTorch)</td>
+              <td>26.4</td>
+              <td>1.50 GB</td>
+              <td><span class="provenance-pill">✓ Educational Baseline</span></td>
             </tr>
             <tr class="highlight-row">
-              <td>quantbench v0.1.0</td>
+              <td>Ollama 0.35.1</td>
+              <td>4-bit GGUF (Optimized C++)</td>
+              <td>164.2</td>
+              <td>0.50 GB</td>
+              <td><span class="provenance-pill">✓ Production Binary</span></td>
+            </tr>
+            <tr class="highlight-row">
+              <td>quantbench v0.1.2</td>
               <td>INT4 Block (G=128)</td>
               <td>41.5</td>
               <td>0.94 GB</td>
               <td><span class="provenance-pill">✓ 3.5x Compressed</span></td>
             </tr>
             <tr>
-              <td>HF Transformers</td>
-              <td>Naive Eager</td>
-              <td>11.2</td>
-              <td>3.40 GB</td>
-              <td><span style="font-size: 0.7rem; color: var(--text-dim);">Fragmented</span></td>
+              <td>Roofline Calculator</td>
+              <td>Theoretical Model</td>
+              <td>444.0</td>
+              <td>0.50 GB</td>
+              <td><span class="provenance-pill-bad">⚠️ +170% Error (No Overhead)</span></td>
             </tr>
             <tr>
-              <td>vLLM (Standard)</td>
-              <td>Fixed Prealloc</td>
-              <td>OOM</td>
-              <td>&gt;5.5 GB</td>
-              <td><span class="provenance-pill-bad">❌ CUDA OOM</span></td>
-            </tr>
-            <tr>
-              <td>servebench v1.1.2</td>
-              <td>SSE Harness</td>
+              <td>servebench v1.2.0</td>
+              <td>Harness + Saturation Knee</td>
               <td>--</td>
               <td>&lt;50 MB</td>
               <td><span class="provenance-pill">✓ Sigstore Verified</span></td>
+            </tr>
+            <tr>
+              <td>RunsOnMine</td>
+              <td>Physical Validity Gate</td>
+              <td>112.0</td>
+              <td>T4 Cloud</td>
+              <td><span class="provenance-pill">✓ CC BY 4.0 Data</span></td>
             </tr>
           </tbody>
         </table>
 
         <div class="matrix-footer">
-          <strong>Key Systems Takeaway:</strong> On 6GB laptop GPU constraints, standard vLLM crashes during KV preallocation under concurrency, while naive PyTorch degrades to 11.2 tok/s. `mini-infer`'s dynamic paged block table achieves <strong>27.0 tok/s</strong>, and `quantbench` INT4 block packing cuts weight footprint to <strong>0.94 GB (3.5x compression)</strong> with zero CUDA OOMs.
+          <strong>Key Systems Takeaway:</strong> Theoretical roofline calculators estimate 444 tok/s on an RTX 3050 laptop, but real-world Ollama serving measures 164.2 tok/s due to memory clock states and engine overhead (tracked in <code>RunsOnMine</code>). Meanwhile, <code>mini-infer</code> implements continuous batching and Paged KV-cache in pure PyTorch (scaling from 8.5 to 26.4 tok/s at c=4), and <code>quantbench</code> INT4 block packing cuts weight footprint by 3.5× with zero-copy dequantization hooks.
         </div>
 
         <div style="background: var(--bg-subtle); border: 1px solid var(--border); border-radius: 6px; padding: 10px 12px; display: flex; align-items: center; justify-content: space-between; font-family: 'JetBrains Mono', monospace; font-size: 0.74rem;">
@@ -1543,24 +1550,24 @@
           <a href="https://github.com/Prajwal7-2002/mini-infer" target="_blank" rel="noopener noreferrer" class="flagship-title">
             <img src="./assets/logos/mini-infer.svg" alt="mini-infer logo" class="flagship-icon" />
             mini-infer
-            <span style="font-size: 0.8rem; color: var(--text-dim); font-family: 'JetBrains Mono', monospace;">v0.2.4</span>
+            <span style="font-size: 0.8rem; color: var(--text-dim); font-family: 'JetBrains Mono', monospace;">v0.4.0</span>
           </a>
           <span class="provenance-pill">PyPI · Sigstore</span>
         </div>
         <p class="flagship-desc">
-          High-performance, from-scratch <strong>continuous batching LLM inference runtime</strong> featuring Paged KV-Cache allocation, iteration-level scheduling, and raw Safetensors streaming deserialization.
+          Educational, from-scratch <strong>continuous batching LLM inference runtime</strong> in pure PyTorch featuring Paged KV-Cache allocation, iteration-level scheduling, and raw Safetensors streaming deserialization.
         </p>
         <ul class="flagship-features">
           <li><span>[Paging]</span> Zero-fragmentation virtual memory table mapping logical token blocks to physical GPU memory slots.</li>
           <li><span>[Batching]</span> Step-level continuous iteration merges new prompts with ongoing decodes dynamically.</li>
-          <li><span>[Loader]</span> Direct tensor streaming loader bypasses HuggingFace overhead for instant memory mapping.</li>
+          <li><span>[Eviction]</span> Prefix LRU cache eviction under memory pressure preventing OOM faults on long sequences.</li>
         </ul>
       </div>
 
       <div style="display: flex; flex-direction: column; gap: 12px;">
         <div class="flagship-stat-strip">
-          <span>Throughput: <span class="metric">27.0 tok/s</span></span>
-          <span>Tests: <span class="metric">42/42 Pass</span></span>
+          <span>c=4 Speed: <span class="metric">26.4 tok/s</span></span>
+          <span>Batch Scaling: <span class="metric">3.1x</span></span>
           <span>Target: <span class="metric">Qwen2.5 / SmolLM2</span></span>
         </div>
 
@@ -1587,7 +1594,7 @@
           <a href="https://github.com/Prajwal7-2002/servebench" target="_blank" rel="noopener noreferrer" class="flagship-title">
             <img src="./assets/logos/servebench.svg" alt="servebench logo" class="flagship-icon" />
             servebench
-            <span style="font-size: 0.8rem; color: var(--text-dim); font-family: 'JetBrains Mono', monospace;">v1.1.2</span>
+            <span style="font-size: 0.8rem; color: var(--text-dim); font-family: 'JetBrains Mono', monospace;">v1.2.0</span>
           </a>
           <span class="provenance-pill">PyPI · Sigstore</span>
         </div>
@@ -1604,8 +1611,8 @@
       <div style="display: flex; flex-direction: column; gap: 12px;">
         <div class="flagship-stat-strip">
           <span>Tests: <span class="metric">152/152 Pass</span></span>
-          <span>Telemetry: <span class="metric">Sub-millisecond</span></span>
-          <span>Footprint: <span class="metric">&lt;50 MB RAM</span></span>
+          <span>Peak MBU: <span class="metric">44.8% (RTX 3050)</span></span>
+          <span>Knee: <span class="metric">Ollama 4→8 Slots</span></span>
         </div>
 
         <div class="flagship-footer-row">
@@ -1631,12 +1638,12 @@
           <a href="https://github.com/Prajwal7-2002/sched-sim" target="_blank" rel="noopener noreferrer" class="flagship-title">
             <img src="./assets/logos/sched-sim.svg" alt="sched-sim logo" class="flagship-icon" />
             sched-sim
-            <span style="font-size: 0.8rem; color: var(--text-dim); font-family: 'JetBrains Mono', monospace;">v0.2.2</span>
+            <span style="font-size: 0.8rem; color: var(--text-dim); font-family: 'JetBrains Mono', monospace;">v0.2.3</span>
           </a>
           <span class="provenance-pill">PyPI · Discrete-Event</span>
         </div>
         <p class="flagship-desc">
-          High-fidelity <strong>discrete-event simulator for LLM serving schedulers</strong>. Evaluates Sarathi Chunked Prefill, Radix Prefix Caching, and PD Disaggregation on CPU with &lt;8% variance to real silicon.
+          High-fidelity <strong>discrete-event simulator for LLM serving schedulers</strong>. Evaluates Sarathi Chunked Prefill, Radix Prefix Caching, and PD Disaggregation on CPU, calibrated against out-of-sample real serving data.
         </p>
         <ul class="flagship-features">
           <li><span>[Roofline]</span> Analytical compute &amp; DRAM bandwidth latency physics calibrated with physical silicon data.</li>
@@ -1649,7 +1656,7 @@
         <div class="flagship-stat-strip">
           <span>Tests: <span class="metric">42/42 Pass</span></span>
           <span>Policies: <span class="metric">6 Schedulers</span></span>
-          <span>Silicon Error: <span class="metric">&lt;8% vs RTX 3050</span></span>
+          <span>Out-of-Sample: <span class="metric">±12% TPOT (Ollama)</span></span>
         </div>
 
         <div class="flagship-footer-row">
@@ -1675,7 +1682,7 @@
           <a href="https://github.com/Prajwal7-2002/quantbench" target="_blank" rel="noopener noreferrer" class="flagship-title">
             <img src="./assets/logos/quantbench.svg" alt="quantbench logo" class="flagship-icon" />
             quantbench
-            <span style="font-size: 0.8rem; color: var(--text-dim); font-family: 'JetBrains Mono', monospace;">v0.1.0</span>
+            <span style="font-size: 0.8rem; color: var(--text-dim); font-family: 'JetBrains Mono', monospace;">v0.1.2</span>
           </a>
           <span class="provenance-pill">PyPI · Pareto Engine</span>
         </div>
@@ -1723,7 +1730,7 @@
           <a href="https://github.com/Prajwal7-2002/infersize" target="_blank" rel="noopener noreferrer" class="flagship-title">
             <img src="./assets/logos/infersize.svg" alt="infersize logo" class="flagship-icon" />
             infersize
-            <span style="font-size: 0.8rem; color: var(--text-dim); font-family: 'JetBrains Mono', monospace;">v0.3.1</span>
+            <span style="font-size: 0.8rem; color: var(--text-dim); font-family: 'JetBrains Mono', monospace;">v0.4.0</span>
           </a>
           <span class="provenance-pill">PyPI · Capacity CAD</span>
         </div>
@@ -1731,7 +1738,7 @@
           First-principles <strong>analytical performance modeling, multi-GPU comparison matrix &amp; cloud TCO sizer</strong>. Predicts exact parameter footprints, memory-bandwidth decode throughput, and $/1M tokens before downloading weights or renting clusters.
         </p>
         <ul class="flagship-features">
-          <li><span>[VRAM Physics]</span> Exact SwiGLU 3x parameter accounting, GQA sub-byte KV scaling, MoE active routing, and FlashAttention linear buffer modeling.</li>
+          <li><span>[VRAM Physics]</span> Exact SwiGLU 3x parameter accounting, DeepSeek-V3 MLA (98.2% KV cache reduction), GQA scaling, and MoE active routing.</li>
           <li><span>[Hardware Matrix]</span> Multi-accelerator side-by-side evaluation, speculative decoding speedup sizer, and local physical zero-OOM verification.</li>
           <li><span>[Cloud Economics]</span> Dynamic Hugging Face Hub ingestion, roofline decode throughput, $/1M tokens, and interactive Streamlit Web Studio.</li>
         </ul>
@@ -1739,8 +1746,8 @@
 
       <div style="display: flex; flex-direction: column; gap: 12px;">
         <div class="flagship-stat-strip">
-          <span>Tests: <span class="metric">46/46 Pass (95%)</span></span>
-          <span>Runtime: <span class="metric">&lt; 10ms (CPU)</span></span>
+          <span>Tests: <span class="metric">49/49 Pass (100% CI)</span></span>
+          <span>MLA: <span class="metric">DeepSeek-V3</span></span>
           <span>Compute: <span class="metric">Zero GPU Required</span></span>
         </div>
 
@@ -1761,6 +1768,50 @@
           </div>
           <button class="copy-btn" onclick="copySnippet('pip install infersize', this)">
             $ pip install infersize
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- FLAGSHIP 6: RunsOnMine -->
+    <div class="flagship-card">
+      <div class="flagship-top">
+        <div class="flagship-header-row">
+          <a href="https://github.com/Prajwal7-2002/runsonmine" target="_blank" rel="noopener noreferrer" class="flagship-title">
+            <img src="./assets/logos/runsonmine.svg" alt="RunsOnMine logo" class="flagship-icon" />
+            RunsOnMine
+            <span style="font-size: 0.8rem; color: var(--text-dim); font-family: 'JetBrains Mono', monospace;">v0.3.0</span>
+          </a>
+          <span class="provenance-pill">CC BY 4.0 · Open Data</span>
+        </div>
+        <p class="flagship-desc">
+          Crowdsourced <strong>local AI hardware benchmark database &amp; physical validity gate</strong>. Collects measured speeds from community laptops, desktops, and Macs so developers see real tok/s before downloading models.
+        </p>
+        <ul class="flagship-features">
+          <li><span>[Real vs Est]</span> Exposes the 444 vs 164 tok/s gap on RTX 3050 between theoretical paper models and real Ollama runs.</li>
+          <li><span>[Physics Gate]</span> Automated CI verification: rejects impossible submissions where speed exceeds memory bandwidth / model size.</li>
+          <li><span>[Zero Leak]</span> Submissions via <code>uvx servebench submit</code> collect zero usernames, IPs, prompts, or model outputs.</li>
+        </ul>
+      </div>
+
+      <div style="display: flex; flex-direction: column; gap: 12px;">
+        <div class="flagship-stat-strip">
+          <span>RTX 3050: <span class="metric">164 tok/s (Real)</span></span>
+          <span>Kaggle T4: <span class="metric">112 tok/s</span></span>
+          <span>Tests: <span class="metric">24/24 Pass</span></span>
+        </div>
+
+        <div class="flagship-footer-row">
+          <div class="flagship-links">
+            <a href="https://github.com/Prajwal7-2002/runsonmine" target="_blank" rel="noopener noreferrer" class="flagship-link">
+              GitHub ↗
+            </a>
+            <a href="https://prajwal7-2002.github.io/runsonmine/" target="_blank" rel="noopener noreferrer" class="flagship-link">
+              Live Database ↗
+            </a>
+          </div>
+          <button class="copy-btn" onclick="copySnippet('uvx servebench submit --model qwen2.5:0.5b', this)">
+            $ uvx servebench submit
           </button>
         </div>
       </div>
@@ -1994,10 +2045,10 @@
 <script>
   // SIMULATOR LOGIC (Style A)
   const simData = {
-    1: { toks: "12.4 tok/s", ttft: "28.5 ms", itl: "26.2 ms", vram: "1.25 GB", prefix: 4, active: 4, free: 24, label: "8 / 32 ALLOCATED (25%)", cmd: "pip install mini-infer && python -m mini_infer.cli --model qwen-1.5b --concurrency 1" },
-    2: { toks: "19.8 tok/s", ttft: "36.2 ms", itl: "31.0 ms", vram: "1.48 GB", prefix: 6, active: 10, free: 16, label: "16 / 32 ALLOCATED (50%)", cmd: "pip install mini-infer && python -m mini_infer.cli --model qwen-1.5b --concurrency 2" },
-    4: { toks: "27.0 tok/s", ttft: "48.2 ms", itl: "37.0 ms", vram: "1.82 GB", prefix: 8, active: 16, free: 8, label: "24 / 32 ALLOCATED (75%) [OPTIMAL]", cmd: "pip install mini-infer && python -m mini_infer.cli --model qwen-1.5b --concurrency 4" },
-    8: { toks: "29.4 tok/s", ttft: "76.8 ms", itl: "49.5 ms", vram: "2.40 GB", prefix: 8, active: 22, free: 2, label: "30 / 32 ALLOCATED (94%) [HEAVY BURST]", cmd: "pip install mini-infer && python -m mini_infer.cli --model qwen-1.5b --concurrency 8" }
+    1: { toks: "8.5 tok/s", ttft: "118 ms", itl: "117 ms", vram: "1.20 GB", prefix: 4, active: 4, free: 24, label: "8 / 32 ALLOCATED (25%)", cmd: "pip install mini-infer && python -m mini_infer.cli --model qwen-0.5b --concurrency 1" },
+    2: { toks: "15.3 tok/s", ttft: "255 ms", itl: "146 ms", vram: "1.35 GB", prefix: 6, active: 10, free: 16, label: "16 / 32 ALLOCATED (50%)", cmd: "pip install mini-infer && python -m mini_infer.cli --model qwen-0.5b --concurrency 2" },
+    4: { toks: "26.4 tok/s", ttft: "756 ms", itl: "151 ms", vram: "1.50 GB", prefix: 8, active: 16, free: 8, label: "24 / 32 ALLOCATED (75%) [MEASURED PEAK]", cmd: "pip install mini-infer && python -m mini_infer.cli --model qwen-0.5b --concurrency 4" },
+    8: { toks: "27.8 tok/s", ttft: "1420 ms", itl: "168 ms", vram: "1.75 GB", prefix: 8, active: 22, free: 2, label: "30 / 32 ALLOCATED (94%) [HEAVY BURST]", cmd: "pip install mini-infer && python -m mini_infer.cli --model qwen-0.5b --concurrency 8" }
   };
 
   function setSimConcurrency(c) {
@@ -2050,7 +2101,7 @@
     document.getElementById('tab-quant').classList.toggle('active', !isPaged);
     document.getElementById('sim-view-paged').style.display = isPaged ? 'flex' : 'none';
     document.getElementById('sim-view-quant').style.display = isPaged ? 'none' : 'flex';
-    document.getElementById('sim-main-title').textContent = isPaged ? '⚡ RUNTIME SIMULATOR // mini-infer v0.2.4' : '🧮 PRECISION WORKSTATION // quantbench v0.1.0';
+    document.getElementById('sim-main-title').textContent = isPaged ? '⚡ RUNTIME SIMULATOR // mini-infer v0.4.0' : '🧮 PRECISION WORKSTATION // quantbench v0.1.2';
   }
 
   // Quantization Schemes Data
