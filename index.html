@@ -1244,12 +1244,14 @@
 <div class="telemetry-topbar">
   <div class="telemetry-topbar-inner">
     <div class="telemetry-topbar-left">
-      <span class="telemetry-item"><span class="telemetry-dot"></span> ⚡ SYSTEMS: 6 Flagship Engines (mini-infer • servebench • sched-sim • quantbench • infersize • runsonmine)</span>
+      <span class="telemetry-item"><span class="telemetry-dot"></span> ⚡ SYSTEMS: 7 Flagship Engines (mini-infer • servebench • sched-sim • quantbench • infersize • token-atlas • runsonmine)</span>
       <span class="telemetry-item">🛡️ SIGSTORE: Cryptographically Attested</span>
-      <span class="telemetry-item">🧪 TESTS: 356/356 Pass (100% CI across 6 Flagships)</span>
+      <span class="telemetry-item">🧪 TESTS: 477/477 Pass (100% CI across 8 Repositories)</span>
     </div>
     <div class="telemetry-topbar-right">
       <a href="https://github.com/Prajwal7-2002" target="_blank" rel="noopener noreferrer">GitHub ↗</a>
+      <span>·</span>
+      <a href="https://huggingface.co/prajwalpujari16" target="_blank" rel="noopener noreferrer">Hugging Face ↗</a>
       <span>·</span>
       <a href="https://pypi.org/user/Prajwal2002PI/" target="_blank" rel="noopener noreferrer">PyPI Profile ↗</a>
       <span>·</span>
@@ -1579,6 +1581,9 @@
             <a href="https://pypi.org/project/mini-infer/" target="_blank" rel="noopener noreferrer" class="flagship-link">
               PyPI Package ↗
             </a>
+            <a href="https://huggingface.co/spaces/prajwalpujari16/mini-infer" target="_blank" rel="noopener noreferrer" class="flagship-link" style="color: var(--accent); font-weight: 600;">
+              Live Studio 🚀
+            </a>
           </div>
           <button class="copy-btn" onclick="copySnippet('pip install mini-infer', this)">
             $ pip install mini-infer
@@ -1667,6 +1672,9 @@
             <a href="https://pypi.org/project/sched-sim/" target="_blank" rel="noopener noreferrer" class="flagship-link">
               PyPI Package ↗
             </a>
+            <a href="https://huggingface.co/spaces/prajwalpujari16/sched-sim" target="_blank" rel="noopener noreferrer" class="flagship-link" style="color: var(--accent); font-weight: 600;">
+              Live Studio ⏱️
+            </a>
           </div>
           <button class="copy-btn" onclick="copySnippet('pip install sched-sim', this)">
             $ pip install sched-sim
@@ -1712,7 +1720,10 @@
               PyPI Package ↗
             </a>
             <a href="https://prajwal7-2002.github.io/quantbench/" target="_blank" rel="noopener noreferrer" class="flagship-link">
-              Documentation ↗
+              Docs ↗
+            </a>
+            <a href="https://huggingface.co/spaces/prajwalpujari16/quantbench" target="_blank" rel="noopener noreferrer" class="flagship-link" style="color: var(--accent); font-weight: 600;">
+              Live Studio 🔬
             </a>
           </div>
           <button class="copy-btn" onclick="copySnippet('pip install quantbench-engine', this)">
@@ -1762,7 +1773,7 @@
             <a href="https://prajwal7-2002.github.io/infersize/" target="_blank" rel="noopener noreferrer" class="flagship-link">
               Documentation ↗
             </a>
-            <a href="https://infersize.streamlit.app/" target="_blank" rel="noopener noreferrer" class="flagship-link" style="color: var(--accent); font-weight: 600;">
+            <a href="https://huggingface.co/spaces/prajwalpujari16/infersize" target="_blank" rel="noopener noreferrer" class="flagship-link" style="color: var(--accent); font-weight: 600;">
               Live Studio ⚡
             </a>
           </div>
@@ -1806,12 +1817,62 @@
             <a href="https://github.com/Prajwal7-2002/runsonmine" target="_blank" rel="noopener noreferrer" class="flagship-link">
               GitHub ↗
             </a>
+            <a href="https://huggingface.co/spaces/prajwalpujari16/runsonmine" target="_blank" rel="noopener noreferrer" class="flagship-link" style="color: var(--accent); font-weight: 600;">
+              Live Studio ⚡
+            </a>
             <a href="https://prajwal7-2002.github.io/runsonmine/" target="_blank" rel="noopener noreferrer" class="flagship-link">
               Live Database ↗
             </a>
           </div>
           <button class="copy-btn" onclick="copySnippet('uvx servebench submit --model qwen2.5:0.5b', this)">
             $ uvx servebench submit
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- FLAGSHIP 7: token-atlas -->
+    <div class="flagship-card">
+      <div class="flagship-top">
+        <div class="flagship-header-row">
+          <a href="https://github.com/Prajwal7-2002/token-atlas" target="_blank" rel="noopener noreferrer" class="flagship-title">
+            <img src="./assets/logos/token-atlas.svg" alt="token-atlas logo" class="flagship-icon" onerror="this.style.display='none'" />
+            token-atlas
+            <span style="font-size: 0.8rem; color: var(--text-dim); font-family: 'JetBrains Mono', monospace;">v0.1.0</span>
+          </a>
+          <span class="provenance-pill">PyPI · Multilingual CAD</span>
+        </div>
+        <p class="flagship-desc">
+          Multilingual <strong>token inflation tax visualizer &amp; cost calculator</strong> across 52 world languages and 6 foundation tokenizers. Exposes the 2.5× to 9.2× token penalty paid by non-English prompt traffic.
+        </p>
+        <ul class="flagship-features">
+          <li><span>[Tax Matrix]</span> Fertility ratio benchmarking across FLORES-200 parallel evaluation sentences.</li>
+          <li><span>[Multi-Tokenizer]</span> Compares GPT-4o (o200k), LLaMA-3 (tiktoken), Claude, Qwen2.5, DeepSeek, and Gemma.</li>
+          <li><span>[Cost Estimator]</span> Translates token inflation directly into real enterprise inference $/1M tokens financial waste.</li>
+        </ul>
+      </div>
+
+      <div style="display: flex; flex-direction: column; gap: 12px;">
+        <div class="flagship-stat-strip">
+          <span>Languages: <span class="metric">52 Analyzed</span></span>
+          <span>Tokenizers: <span class="metric">6 Families</span></span>
+          <span>Tests: <span class="metric">24/24 Pass (100%)</span></span>
+        </div>
+
+        <div class="flagship-footer-row">
+          <div class="flagship-links">
+            <a href="https://github.com/Prajwal7-2002/token-atlas" target="_blank" rel="noopener noreferrer" class="flagship-link">
+              GitHub ↗
+            </a>
+            <a href="https://pypi.org/project/token-atlas/" target="_blank" rel="noopener noreferrer" class="flagship-link">
+              PyPI Package ↗
+            </a>
+            <a href="https://huggingface.co/spaces/prajwalpujari16/token-atlas" target="_blank" rel="noopener noreferrer" class="flagship-link" style="color: var(--accent); font-weight: 600;">
+              Live Studio 🌐
+            </a>
+          </div>
+          <button class="copy-btn" onclick="copySnippet('pip install token-atlas', this)">
+            $ pip install token-atlas
           </button>
         </div>
       </div>
