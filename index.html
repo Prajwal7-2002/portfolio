@@ -1244,9 +1244,9 @@
 <div class="telemetry-topbar">
   <div class="telemetry-topbar-inner">
     <div class="telemetry-topbar-left">
-      <span class="telemetry-item"><span class="telemetry-dot"></span> ⚡ SYSTEMS: 7 Flagship Engines (mini-infer • servebench • sched-sim • quantbench • infersize • token-atlas • runsonmine)</span>
+      <span class="telemetry-item"><span class="telemetry-dot"></span> ⚡ SYSTEMS: 8 Flagship Engines (streamspec • mini-infer • servebench • sched-sim • quantbench • infersize • token-atlas • runsonmine)</span>
       <span class="telemetry-item">🛡️ SIGSTORE: Cryptographically Attested</span>
-      <span class="telemetry-item">🧪 TESTS: 494/494 Pass (100% CI across 8 Repositories)</span>
+      <span class="telemetry-item">🧪 TESTS: 517/517 Pass (100% CI across 9 Repositories)</span>
     </div>
     <div class="telemetry-topbar-right">
       <a href="https://github.com/Prajwal7-2002" target="_blank" rel="noopener noreferrer">GitHub ↗</a>
@@ -1545,7 +1545,54 @@
   <!-- FLAGSHIPS GRID (Style B) -->
   <section class="flagships-grid-quad">
 
-    <!-- FLAGSHIP 1: mini-infer -->
+    <!-- FLAGSHIP 1: streamspec -->
+    <div class="flagship-card">
+      <div class="flagship-top">
+        <div class="flagship-header-row">
+          <a href="https://github.com/Prajwal7-2002/streamspec" target="_blank" rel="noopener noreferrer" class="flagship-title">
+            <img src="./assets/logos/streamspec.svg" alt="streamspec logo" class="flagship-icon" onerror="this.style.display='none'" />
+            streamspec
+            <span style="font-size: 0.8rem; color: var(--text-dim); font-family: 'JetBrains Mono', monospace;">v1.1.0</span>
+          </a>
+          <span class="provenance-pill">AGPL-3.0 · Speculative Streaming</span>
+        </div>
+        <p class="flagship-desc">
+          Asynchronous <strong>speculative layer-streaming runtime</strong> enabling 70B &amp; DeepSeek-R1 inference on consumer VRAM (8–16 GB). Eliminates single-token disk thrashing via batched GEMM sweeps.
+        </p>
+        <ul class="flagship-features">
+          <li><span>[Chunk Sweeps]</span> In-memory 0.5B draft model bursts K candidate tokens; 70B target streams layers once in GEMM.</li>
+          <li><span>[16x MLA Compression]</span> Multi-Head Latent Attention compresses KV-cache by 16x without precision loss.</li>
+          <li><span>[Leviathan Verification]</span> Exact rejection sampling guarantees 100% target distribution equivalence (0 reasoning loss).</li>
+        </ul>
+      </div>
+
+      <div style="display: flex; flex-direction: column; gap: 12px;">
+        <div class="flagship-stat-strip">
+          <span>I/O Speedup: <span class="metric">10x–15x</span></span>
+          <span>KV Reduction: <span class="metric">-93.7% (MLA)</span></span>
+          <span>CI/CD: <span class="metric">100% Pass (Py3.10-3.12)</span></span>
+        </div>
+
+        <div class="flagship-footer-row">
+          <div class="flagship-links">
+            <a href="https://github.com/Prajwal7-2002/streamspec" target="_blank" rel="noopener noreferrer" class="flagship-link">
+              GitHub ↗
+            </a>
+            <a href="https://colab.research.google.com/github/Prajwal7-2002/streamspec/blob/main/notebooks/streamspec_70b_benchmark.ipynb" target="_blank" rel="noopener noreferrer" class="flagship-link" style="color: var(--accent); font-weight: 600;">
+              Google Colab ↗
+            </a>
+            <a href="https://github.com/Prajwal7-2002/streamspec/blob/main/SPECIFICATION.md" target="_blank" rel="noopener noreferrer" class="flagship-link">
+              Architecture Spec ↗
+            </a>
+          </div>
+          <button class="copy-btn" onclick="copySnippet('git clone https://github.com/Prajwal7-2002/streamspec.git', this)">
+            $ git clone streamspec
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- FLAGSHIP 2: mini-infer -->
     <div class="flagship-card">
       <div class="flagship-top">
         <div class="flagship-header-row">
@@ -1838,25 +1885,25 @@
           <a href="https://github.com/Prajwal7-2002/token-atlas" target="_blank" rel="noopener noreferrer" class="flagship-title">
             <img src="./assets/logos/token-atlas.svg" alt="token-atlas logo" class="flagship-icon" onerror="this.style.display='none'" />
             token-atlas
-            <span style="font-size: 0.8rem; color: var(--text-dim); font-family: 'JetBrains Mono', monospace;">v0.1.0</span>
+            <span style="font-size: 0.8rem; color: var(--text-dim); font-family: 'JetBrains Mono', monospace;">v0.3.0</span>
           </a>
           <span class="provenance-pill">PyPI · Multilingual CAD</span>
         </div>
         <p class="flagship-desc">
-          Multilingual <strong>token inflation tax visualizer &amp; cost calculator</strong> across 52 world languages and 6 foundation tokenizers. Exposes the 2.5× to 9.2× token penalty paid by non-English prompt traffic.
+          Universal multilingual <strong>tokenizer efficiency benchmark &amp; global linguistic inflation atlas</strong>. Analyzes 52 languages across 13 frontier tokenizers, multi-domain benchmarks (Code, Indentation, Tool-Calling Schemas), cost router, and prompt minifier.
         </p>
         <ul class="flagship-features">
-          <li><span>[Tax Matrix]</span> Fertility ratio benchmarking across FLORES-200 parallel evaluation sentences.</li>
-          <li><span>[Multi-Tokenizer]</span> Compares GPT-4o (o200k), LLaMA-3 (tiktoken), Claude, Qwen2.5, DeepSeek, and Gemma.</li>
-          <li><span>[Cost Estimator]</span> Translates token inflation directly into real enterprise inference $/1M tokens financial waste.</li>
+          <li><span>[13 Frontier Models]</span> Benchmarks DeepSeek-R1, Qwen2.5-Coder, Cohere Aya, Llama-3.2, Mistral Tekken, GPT-4o.</li>
+          <li><span>[Domain Taxes]</span> Measures 2.63× tool schema bloat and 1.16×–1.42× 4-space indentation tax.</li>
+          <li><span>[Router &amp; Minifier]</span> Computes true effective $/1M cost and losslessly compresses prompt whitespace and JSON schemas.</li>
         </ul>
       </div>
 
       <div style="display: flex; flex-direction: column; gap: 12px;">
         <div class="flagship-stat-strip">
           <span>Languages: <span class="metric">52 Analyzed</span></span>
-          <span>Tokenizers: <span class="metric">6 Families</span></span>
-          <span>Tests: <span class="metric">24/24 Pass (100%)</span></span>
+          <span>Tokenizers: <span class="metric">13 Models</span></span>
+          <span>Tests: <span class="metric">41/41 Pass (91% Cov)</span></span>
         </div>
 
         <div class="flagship-footer-row">
@@ -1864,15 +1911,15 @@
             <a href="https://github.com/Prajwal7-2002/token-atlas" target="_blank" rel="noopener noreferrer" class="flagship-link">
               GitHub ↗
             </a>
-            <a href="https://pypi.org/project/token-atlas/" target="_blank" rel="noopener noreferrer" class="flagship-link">
+            <a href="https://pypi.org/project/token-atlas-engine/" target="_blank" rel="noopener noreferrer" class="flagship-link">
               PyPI Package ↗
             </a>
-            <a href="https://huggingface.co/spaces/prajwalpujari16/token-atlas" target="_blank" rel="noopener noreferrer" class="flagship-link" style="color: var(--accent); font-weight: 600;">
+            <a href="https://prajwal7-2002.github.io/token-atlas/" target="_blank" rel="noopener noreferrer" class="flagship-link" style="color: var(--accent); font-weight: 600;">
               Live Studio 🌐
             </a>
           </div>
-          <button class="copy-btn" onclick="copySnippet('pip install token-atlas', this)">
-            $ pip install token-atlas
+          <button class="copy-btn" onclick="copySnippet('pip install token-atlas-engine', this)">
+            $ pip install token-atlas-engine
           </button>
         </div>
       </div>
