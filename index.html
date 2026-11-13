@@ -1246,7 +1246,7 @@
     <div class="telemetry-topbar-left">
       <span class="telemetry-item"><span class="telemetry-dot"></span> ⚡ SYSTEMS: 8 Flagship Engines (streamspec • mini-infer • servebench • sched-sim • quantbench • infersize • token-atlas • runsonmine)</span>
       <span class="telemetry-item">🛡️ SIGSTORE: Cryptographically Attested</span>
-      <span class="telemetry-item">🧪 TESTS: 517/517 Pass (100% CI across 9 Repositories)</span>
+      <span class="telemetry-item">🧪 TESTS: 521/521 Pass (100% CI across 9 Repositories)</span>
     </div>
     <div class="telemetry-topbar-right">
       <a href="https://github.com/Prajwal7-2002" target="_blank" rel="noopener noreferrer">GitHub ↗</a>
@@ -1552,7 +1552,7 @@
           <a href="https://github.com/Prajwal7-2002/streamspec" target="_blank" rel="noopener noreferrer" class="flagship-title">
             <img src="./assets/logos/streamspec.svg" alt="streamspec logo" class="flagship-icon" onerror="this.style.display='none'" />
             streamspec
-            <span style="font-size: 0.8rem; color: var(--text-dim); font-family: 'JetBrains Mono', monospace;">v1.1.0</span>
+            <span style="font-size: 0.8rem; color: var(--text-dim); font-family: 'JetBrains Mono', monospace;">v1.2.0</span>
           </a>
           <span class="provenance-pill">AGPL-3.0 · Speculative Streaming</span>
         </div>
@@ -1560,17 +1560,17 @@
           Asynchronous <strong>speculative layer-streaming runtime</strong> enabling 70B &amp; DeepSeek-R1 inference on consumer VRAM (8–16 GB). Eliminates single-token disk thrashing via batched GEMM sweeps.
         </p>
         <ul class="flagship-features">
-          <li><span>[Chunk Sweeps]</span> In-memory 0.5B draft model bursts K candidate tokens; 70B target streams layers once in GEMM.</li>
-          <li><span>[16x MLA Compression]</span> Multi-Head Latent Attention compresses KV-cache by 16x without precision loss.</li>
-          <li><span>[Leviathan Verification]</span> Exact rejection sampling guarantees 100% target distribution equivalence (0 reasoning loss).</li>
+          <li><span>[Double-Buffer Prefetch]</span> Overlaps layer L+1 transfer with layer L execution with &gt;90% bus overlap efficiency.</li>
+          <li><span>[Zero-Extra-Sweep]</span> Concatenates trailing tokens to eliminate redundant target sync sweeps (O(1) disk passes/round).</li>
+          <li><span>[Adaptive Dynamic K]</span> Online EMA controller modulates candidate length K based on empirical token acceptance.</li>
         </ul>
       </div>
 
       <div style="display: flex; flex-direction: column; gap: 12px;">
         <div class="flagship-stat-strip">
           <span>I/O Speedup: <span class="metric">10x–15x</span></span>
-          <span>KV Reduction: <span class="metric">-93.7% (MLA)</span></span>
-          <span>CI/CD: <span class="metric">100% Pass (Py3.10-3.12)</span></span>
+          <span>Bus Overlap: <span class="metric">&gt;90% (Async)</span></span>
+          <span>CI/CD: <span class="metric">10/10 Pass (100%)</span></span>
         </div>
 
         <div class="flagship-footer-row">
