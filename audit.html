@@ -38,49 +38,50 @@
     var saved = localStorage.getItem("theme");
     if (saved) {
       document.documentElement.dataset.theme = saved;
-    } else if (window.matchMedia("(prefers-color-scheme: light)").matches) {
-      document.documentElement.dataset.theme = "light";
+    } else if (window.matchMedia("(prefers-color-scheme: dark)").matches) {
+      document.documentElement.dataset.theme = "dark";
     }
   } catch (e) {}
 </script>
 <style>
   :root {
-    --bg: #09090b;
-    --bg-subtle: #121215;
-    --card-bg: #141417;
-    --card-hover: #19191e;
-    --border: #27272a;
-    --border-hover: #3f3f46;
-    --border-bright: #52525b;
-    --text: #fafafa;
-    --text-muted: #a1a1aa;
-    --text-dim: #71717a;
-    --accent: #f59e0b;
-    --accent-tint: rgba(245, 158, 11, 0.08);
-    --accent-border: rgba(245, 158, 11, 0.25);
-    --telemetry-green: #10b981;
-    --telemetry-green-tint: rgba(16, 185, 129, 0.1);
-    --shadow: 0 4px 20px -2px rgba(0, 0, 0, 0.45);
-    --card-inset: inset 0 1px 0 rgba(255, 255, 255, 0.06);
+    --bg: #FAF8F5;
+    --bg-subtle: #F3EFE9;
+    --card-bg: #FFFFFF;
+    --card-hover: #F8F6F1;
+    --border: #E6E1D6;
+    --border-hover: #D8D2C5;
+    --border-bright: #858076;
+    --text: #1C1B18;
+    --text-muted: #57534D;
+    --text-dim: #858076;
+    --accent: #9A3412;
+    --accent-tint: #FBEFE9;
+    --accent-border: rgba(154, 52, 18, 0.25);
+    --telemetry-green: #15803D;
+    --telemetry-green-tint: rgba(21, 128, 61, 0.1);
+    --shadow: 0 1px 3px rgba(0, 0, 0, 0.04);
+    --card-inset: inset 0 1px 0 rgba(255, 255, 255, 0.8);
   }
 
-  [data-theme="light"] {
-    --bg: #f8fafc;
-    --bg-subtle: #f1f5f9;
-    --card-bg: #ffffff;
-    --card-hover: #f8fafc;
-    --border: #e2e8f0;
-    --border-hover: #cbd5e1;
-    --border-bright: #94a3b8;
-    --text: #0f172a;
-    --text-muted: #475569;
-    --text-dim: #64748b;
-    --accent: #d97706;
-    --accent-tint: rgba(217, 119, 6, 0.08);
-    --accent-border: rgba(217, 119, 6, 0.25);
-    --telemetry-green: #059669;
-    --telemetry-green-tint: rgba(5, 150, 105, 0.1);
-    --card-inset: inset 0 1px 0 rgba(0, 0, 0, 0.03);
+  [data-theme="dark"] {
+    --bg: #0D0E11;
+    --bg-subtle: #14151A;
+    --card-bg: #17181F;
+    --card-hover: #1E202A;
+    --border: #23252E;
+    --border-hover: #323542;
+    --border-bright: #6B7280;
+    --text: #F3F4F6;
+    --text-muted: #9CA3AF;
+    --text-dim: #6B7280;
+    --accent: #FB923C;
+    --accent-tint: rgba(251, 146, 60, 0.1);
+    --accent-border: rgba(251, 146, 60, 0.25);
+    --telemetry-green: #34D399;
+    --telemetry-green-tint: rgba(52, 211, 153, 0.1);
+    --shadow: 0 4px 20px rgba(0, 0, 0, 0.4);
+    --card-inset: inset 0 1px 0 rgba(255, 255, 255, 0.06);
   }
 
   * { box-sizing: border-box; margin: 0; padding: 0; }
@@ -446,10 +447,13 @@
 <div class="container">
   <header class="nav">
     <a href="/" class="nav-brand">
-      <span class="nav-prompt">PP://AUDIT</span>
-      <span>Prajwal Pujari · Systems Engineer</span>
+      <span>Prajwal Pujari</span>
+      <span style="color: var(--text-dim); font-size: 0.8rem; font-weight: normal;">/ Inference Audit</span>
     </a>
-    <a href="/" class="nav-back">← Return to Workstation</a>
+    <div style="display: flex; align-items: center; gap: 14px;">
+      <a href="/" class="nav-back">← Back to Overview</a>
+      <button onclick="toggleTheme()" id="theme-btn" style="background: var(--bg-subtle); border: 1px solid var(--border); padding: 5px 11px; border-radius: 6px; cursor: pointer; font-family: 'JetBrains Mono', monospace; font-size: 0.76rem; color: var(--text); font-weight: 500;">🌙 Dark</button>
+    </div>
   </header>
 
   <main>
@@ -599,9 +603,27 @@
 
   <footer class="footer">
     <p>Prajwal Pujari · AI/ML Systems &amp; High-Performance Inference Engineer</p>
-    <p style="margin-top: 6px; color: var(--text-dim);">Dharwad, Karnataka, India · <a href="mailto:prajwalpujari16@gmail.com" style="color: var(--accent); text-decoration: none;">prajwalpujari16@gmail.com</a></p>
+    <p style="margin-top: 6px; color: var(--text-dim);">Bengaluru, Karnataka, India · <a href="mailto:prajwalpujari16@gmail.com" style="color: var(--accent); text-decoration: none;">prajwalpujari16@gmail.com</a></p>
   </footer>
 </div>
+
+<script>
+  function toggleTheme() {
+    var isDark = document.documentElement.dataset.theme === 'dark';
+    var next = isDark ? 'light' : 'dark';
+    document.documentElement.dataset.theme = next;
+    localStorage.setItem('theme', next);
+    var btn = document.getElementById('theme-btn');
+    if (btn) btn.textContent = next === 'dark' ? '☀️ Light' : '🌙 Dark';
+  }
+  (function() {
+    var saved = localStorage.getItem('theme');
+    var isDark = saved === 'dark' || (!saved && window.matchMedia('(prefers-color-scheme: dark)').matches);
+    document.documentElement.dataset.theme = isDark ? 'dark' : 'light';
+    var btn = document.getElementById('theme-btn');
+    if (btn) btn.textContent = isDark ? '☀️ Light' : '🌙 Dark';
+  })();
+</script>
 
 </body>
 </html>

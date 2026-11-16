@@ -3,23 +3,23 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Prajwal Pujari // Inference Systems & Runtime Engineering Workstation</title>
-<meta name="description" content="Systems engineer building continuous-batching LLM runtimes, Paged KV-cache allocators, first-principles quantization engines (INT4/AWQ/GPTQ/2:4 sparsity), and capacity load-testing harnesses.">
+<title>Prajwal Pujari · AI/ML Systems &amp; LLM Inference Engineer</title>
+<meta name="description" content="Systems engineer building continuous-batching runtimes, Paged KV-cache allocators, and quantization engines for LLMs on consumer GPUs.">
 <link rel="canonical" href="https://prajwal-pujari.vercel.app">
-<meta name="theme-color" content="#09090b">
+<meta name="theme-color" content="#FAF8F5">
 
 <!-- OpenGraph / Social Metadata -->
 <meta property="og:type" content="website">
-<meta property="og:site_name" content="Prajwal Pujari // Inference Systems">
-<meta property="og:title" content="Prajwal Pujari // Inference Systems & Runtime Engineering Workstation">
-<meta property="og:description" content="Systems engineer building continuous-batching LLM runtimes, Paged KV-cache allocators, and capacity benchmarking harnesses for modern inference clusters.">
+<meta property="og:site_name" content="Prajwal Pujari · Inference Systems">
+<meta property="og:title" content="Prajwal Pujari · AI/ML Systems &amp; LLM Inference Engineer">
+<meta property="og:description" content="Systems engineer building continuous-batching runtimes, Paged KV-cache allocators, and sub-byte quantization engines for LLMs on consumer GPUs.">
 <meta property="og:url" content="https://prajwal-pujari.vercel.app">
 <meta property="og:locale" content="en_US">
 
 <!-- Twitter Card Metadata -->
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="Prajwal Pujari // Inference Systems & Runtime Engineering Workstation">
-<meta name="twitter:description" content="Building continuous-batching LLM runtimes, Paged KV-cache allocators, and capacity load-testing harnesses from first principles.">
+<meta name="twitter:title" content="Prajwal Pujari · AI/ML Systems &amp; LLM Inference Engineer">
+<meta name="twitter:description" content="Building continuous-batching runtimes, Paged KV-cache allocators, and quantization engines for LLMs on consumer GPUs.">
 
 <!-- Schema.org JSON-LD Structured Data -->
 <script type="application/ld+json">
@@ -45,7 +45,7 @@
         "PagedAttention",
         "KV-Cache Memory Management",
         "Model Quantization (AWQ, GPTQ, INT4)",
-        "GPU Roofline Benchmarking",
+        "GPU Profiling & Roofline Benchmarking",
         "PyTorch",
         "CUDA"
       ]
@@ -54,9 +54,9 @@
       "@type": "WebSite",
       "@id": "https://prajwal-pujari.vercel.app/#website",
       "url": "https://prajwal-pujari.vercel.app",
-      "name": "Prajwal Pujari // Inference Systems Workstation",
+      "name": "Prajwal Pujari · Inference Systems",
       "author": { "@id": "https://prajwal-pujari.vercel.app/#person" },
-      "description": "Systems engineer building continuous-batching LLM runtimes, Paged KV-cache allocators, and capacity load-testing harnesses."
+      "description": "Systems engineer building continuous-batching runtimes, Paged KV-cache allocators, and quantization engines for LLMs on consumer GPUs."
     }
   ]
 }
@@ -64,87 +64,52 @@
 <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>⚡</text></svg>">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Newsreader:ital,opsz,wght@0,6..72,400;0,6..72,500;1,6..72,400&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
 <script>
   try {
     var saved = localStorage.getItem("theme");
     if (saved) {
       document.documentElement.dataset.theme = saved;
-    } else if (window.matchMedia("(prefers-color-scheme: light)").matches) {
-      document.documentElement.dataset.theme = "light";
+    } else if (window.matchMedia("(prefers-color-scheme: dark)").matches) {
+      document.documentElement.dataset.theme = "dark";
     }
   } catch (e) {}
 </script>
 <style>
   :root {
-    --bg: #09090b;
-    --bg-subtle: #121215;
-    --card-bg: #141417;
-    --card-hover: #19191e;
-    --border: #27272a;
-    --border-hover: #3f3f46;
-    --border-bright: #52525b;
-    --text: #fafafa;
-    --text-muted: #a1a1aa;
-    --text-dim: #71717a;
-    
-    /* Systems Accents */
-    --accent: #f59e0b;
-    --accent-tint: rgba(245, 158, 11, 0.08);
-    --accent-border: rgba(245, 158, 11, 0.25);
-    --accent-border-hover: rgba(245, 158, 11, 0.5);
-    
-    /* Telemetry Green */
-    --telemetry-green: #10b981;
-    --telemetry-green-tint: rgba(16, 185, 129, 0.1);
-    --telemetry-green-border: rgba(16, 185, 129, 0.28);
-    
-    /* Telemetry Cyan */
-    --telemetry-cyan: #38bdf8;
-    --telemetry-cyan-tint: rgba(56, 189, 248, 0.1);
-    
-    --badge-bg: rgba(255, 255, 255, 0.04);
-    --badge-text: #d4d4d8;
-    --chip-bg: rgba(245, 158, 11, 0.1);
-    --chip-text: #fbbf24;
-    
-    --shadow: 0 4px 20px -2px rgba(0, 0, 0, 0.45);
-    --shadow-hover: 0 12px 28px -4px rgba(0, 0, 0, 0.6);
-    --card-inset: inset 0 1px 0 rgba(255, 255, 255, 0.06);
+    --bg: #FAF8F5;
+    --bg-subtle: #F3EFE9;
+    --surface: #FFFFFF;
+    --border: #E6E1D6;
+    --border-light: #ECE7DD;
+    --text: #1C1B18;
+    --text-muted: #57534D;
+    --text-dim: #858076;
+    --accent: #9A3412;
+    --accent-bg: #FBEFE9;
+    --accent-hover: #C2410C;
+    --green: #15803D;
+    --green-bg: #ECFDF5;
+    --card-shadow: 0 1px 3px rgba(0, 0, 0, 0.04);
+    --rim-light: inset 0 1px 0 rgba(255, 255, 255, 0.8);
   }
 
-  :root[data-theme="light"] {
-    --bg: #fafafa;
-    --bg-subtle: #f4f4f5;
-    --card-bg: #ffffff;
-    --card-hover: #f9f9fa;
-    --border: #e4e4e7;
-    --border-hover: #cbd5e1;
-    --border-bright: #94a3b8;
-    --text: #09090b;
-    --text-muted: #52525b;
-    --text-dim: #a1a1aa;
-    
-    --accent: #d97706;
-    --accent-tint: rgba(217, 119, 6, 0.08);
-    --accent-border: rgba(217, 119, 6, 0.25);
-    --accent-border-hover: rgba(217, 119, 6, 0.5);
-    
-    --telemetry-green: #059669;
-    --telemetry-green-tint: rgba(5, 150, 105, 0.1);
-    --telemetry-green-border: rgba(5, 150, 105, 0.25);
-    
-    --telemetry-cyan: #0284c7;
-    --telemetry-cyan-tint: rgba(2, 132, 199, 0.1);
-    
-    --badge-bg: #f4f4f5;
-    --badge-text: #3f3f46;
-    --chip-bg: #fef3c7;
-    --chip-text: #b45309;
-    
-    --shadow: 0 2px 10px -1px rgba(0, 0, 0, 0.05);
-    --shadow-hover: 0 8px 20px -2px rgba(0, 0, 0, 0.08);
-    --card-inset: inset 0 1px 0 rgba(255, 255, 255, 0.8);
+  [data-theme="dark"] {
+    --bg: #0D0E11;
+    --bg-subtle: #14151A;
+    --surface: #17181F;
+    --border: #23252E;
+    --border-light: #1C1E26;
+    --text: #F3F4F6;
+    --text-muted: #9CA3AF;
+    --text-dim: #6B7280;
+    --accent: #FB923C;
+    --accent-bg: rgba(251, 146, 60, 0.1);
+    --accent-hover: #FDBA74;
+    --green: #34D399;
+    --green-bg: rgba(52, 211, 153, 0.08);
+    --card-shadow: 0 4px 20px rgba(0, 0, 0, 0.4);
+    --rim-light: inset 0 1px 0 rgba(255, 255, 255, 0.06);
   }
 
   * { box-sizing: border-box; margin: 0; padding: 0; }
@@ -152,7 +117,6 @@
   @media (prefers-reduced-motion: reduce) {
     *, *::before, *::after {
       animation-duration: 0.01ms !important;
-      animation-iteration-count: 1 !important;
       transition-duration: 0.01ms !important;
       scroll-behavior: auto !important;
     }
@@ -161,2294 +125,938 @@
   html {
     scroll-behavior: smooth;
     font-size: 16px;
-    -webkit-font-smoothing: antialiased;
-  }
-
-  [id] {
-    scroll-margin-top: 85px;
   }
 
   body {
     background-color: var(--bg);
-    background-image: radial-gradient(rgba(255, 255, 255, 0.05) 1px, transparent 1px);
-    background-size: 24px 24px;
-    background-repeat: repeat;
     color: var(--text);
-    font-family: Inter, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
-    line-height: 1.55;
-    min-height: 100vh;
-    display: flex;
-    flex-direction: column;
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+    font-size: 15px;
+    line-height: 1.65;
+    -webkit-font-smoothing: antialiased;
+    transition: background-color 0.2s ease, color 0.2s ease;
   }
 
-  :root[data-theme="light"] body {
-    background-image: radial-gradient(rgba(0, 0, 0, 0.04) 1px, transparent 1px);
-    background-size: 24px 24px;
-  }
-
-  /* TOP TELEMETRY SPEC HEADER (Style C) */
-  .telemetry-topbar {
-    background-color: var(--bg-subtle);
+  /* TOP NAVIGATION */
+  .top-nav {
     border-bottom: 1px solid var(--border);
-    font-family: "JetBrains Mono", monospace;
-    font-size: 0.76rem;
-    padding: 6px 16px;
-    color: var(--text-dim);
-  }
-
-  .telemetry-topbar-inner {
-    max-width: 1140px;
-    margin: 0 auto;
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    gap: 12px;
-    flex-wrap: wrap;
-  }
-
-  .telemetry-topbar-left {
-    display: flex;
-    align-items: center;
-    gap: 14px;
-    flex-wrap: wrap;
-  }
-
-  .telemetry-item {
-    display: inline-flex;
-    align-items: center;
-    gap: 6px;
-  }
-
-  .telemetry-dot {
-    width: 6px;
-    height: 6px;
-    border-radius: 50%;
-    background-color: var(--telemetry-green);
-    box-shadow: 0 0 0 2px var(--telemetry-green-tint);
-  }
-
-  .telemetry-topbar-right {
-    display: flex;
-    align-items: center;
-    gap: 12px;
-  }
-
-  .telemetry-topbar-right a {
-    color: var(--text-muted);
-    text-decoration: none;
-    transition: color 0.15s ease;
-  }
-
-  .telemetry-topbar-right a:hover {
-    color: var(--text);
-  }
-
-  /* WORKSTATION NAVIGATION HEADER */
-  .header {
+    background: var(--surface);
     position: sticky;
     top: 0;
     z-index: 100;
-    background: color-mix(in srgb, var(--bg) 90%, transparent);
-    backdrop-filter: blur(12px);
-    border-bottom: 1px solid var(--border);
+    box-shadow: var(--card-shadow);
   }
-
   .nav-inner {
-    max-width: 1140px;
+    max-width: 680px;
     margin: 0 auto;
-    padding: 14px 20px;
+    padding: 14px 22px;
     display: flex;
-    align-items: center;
     justify-content: space-between;
-  }
-
-  .nav-brand {
-    display: inline-flex;
     align-items: center;
-    gap: 10px;
-    text-decoration: none;
+    gap: 16px;
+  }
+  .nav-brand {
+    font-family: 'Newsreader', Georgia, serif;
+    font-size: 1.25rem;
+    font-weight: 500;
     color: var(--text);
+    text-decoration: none;
+    letter-spacing: -0.01em;
   }
-
-  .nav-prompt {
-    font-family: "JetBrains Mono", monospace;
-    font-size: 0.85rem;
-    font-weight: 700;
-    color: var(--accent);
-    background: var(--accent-tint);
-    border: 1px solid var(--accent-border);
-    padding: 3px 8px;
-    border-radius: 4px;
-  }
-
-  .nav-title {
-    font-size: 0.96rem;
-    font-weight: 700;
-    letter-spacing: -0.02em;
-  }
-
-  .nav-links {
+  .nav-right {
     display: flex;
     align-items: center;
-    gap: 20px;
+    gap: 16px;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.8rem;
   }
-
   .nav-link {
     color: var(--text-muted);
     text-decoration: none;
-    font-size: 0.86rem;
-    font-weight: 500;
-    font-family: "JetBrains Mono", monospace;
     transition: color 0.15s ease;
   }
-
   .nav-link:hover {
-    color: var(--accent);
-  }
-
-  .theme-toggle {
-    background: none;
-    border: 1px solid var(--border);
-    border-radius: 6px;
-    color: var(--text-muted);
-    cursor: pointer;
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    width: 32px;
-    height: 32px;
-    transition: all 0.15s ease;
-  }
-
-  .theme-toggle:hover {
     color: var(--text);
-    border-color: var(--border-hover);
-    background-color: var(--bg-subtle);
   }
-
-  /* WORKSTATION CONTAINER */
-  .workstation-container {
-    max-width: 1140px;
-    width: 100%;
-    margin: 0 auto;
-    padding: 36px 20px 80px;
-    display: flex;
-    flex-direction: column;
-    gap: 48px;
-  }
-
-  /* HERO DOSSIER HEADER */
-  .hero-dossier {
-    display: flex;
-    flex-direction: column;
-    gap: 16px;
-    border-bottom: 1px solid var(--border);
-    padding-bottom: 32px;
-  }
-
-  .hero-dossier-top {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    gap: 16px;
-    flex-wrap: wrap;
-  }
-
-  .hero-tag {
-    font-family: "JetBrains Mono", monospace;
-    font-size: 0.78rem;
-    font-weight: 600;
-    color: var(--telemetry-green);
-    background: var(--telemetry-green-tint);
-    border: 1px solid var(--telemetry-green-border);
-    padding: 4px 10px;
-    border-radius: 4px;
+  .theme-btn {
+    background: var(--bg-subtle);
+    border: 1px solid var(--border);
+    padding: 5px 11px;
+    border-radius: 6px;
+    cursor: pointer;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.76rem;
+    color: var(--text);
+    font-weight: 500;
     display: inline-flex;
     align-items: center;
     gap: 6px;
+    transition: transform 180ms cubic-bezier(0.16, 1, 0.3, 1), border-color 150ms ease;
+  }
+  .theme-btn:hover {
+    border-color: var(--text-dim);
+  }
+  .theme-btn:active {
+    transform: scale(0.96);
   }
 
-  .hero-tag span {
-    width: 6px;
-    height: 6px;
-    border-radius: 50%;
-    background-color: var(--telemetry-green);
+  /* MAIN CONTAINER */
+  .container {
+    max-width: 680px;
+    margin: 0 auto;
+    padding: 50px 22px 110px;
   }
 
-  .hero-title {
-    font-size: 2.35rem;
-    font-weight: 700;
-    letter-spacing: -0.035em;
-    line-height: 1.18;
+  /* HEADER */
+  .header {
+    margin-bottom: 48px;
+  }
+  .name {
+    font-family: 'Newsreader', Georgia, serif;
+    font-size: 2.6rem;
+    font-weight: 500;
+    letter-spacing: -0.025em;
+    line-height: 1.15;
+    margin-bottom: 6px;
     color: var(--text);
   }
-
-  .hero-lead {
+  .role {
     font-size: 1.05rem;
     color: var(--text-muted);
-    line-height: 1.6;
-    max-width: 860px;
+    margin-bottom: 18px;
   }
-
-  .hero-lead strong {
+  .intro {
+    font-size: 1.02rem;
     color: var(--text);
-    font-weight: 600;
+    line-height: 1.7;
+    margin-bottom: 20px;
   }
-
-  .hero-actions-row {
+  .links {
     display: flex;
-    align-items: center;
-    gap: 12px;
+    gap: 16px;
     flex-wrap: wrap;
-    margin-top: 6px;
+    font-size: 0.88rem;
+    font-family: 'JetBrains Mono', monospace;
   }
-
-  .btn {
-    display: inline-flex;
-    align-items: center;
-    gap: 8px;
-    padding: 8px 16px;
-    border-radius: 6px;
-    font-size: 0.86rem;
-    font-weight: 600;
+  .links a {
+    color: var(--accent);
     text-decoration: none;
-    transition: all 0.15s ease;
-    cursor: pointer;
-    font-family: "JetBrains Mono", monospace;
+    transition: color 0.15s ease;
+  }
+  .links a:hover {
+    color: var(--accent-hover);
+    text-decoration: underline;
   }
 
-  .btn-primary {
-    background-color: var(--text);
-    color: var(--bg);
-    border: 1px solid var(--text);
-  }
-
-  .btn-primary:hover {
-    opacity: 0.9;
-    transform: translateY(-1px);
-  }
-
-  .btn-secondary {
-    background-color: var(--card-bg);
-    color: var(--text);
-    border: 1px solid var(--border);
-    box-shadow: var(--card-inset);
-  }
-
-  .btn-secondary:hover {
-    border-color: var(--border-hover);
-    background-color: var(--card-hover);
-    transform: translateY(-1px);
-  }
-
-  .btn svg {
-    width: 15px;
-    height: 15px;
-  }
-
-  /* ASYMMETRIC BENTO GRID DECK (Style A + Style B + Style C) */
-  .bento-grid {
-    display: grid;
-    grid-template-columns: 12fr;
-    gap: 20px;
-  }
-
-  @media (min-width: 900px) {
-    .bento-hero-row {
-      display: grid;
-      grid-template-columns: 7fr 5fr;
-      gap: 20px;
-    }
-  }
-
-  .bento-tile {
-    background-color: var(--card-bg);
-    border: 1px solid var(--border);
-    border-radius: 8px;
-    padding: 22px;
-    display: flex;
-    flex-direction: column;
-    justify-content: space-between;
-    gap: 18px;
-    box-shadow: var(--card-inset), var(--shadow);
-    transition: border-color 0.15s ease;
-  }
-
-  .bento-tile:hover {
-    border-color: var(--border-hover);
-  }
-
-  .tile-header {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    gap: 12px;
-    border-bottom: 1px solid var(--border);
-    padding-bottom: 12px;
-  }
-
-  .tile-label {
-    font-family: "JetBrains Mono", monospace;
-    font-size: 0.78rem;
-    font-weight: 700;
-    letter-spacing: 0.05em;
-    color: var(--accent);
-    text-transform: uppercase;
+  /* HARDWARE CONTEXT STAMP */
+  .hardware-stamp {
     display: inline-flex;
     align-items: center;
-    gap: 6px;
-  }
-
-  .tile-badge {
-    font-family: "JetBrains Mono", monospace;
-    font-size: 0.72rem;
-    color: var(--text-dim);
-    background: var(--bg-subtle);
-    padding: 2px 8px;
-    border-radius: 4px;
-    border: 1px solid var(--border);
-  }
-
-  /* STYLE A: INTERACTIVE SYSTEMS SIMULATOR */
-  .sim-workstation-tabs {
-    display: flex;
     gap: 8px;
-    border-bottom: 1px solid var(--border);
-    padding-bottom: 10px;
-    margin-bottom: 4px;
-    flex-wrap: wrap;
-  }
-
-  .sim-tab {
-    background: transparent;
-    border: 1px solid transparent;
-    border-radius: 4px;
-    color: var(--text-dim);
-    font-family: "JetBrains Mono", monospace;
-    font-size: 0.74rem;
-    font-weight: 600;
-    padding: 6px 12px;
-    cursor: pointer;
-    transition: all 0.15s ease;
-  }
-
-  .sim-tab:hover {
-    color: var(--text-muted);
-    border-color: var(--border);
-  }
-
-  .sim-tab.active {
-    background: var(--bg-subtle);
-    border-color: var(--accent-border);
-    color: var(--accent);
-  }
-
-  .sim-controls {
-    display: flex;
-    align-items: center;
-    gap: 8px;
-    flex-wrap: wrap;
-  }
-
-  .sim-label {
-    font-family: "JetBrains Mono", monospace;
+    font-family: 'JetBrains Mono', monospace;
     font-size: 0.78rem;
-    color: var(--text-dim);
-  }
-
-  .sim-btn {
-    background: var(--bg-subtle);
-    border: 1px solid var(--border);
-    border-radius: 4px;
     color: var(--text-muted);
-    font-family: "JetBrains Mono", monospace;
-    font-size: 0.8rem;
-    font-weight: 600;
-    padding: 5px 12px;
-    cursor: pointer;
-    transition: all 0.15s ease;
-  }
-
-  .sim-btn:hover {
-    color: var(--text);
-    border-color: var(--border-bright);
-  }
-
-  .sim-btn.active {
-    background: var(--accent-tint);
-    border-color: var(--accent);
-    color: var(--accent);
-  }
-
-  /* Telemetry Live Gauges */
-  .sim-gauges {
-    display: grid;
-    grid-template-columns: repeat(4, 1fr);
-    gap: 10px;
     background: var(--bg-subtle);
     border: 1px solid var(--border);
     border-radius: 6px;
-    padding: 12px;
+    padding: 8px 12px;
+    margin-top: 18px;
+    line-height: 1.45;
   }
-
-  @media (max-width: 600px) {
-    .sim-gauges {
-      grid-template-columns: repeat(2, 1fr);
-    }
-  }
-
-  .sim-gauge {
-    display: flex;
-    flex-direction: column;
-    gap: 2px;
-  }
-
-  .sim-gauge-label {
-    font-family: "JetBrains Mono", monospace;
-    font-size: 0.7rem;
-    color: var(--text-dim);
-    text-transform: uppercase;
-  }
-
-  .sim-gauge-val {
-    font-family: "JetBrains Mono", monospace;
-    font-size: 1.15rem;
-    font-weight: 700;
-    color: var(--text);
-    font-variant-numeric: tabular-nums;
-  }
-
-  .sim-gauge-val.highlight {
-    color: var(--accent);
-  }
-
-  /* Paged KV-Cache Memory Block Visualizer */
-  .mem-vis-box {
-    display: flex;
-    flex-direction: column;
-    gap: 8px;
-    background: var(--bg);
-    border: 1px solid var(--border);
-    border-radius: 6px;
-    padding: 12px;
-  }
-
-  .mem-vis-header {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    font-family: "JetBrains Mono", monospace;
-    font-size: 0.74rem;
-    color: var(--text-dim);
-  }
-
-  .mem-grid {
-    display: grid;
-    grid-template-columns: repeat(16, 1fr);
-    gap: 4px;
-  }
-
-  .mem-cell {
-    height: 16px;
-    border-radius: 2px;
-    background: var(--border);
-    transition: background-color 0.2s ease;
-  }
-
-  .mem-cell.prefix {
-    background: var(--telemetry-cyan);
-  }
-
-  .mem-cell.active {
-    background: var(--accent);
-  }
-
-  .mem-cell.free {
-    background: color-mix(in srgb, var(--border) 40%, transparent);
-  }
-
-  .mem-legend {
-    display: flex;
-    align-items: center;
-    gap: 12px;
-    font-family: "JetBrains Mono", monospace;
-    font-size: 0.7rem;
-    color: var(--text-dim);
-    margin-top: 4px;
-    flex-wrap: wrap;
-  }
-
-  .legend-item {
-    display: inline-flex;
-    align-items: center;
-    gap: 5px;
-  }
-
-  .legend-box {
-    width: 8px;
-    height: 8px;
-    border-radius: 2px;
-  }
-
-  /* CLI Box */
-  .cli-snippet-box {
-    background: var(--bg);
-    border: 1px solid var(--border);
-    border-radius: 6px;
-    padding: 10px 14px;
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    gap: 12px;
-    font-family: "JetBrains Mono", monospace;
-    font-size: 0.78rem;
-  }
-
-  .cli-code {
-    color: var(--text);
-    overflow-x: auto;
-    white-space: nowrap;
-  }
-
-  .cli-code .prompt {
-    color: var(--accent);
-    font-weight: 700;
-  }
-
-  .copy-btn {
-    background: var(--bg-subtle);
-    border: 1px solid var(--border);
-    border-radius: 4px;
-    padding: 4px 8px;
-    color: var(--text-muted);
-    font-size: 0.74rem;
-    cursor: pointer;
-    font-family: inherit;
-    transition: all 0.15s ease;
+  .stamp-dot {
+    width: 7px;
+    height: 7px;
+    border-radius: 50%;
+    background: var(--green);
     flex-shrink: 0;
   }
 
-  .copy-btn:hover {
-    color: var(--text);
-    border-color: var(--border-hover);
+  /* SECTION LABELS */
+  .section-title {
+    font-size: 0.8rem;
+    font-family: 'JetBrains Mono', monospace;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: var(--text-dim);
+    margin: 54px 0 22px;
+    padding-bottom: 8px;
+    border-bottom: 1px solid var(--border);
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+  }
+  .section-meta {
+    font-size: 0.72rem;
+    color: var(--text-dim);
+    text-transform: none;
+    letter-spacing: 0;
   }
 
-  /* Bit-Packing & Sparsity Visualizer Grid */
-  .bit-vis-box {
+  /* PROJECT CARD */
+  .project {
+    margin-bottom: 34px;
+    padding-bottom: 30px;
+    border-bottom: 1px solid var(--border-light);
+  }
+  .project:last-child {
+    border-bottom: none;
+    margin-bottom: 0;
+    padding-bottom: 0;
+  }
+  .project-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    gap: 12px;
+    margin-bottom: 8px;
+  }
+  .project-name {
+    font-size: 1.22rem;
+    font-weight: 600;
+    color: var(--text);
+    text-decoration: none;
+    letter-spacing: -0.01em;
+  }
+  .project-name:hover {
+    color: var(--accent);
+  }
+  .project-tag {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.75rem;
+    color: var(--text-dim);
+    background: var(--bg-subtle);
+    padding: 2px 7px;
+    border-radius: 4px;
+    border: 1px solid var(--border);
+  }
+  .project-desc {
+    color: var(--text-muted);
+    font-size: 0.94rem;
+    line-height: 1.62;
+    margin-bottom: 10px;
+  }
+
+  /* PIP INSTALL SNIPPET */
+  .pip-row {
+    margin: 10px 0 12px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+  .pip-chip {
+    background: var(--bg-subtle);
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    padding: 5px 10px;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.78rem;
+    color: var(--text);
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    cursor: pointer;
+    transition: transform 150ms ease, border-color 150ms ease, background-color 150ms ease;
+  }
+  .pip-chip:hover {
+    border-color: var(--text-dim);
+    background: var(--surface);
+  }
+  .pip-chip:active {
+    transform: scale(0.97);
+  }
+  .pip-chip.copied {
+    border-color: var(--green);
+    color: var(--green);
+    background: var(--green-bg);
+  }
+  .copy-label {
+    font-size: 0.7rem;
+    color: var(--text-dim);
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+  }
+  .pip-chip.copied .copy-label {
+    color: var(--green);
+    font-weight: 600;
+  }
+
+  .project-stats {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.8rem;
+    color: var(--green);
+    margin-bottom: 10px;
+    font-weight: 500;
+  }
+  .project-links {
+    display: flex;
+    gap: 14px;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.82rem;
+    flex-wrap: wrap;
+  }
+  .project-links a {
+    color: var(--text-dim);
+    text-decoration: none;
+    transition: color 0.15s ease;
+  }
+  .project-links a:hover {
+    color: var(--accent);
+  }
+
+  /* PROGRESSIVE DISCLOSURE DETAILS */
+  .project-breakdown {
+    margin-top: 14px;
+    border-top: 1px dashed var(--border-light);
+    padding-top: 10px;
+  }
+  .breakdown-toggle {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.78rem;
+    color: var(--text-dim);
+    cursor: pointer;
+    list-style: none;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    user-select: none;
+    padding: 3px 0;
+    transition: color 0.15s ease;
+  }
+  .breakdown-toggle::-webkit-details-marker {
+    display: none;
+  }
+  .breakdown-toggle:hover {
+    color: var(--text);
+  }
+  .toggle-icon {
+    display: inline-block;
+    transition: transform 180ms cubic-bezier(0.16, 1, 0.3, 1);
+    font-size: 0.7rem;
+  }
+  details[open] .toggle-icon {
+    transform: rotate(90deg);
+  }
+  .breakdown-content {
+    background: var(--bg-subtle);
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    padding: 14px 16px;
+    margin-top: 8px;
     display: flex;
     flex-direction: column;
     gap: 10px;
-    background: var(--bg);
-    border: 1px solid var(--border);
-    border-radius: 6px;
-    padding: 12px;
+    font-size: 0.86rem;
+    line-height: 1.55;
   }
-
-  .bit-vis-header {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    font-family: "JetBrains Mono", monospace;
-    font-size: 0.74rem;
-    color: var(--text-dim);
-    flex-wrap: wrap;
-    gap: 6px;
-  }
-
-  .bit-byte-stream {
-    display: grid;
-    grid-template-columns: repeat(4, 1fr);
-    gap: 8px;
-    overflow-x: auto;
-  }
-
-  @media (max-width: 600px) {
-    .bit-byte-stream {
-      grid-template-columns: repeat(2, 1fr);
-    }
-  }
-
-  .byte-unit {
-    display: flex;
-    flex-direction: column;
-    border: 1px solid var(--border);
-    border-radius: 4px;
-    background: var(--bg-subtle);
-    font-family: "JetBrains Mono", monospace;
-    font-size: 0.7rem;
-    overflow: hidden;
-  }
-
-  .byte-header {
-    background: color-mix(in srgb, var(--accent) 15%, transparent);
-    color: var(--accent);
-    padding: 3px 6px;
-    font-weight: 700;
-    text-align: center;
-    border-bottom: 1px solid var(--border);
-    font-size: 0.68rem;
-  }
-
-  .nibble-row {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    text-align: center;
-  }
-
-  .nibble-cell {
-    padding: 6px 4px;
-    border-right: 1px dashed var(--border);
+  .breakdown-item {
     display: flex;
     flex-direction: column;
     gap: 2px;
   }
-
-  .nibble-cell:last-child {
-    border-right: none;
-  }
-
-  .nibble-val {
-    color: var(--telemetry-green);
-    font-weight: 600;
-    font-size: 0.76rem;
-  }
-
-  .nibble-bits {
+  .breakdown-label {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.72rem;
     color: var(--text-dim);
-    font-size: 0.62rem;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    font-weight: 600;
+  }
+  .breakdown-text {
+    color: var(--text-muted);
   }
 
-  /* STYLE C: SILICON BENCHMARK MATRIX TABLE */
-  .matrix-table {
+  /* UPSTREAM CONTRIBUTIONS TABLE */
+  .table-wrap {
+    overflow-x: auto;
+    margin-top: 12px;
+  }
+  .pr-table {
     width: 100%;
     border-collapse: collapse;
-    font-family: "JetBrains Mono", monospace;
-    font-size: 0.78rem;
-    margin-top: 6px;
+    font-size: 0.88rem;
   }
-
-  .matrix-table th {
-    text-align: left;
-    padding: 8px 10px;
-    background: var(--bg-subtle);
-    border-bottom: 1px solid var(--border);
-    color: var(--text-dim);
-    font-size: 0.72rem;
-    font-weight: 600;
-    text-transform: uppercase;
-  }
-
-  .matrix-table td {
-    padding: 10px 10px;
-    border-bottom: 1px solid var(--border);
-    color: var(--text-muted);
-    font-variant-numeric: tabular-nums;
-  }
-
-  .matrix-table tr:hover td {
-    background: var(--bg-subtle);
-    color: var(--text);
-  }
-
-  .matrix-table .highlight-row td {
-    color: var(--text);
-    font-weight: 600;
-    background: var(--accent-tint);
-  }
-
-  .matrix-table .highlight-row td:first-child {
-    border-left: 2px solid var(--accent);
-    color: var(--accent);
-  }
-
-  .provenance-pill {
-    display: inline-flex;
-    align-items: center;
-    gap: 4px;
-    padding: 2px 6px;
-    border-radius: 4px;
-    font-size: 0.7rem;
-    background: var(--telemetry-green-tint);
-    color: var(--telemetry-green);
-    border: 1px solid var(--telemetry-green-border);
-  }
-
-  .provenance-pill-bad {
-    display: inline-flex;
-    align-items: center;
-    gap: 4px;
-    padding: 2px 6px;
-    border-radius: 4px;
-    font-size: 0.7rem;
-    background: rgba(239, 68, 68, 0.1);
-    color: #ef4444;
-    border: 1px solid rgba(239, 68, 68, 0.25);
-  }
-
-  .matrix-footer {
-    font-family: "JetBrains Mono", monospace;
-    font-size: 0.72rem;
-    color: var(--text-dim);
-    line-height: 1.5;
-  }
-
-  /* SECTION TITLE HEADINGS */
-  .section-label-row {
-    display: flex;
-    align-items: baseline;
-    justify-content: space-between;
-    gap: 16px;
-    border-bottom: 1px solid var(--border);
-    padding-bottom: 8px;
-    margin-bottom: -20px;
-  }
-
-  .section-label {
-    font-family: "JetBrains Mono", monospace;
-    font-size: 0.82rem;
-    font-weight: 700;
-    letter-spacing: 0.04em;
-    color: var(--text);
-    text-transform: uppercase;
-  }
-
-  .section-sublabel {
-    font-family: "JetBrains Mono", monospace;
+  .pr-table th {
+    font-family: 'JetBrains Mono', monospace;
     font-size: 0.74rem;
     color: var(--text-dim);
+    text-align: left;
+    padding: 8px 10px;
+    border-bottom: 1px solid var(--border);
+    font-weight: 500;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+  }
+  .pr-table td {
+    padding: 11px 10px;
+    border-bottom: 1px solid var(--border-light);
+    color: var(--text-muted);
+    line-height: 1.5;
+  }
+  .pr-table tr:hover td {
+    background: var(--bg-subtle);
+  }
+  .pr-id {
+    font-family: 'JetBrains Mono', monospace;
+    color: var(--accent);
+    text-decoration: none;
+    font-weight: 600;
+    white-space: nowrap;
+  }
+  .pr-id:hover {
+    text-decoration: underline;
+  }
+  .pr-file {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.75rem;
+    color: var(--text-dim);
+    display: block;
+    margin-top: 2px;
+  }
+  .badge-merged {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.74rem;
+    color: var(--green);
+    background: var(--green-bg);
+    padding: 2px 7px;
+    border-radius: 4px;
+    white-space: nowrap;
+    border: 1px solid rgba(21, 128, 61, 0.2);
   }
 
-  /* FLAGSHIP PROJECTS GRID (Style B) */
-  .flagships-grid {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 20px;
-  }
-
-  .flagships-grid-quad {
-    display: grid;
-    grid-template-columns: repeat(2, 1fr);
-    gap: 20px;
-  }
-
-  @media (max-width: 900px) {
-    .flagships-grid-quad {
-      grid-template-columns: 1fr;
-    }
-  }
-
-  .flagships-grid-trio {
-    display: grid;
-    grid-template-columns: repeat(3, 1fr);
-    gap: 20px;
-  }
-
-  @media (max-width: 1040px) {
-    .flagships-grid-trio {
-      grid-template-columns: 1fr;
-    }
-  }
-
-  @media (max-width: 800px) {
-    .flagships-grid {
-      grid-template-columns: 1fr;
-    }
-  }
-
-  .flagship-card {
-    background-color: var(--card-bg);
+  /* WORKBENCH PULSE */
+  .workbench-card {
+    background: var(--surface);
     border: 1px solid var(--border);
     border-radius: 8px;
-    padding: 24px;
+    padding: 20px;
+    margin-top: 10px;
+    box-shadow: var(--card-shadow), var(--rim-light);
+  }
+  .workbench-status {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.75rem;
+    color: var(--text-dim);
     display: flex;
-    flex-direction: column;
-    justify-content: space-between;
-    gap: 18px;
-    box-shadow: var(--card-inset), var(--shadow);
-    transition: transform 180ms cubic-bezier(0.16, 1, 0.3, 1), border-color 150ms ease, box-shadow 180ms ease, background-color 150ms ease;
-  }
-
-  .flagship-card:hover {
-    border-color: var(--accent-border-hover);
-    transform: translateY(-2px);
-    box-shadow: var(--card-inset), var(--shadow-hover);
-  }
-
-  .flagship-card-hero {
-    grid-column: span 2;
-    background: linear-gradient(180deg, var(--card-bg) 0%, rgba(245, 158, 11, 0.02) 100%);
-    border-color: var(--accent-border);
-  }
-
-  @media (max-width: 900px) {
-    .flagship-card-hero {
-      grid-column: span 1;
-    }
-  }
-
-  .btn:active, .flagship-link:active, .note-tile:active, .solution-tile:active, .sim-tab:active {
-    transform: scale(0.98);
-  }
-
-  .flagship-top {
-    display: flex;
-    flex-direction: column;
-    gap: 12px;
-  }
-
-  .flagship-header-row {
-    display: flex;
-    align-items: flex-start;
-    justify-content: space-between;
-    gap: 12px;
-  }
-
-  .flagship-title {
-    font-size: 1.25rem;
-    font-weight: 700;
-    letter-spacing: -0.02em;
-    color: var(--text);
-    text-decoration: none;
-    display: inline-flex;
     align-items: center;
-    gap: 10px;
+    gap: 8px;
+    margin-bottom: 8px;
   }
-
-  .flagship-icon {
-    width: 28px;
-    height: 28px;
-    border-radius: 6px;
-    flex-shrink: 0;
+  .pulse-dot {
+    width: 7px;
+    height: 7px;
+    border-radius: 50%;
+    background: var(--accent);
+    display: inline-block;
   }
-
-  .flagship-title:hover {
-    color: var(--accent);
-  }
-
-  .flagship-desc {
+  .workbench-text {
+    font-size: 0.92rem;
     color: var(--text-muted);
-    font-size: 0.91rem;
     line-height: 1.6;
   }
 
-  .flagship-desc strong {
-    color: var(--text);
-  }
-
-  .flagship-features {
-    list-style: none;
-    display: flex;
-    flex-direction: column;
-    gap: 6px;
-    margin-top: 4px;
-  }
-
-  .flagship-features li {
-    font-size: 0.83rem;
-    color: var(--text-muted);
-    display: flex;
-    align-items: baseline;
-    gap: 8px;
-  }
-
-  .flagship-features li span {
-    font-family: "JetBrains Mono", monospace;
-    color: var(--accent);
-    font-size: 0.75rem;
-  }
-
-  .flagship-stat-strip {
-    background: var(--bg-subtle);
+  /* AUDIT SERVICE CALLOUT */
+  .audit-box {
+    background: var(--surface);
     border: 1px solid var(--border);
-    border-radius: 6px;
-    padding: 10px 14px;
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    font-family: "JetBrains Mono", monospace;
-    font-size: 0.78rem;
-    color: var(--text);
-  }
-
-  .flagship-stat-strip .metric {
-    color: var(--accent);
-    font-weight: 700;
-  }
-
-  .flagship-footer-row {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    gap: 10px;
-    flex-wrap: wrap;
-    padding-top: 12px;
-    border-top: 1px solid var(--border);
-  }
-
-  .flagship-links {
-    display: flex;
-    align-items: center;
-    gap: 10px;
-  }
-
-  .flagship-link {
-    font-family: "JetBrains Mono", monospace;
-    font-size: 0.78rem;
-    color: var(--text-muted);
-    text-decoration: none;
-    display: inline-flex;
-    align-items: center;
-    gap: 4px;
-    transition: color 0.15s ease;
-  }
-
-  .flagship-link:hover {
-    color: var(--accent);
-  }
-
-  /* HORIZON FLAGSHIP FULL-WIDTH CARD */
-  .horizon-card {
-    background-color: var(--card-bg);
-    border: 1px dashed var(--border-bright);
     border-radius: 8px;
     padding: 24px;
-    display: flex;
-    flex-direction: column;
-    gap: 16px;
-    box-shadow: var(--card-inset);
+    margin-top: 12px;
+    box-shadow: var(--card-shadow), var(--rim-light);
   }
-
-  .horizon-header {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    gap: 12px;
-    flex-wrap: wrap;
-  }
-
-  /* SOLUTIONS BENTO GRID */
-  .solutions-bento {
-    display: grid;
-    grid-template-columns: repeat(3, 1fr);
-    gap: 18px;
-  }
-
-  @media (max-width: 860px) {
-    .solutions-bento {
-      grid-template-columns: 1fr;
-    }
-  }
-
-  .solution-tile {
-    background-color: var(--card-bg);
-    border: 1px solid var(--border);
-    border-radius: 8px;
-    padding: 22px;
-    display: flex;
-    flex-direction: column;
-    justify-content: space-between;
-    gap: 14px;
-    box-shadow: var(--card-inset);
-    transition: all 0.2s ease;
-  }
-
-  .solution-tile:hover {
-    border-color: var(--border-hover);
-    transform: translateY(-2px);
-  }
-
-  .solution-tile-title {
-    font-size: 1.05rem;
-    font-weight: 700;
+  .audit-box h3 {
+    font-size: 1.15rem;
+    font-weight: 600;
+    margin-bottom: 8px;
     color: var(--text);
     letter-spacing: -0.01em;
   }
-
-  .solution-tile-desc {
-    font-size: 0.88rem;
+  .audit-box p {
     color: var(--text-muted);
-    line-height: 1.55;
+    font-size: 0.92rem;
+    line-height: 1.62;
+    margin-bottom: 16px;
   }
-
-  .solution-tile-points {
-    list-style: none;
+  .audit-meta {
     display: flex;
-    flex-direction: column;
-    gap: 6px;
-    font-size: 0.8rem;
-    color: var(--text-dim);
-    font-family: "JetBrains Mono", monospace;
-  }
-
-  .solution-tile-points li {
-    display: flex;
-    align-items: center;
-    gap: 6px;
-  }
-
-  .solution-tile-points li::before {
-    content: "→";
-    color: var(--accent);
-  }
-
-  /* WORKSTATION CTA DISPATCH BAR */
-  .dispatch-banner {
-    background: linear-gradient(135deg, var(--card-bg) 0%, var(--bg-subtle) 100%);
-    border: 1px solid var(--border-bright);
-    border-radius: 8px;
-    padding: 24px 28px;
-    display: flex;
-    align-items: center;
     justify-content: space-between;
-    gap: 20px;
+    align-items: center;
     flex-wrap: wrap;
-    box-shadow: var(--card-inset), var(--shadow);
-  }
-
-  .dispatch-info h4 {
-    font-size: 1.15rem;
-    font-weight: 700;
-    color: var(--text);
-    margin-bottom: 4px;
-    letter-spacing: -0.02em;
-  }
-
-  .dispatch-info p {
-    font-size: 0.9rem;
-    color: var(--text-muted);
-    max-width: 600px;
-  }
-
-  /* ENGINEERING RESEARCH NOTES PREVIEW */
-  .notes-row {
-    display: grid;
-    grid-template-columns: 1fr 1fr 1fr;
-    gap: 16px;
-  }
-
-  @media (max-width: 820px) {
-    .notes-row {
-      grid-template-columns: 1fr;
-    }
-  }
-
-  .note-tile {
-    background-color: var(--card-bg);
-    border: 1px solid var(--border);
-    border-radius: 6px;
-    padding: 18px;
-    display: flex;
-    flex-direction: column;
-    justify-content: space-between;
     gap: 12px;
-    text-decoration: none;
-    transition: all 0.15s ease;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.82rem;
+    padding-top: 14px;
+    border-top: 1px solid var(--border-light);
   }
-
-  .note-tile:hover {
-    border-color: var(--accent-border);
-    background-color: var(--card-hover);
-    transform: translateY(-2px);
-  }
-
-  .note-date {
-    font-family: "JetBrains Mono", monospace;
-    font-size: 0.72rem;
-    color: var(--text-dim);
-  }
-
-  .note-title {
-    font-size: 0.95rem;
-    font-weight: 600;
+  .audit-price-tag {
     color: var(--text);
-    line-height: 1.4;
+    font-weight: 500;
+  }
+  .audit-link {
+    color: var(--bg);
+    background: var(--text);
+    text-decoration: none;
+    font-weight: 500;
+    padding: 7px 14px;
+    border-radius: 5px;
+    transition: opacity 0.15s ease, transform 150ms ease;
+  }
+  .audit-link:hover {
+    opacity: 0.9;
+  }
+  .audit-link:active {
+    transform: scale(0.97);
   }
 
-  .note-cta {
-    font-family: "JetBrains Mono", monospace;
-    font-size: 0.76rem;
-    color: var(--accent);
-    display: inline-flex;
-    align-items: center;
-    gap: 4px;
-  }
-
-  /* FOOTER TERMINAL */
-  footer {
+  /* FOOTER */
+  .footer {
+    margin-top: 80px;
+    padding-top: 24px;
     border-top: 1px solid var(--border);
-    background-color: var(--bg-subtle);
-    padding: 24px 20px;
-    font-family: "JetBrains Mono", monospace;
-    font-size: 0.76rem;
+    font-size: 0.82rem;
+    font-family: 'JetBrains Mono', monospace;
     color: var(--text-dim);
-    margin-top: auto;
-  }
-
-  .footer-inner {
-    max-width: 1140px;
-    margin: 0 auto;
     display: flex;
-    align-items: center;
     justify-content: space-between;
-    gap: 12px;
+    align-items: center;
     flex-wrap: wrap;
+    gap: 12px;
   }
-
-  .footer-inner a {
+  .footer a {
     color: var(--text-muted);
     text-decoration: none;
   }
-
-  .footer-inner a:hover {
+  .footer a:hover {
     color: var(--text);
   }
 </style>
 </head>
 <body>
 
-<!-- TOP SPEC TELEMETRY STRIP (Style C) -->
-<div class="telemetry-topbar">
-  <div class="telemetry-topbar-inner">
-    <div class="telemetry-topbar-left">
-      <span class="telemetry-item"><span class="telemetry-dot"></span> ⚡ SYSTEMS: 8 Flagship Engines (streamspec • mini-infer • servebench • sched-sim • quantbench • infersize • token-atlas • runsonmine)</span>
-      <span class="telemetry-item">🛡️ SIGSTORE: Cryptographically Attested</span>
-      <span class="telemetry-item">🧪 TESTS: 521/521 Pass (100% CI across 9 Repositories)</span>
-    </div>
-    <div class="telemetry-topbar-right">
-      <a href="https://github.com/Prajwal7-2002" target="_blank" rel="noopener noreferrer">GitHub ↗</a>
-      <span>·</span>
-      <a href="https://huggingface.co/prajwalpujari16" target="_blank" rel="noopener noreferrer">Hugging Face ↗</a>
-      <span>·</span>
-      <a href="https://pypi.org/user/Prajwal2002PI/" target="_blank" rel="noopener noreferrer">PyPI Profile ↗</a>
-      <span>·</span>
-      <a href="mailto:prajwalpujari16@gmail.com">Contact Direct ↗</a>
-    </div>
-  </div>
-</div>
-
-<!-- WORKSTATION NAVIGATION BAR -->
-<header class="header">
+<!-- TOP NAVIGATION -->
+<nav class="top-nav">
   <div class="nav-inner">
-    <a href="#workstation" class="nav-brand">
-      <span class="nav-prompt">PP://SYS</span>
-      <span class="nav-title">Prajwal Pujari · Inference Systems</span>
-    </a>
-    <nav class="nav-links">
-      <a href="#simulator" class="nav-link">01 // SIMULATOR</a>
-      <a href="#benchmarks" class="nav-link">02 // BENCHMARKS</a>
-      <a href="#flagships" class="nav-link">03 // RUNTIMES</a>
-      <a href="#rag" class="nav-link">04 // RAG &amp; EDGE</a>
-      <a href="#notes" class="nav-link">05 // NOTES</a>
-      <a href="#solutions" class="nav-link">06 // SOLUTIONS</a>
-      <a href="#contact" class="nav-link">07 // DISPATCH</a>
-      <button class="theme-toggle" id="theme-btn" aria-label="Toggle theme">
-        <svg id="theme-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-          <circle cx="12" cy="12" r="5"></circle>
-          <line x1="12" y1="1" x2="12" y2="3"></line>
-          <line x1="12" y1="21" x2="12" y2="23"></line>
-          <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
-          <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
-          <line x1="1" y1="12" x2="3" y2="12"></line>
-          <line x1="21" y1="12" x2="23" y2="12"></line>
-          <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
-          <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
-        </svg>
+    <a href="/" class="nav-brand">Prajwal Pujari</a>
+    <div class="nav-right">
+      <a href="#projects" class="nav-link">Projects</a>
+      <a href="#upstream" class="nav-link">Upstream</a>
+      <a href="/audit.html" class="nav-link">Audit</a>
+      <button class="theme-btn" onclick="toggleTheme()" id="theme-btn" aria-label="Toggle light or dark mode">
+        <span id="theme-icon">🌙</span> <span id="theme-label">Dark</span>
       </button>
-    </nav>
-  </div>
-</header>
-
-<main class="workstation-container" id="workstation">
-
-  <!-- HERO DOSSIER HEADER -->
-  <section class="hero-dossier">
-    <div class="hero-dossier-top">
-      <div class="hero-tag">
-        <span></span> AVAILABLE FOR Q4 2026 CONTRACTS & FULL-TIME ROLES
-      </div>
-      <div class="telemetry-item" style="font-family: 'JetBrains Mono', monospace; font-size: 0.78rem; color: var(--text-dim);">
-        SPECIFICATION ID: <span style="color: var(--text);">PP-INF-2026-V1</span>
-      </div>
     </div>
-    <h1 class="hero-title">
-      AI/ML Systems & LLM Inference Engineer
-    </h1>
-    <p class="hero-lead">
-      I engineer from-scratch <strong>continuous batching runtimes</strong>, <strong>Paged KV-cache virtual memory allocators</strong>, <strong>first-principles quantization engines (INT4/AWQ/GPTQ/2:4 sparsity)</strong>, and <strong>low-overhead benchmarking harnesses</strong>. Calibrated against constrained silicon (RTX 3050 6GB Laptop GPU) to achieve zero CUDA OOMs and high-density serving throughput.
+  </div>
+</nav>
+
+<main class="container">
+
+  <!-- HEADER -->
+  <header class="header">
+    <h1 class="name">Prajwal Pujari</h1>
+    <div class="role">Systems &amp; LLM inference engineer · Bengaluru, India</div>
+    <p class="intro">
+      I build inference runtimes, memory allocators, and quantization tools for running LLMs on consumer GPUs. Most of my work targets low latency and memory efficiency on single-card systems.
     </p>
-    <div class="hero-actions-row">
-      <a href="#simulator" class="btn btn-primary">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="5 3 19 12 5 21 5 3"/></svg>
-        <span>LAUNCH SIMULATOR</span>
-      </a>
-      <a href="#flagships" class="btn btn-secondary">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m18 16 4-4-4-4"/><path d="m6 8-4 4 4 4"/><path d="m14.5 4-5 16"/></svg>
-        <span>INSPECT RUNTIMES</span>
-      </a>
-      <a href="https://github.com/Prajwal7-2002" target="_blank" rel="noopener noreferrer" class="btn btn-secondary">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 22v-4a4.8 4.8 0 0 0-1-3.5c3 0 6-2 6-5.5.08-1.25-.27-2.48-1-3.5.28-1.15.28-2.35 0-3.5 0 0-1 0-3 1.5-2.64-.5-5.36-.5-8 0C6 2 5 2 5 2c-.3 1.15-.3 2.35 0 3.5A5.403 5.403 0 0 0 4 9c0 3.5 3 5.5 6 5.5-.39.49-.68 1.05-.85 1.65-.17.6-.22 1.23-.15 1.85v4"/><path d="M9 18c-4.51 2-5-2-7-2"/></svg>
-        <span>GITHUB PROFILE</span>
-      </a>
-    </div>
-  </section>
-
-  <!-- BENTO TOP DECK: SIMULATOR (Style A) + BENCHMARK MATRIX (Style C) -->
-  <section class="bento-hero-row" id="simulator">
-    
-    <!-- LEFT: INTERACTIVE SYSTEMS SIMULATOR (Style A) -->
-    <div class="bento-tile">
-      <div class="tile-header">
-        <span class="tile-label" id="sim-main-title">⚡ RUNTIME SIMULATOR // mini-infer v0.4.0</span>
-        <span class="tile-badge">INTERACTIVE WORKSTATION</span>
-      </div>
-
-      <!-- Mode Switcher Tabs -->
-      <div class="sim-workstation-tabs">
-        <button class="sim-tab active" id="tab-paged" onclick="switchSimulatorMode('paged')">⚡ RUNTIME: PAGED KV-CACHE</button>
-        <button class="sim-tab" id="tab-quant" onclick="switchSimulatorMode('quant')">🧮 PRECISION: BIT-PACKING &amp; SPARSITY</button>
-      </div>
-
-      <!-- VIEW 1: PAGED KV-CACHE (mini-infer) -->
-      <div id="sim-view-paged" style="display: flex; flex-direction: column; gap: 14px;">
-        <div class="sim-controls">
-          <span class="sim-label">CONCURRENCY (c):</span>
-          <button class="sim-btn" data-c="1" onclick="setSimConcurrency(1)">c = 1</button>
-          <button class="sim-btn" data-c="2" onclick="setSimConcurrency(2)">c = 2</button>
-          <button class="sim-btn active" data-c="4" onclick="setSimConcurrency(4)">c = 4 (Max)</button>
-          <button class="sim-btn" data-c="8" onclick="setSimConcurrency(8)">c = 8 (Burst)</button>
-        </div>
-
-        <!-- Dynamic Live Gauges -->
-        <div class="sim-gauges">
-          <div class="sim-gauge">
-            <span class="sim-gauge-label">Throughput</span>
-            <span class="sim-gauge-val highlight" id="gauge-toks">26.4 tok/s</span>
-          </div>
-          <div class="sim-gauge">
-            <span class="sim-gauge-label">TTFT Latency</span>
-            <span class="sim-gauge-val" id="gauge-ttft">756 ms</span>
-          </div>
-          <div class="sim-gauge">
-            <span class="sim-gauge-label">Inter-Token</span>
-            <span class="sim-gauge-val" id="gauge-itl">151 ms</span>
-          </div>
-          <div class="sim-gauge">
-            <span class="sim-gauge-label">VRAM Peak</span>
-            <span class="sim-gauge-val" id="gauge-vram">1.50 GB</span>
-          </div>
-        </div>
-
-        <!-- Paged KV-Cache Memory Block Map Visualizer -->
-        <div class="mem-vis-box">
-          <div class="mem-vis-header">
-            <span>PAGED KV-CACHE BLOCK TABLE (32 PHYSICAL PAGES · ZERO-FRAGMENTATION)</span>
-            <span id="mem-status-label">24 / 32 ALLOCATED (75%)</span>
-          </div>
-          <div class="mem-grid" id="mem-grid">
-            <!-- 32 memory blocks dynamically toggled by JS -->
-          </div>
-          <div class="mem-legend">
-            <span class="legend-item"><span class="legend-box" style="background: var(--telemetry-cyan);"></span> Prefix Cache</span>
-            <span class="legend-item"><span class="legend-box" style="background: var(--accent);"></span> Active Decode</span>
-            <span class="legend-item"><span class="legend-box" style="background: var(--border);"></span> Free Pool</span>
-          </div>
-        </div>
-
-        <!-- Copyable CLI Command -->
-        <div class="cli-snippet-box">
-          <div class="cli-code" id="cli-cmd-display">
-            <span class="prompt">$</span> pip install mini-infer &amp;&amp; python -m mini_infer.cli --model qwen-1.5b --concurrency 4
-          </div>
-          <button class="copy-btn" onclick="copySnippet('pip install mini-infer && python -m mini_infer.cli --model qwen-1.5b --concurrency 4', this)">
-            Copy CLI
-          </button>
-        </div>
-      </div>
-
-      <!-- VIEW 2: BIT-PACKING & SPARSITY (quantbench) -->
-      <div id="sim-view-quant" style="display: none; flex-direction: column; gap: 14px;">
-        <div class="sim-controls">
-          <span class="sim-label">PRECISION SCHEME:</span>
-          <button class="sim-btn quant-btn active" data-q="int4" onclick="setQuantScheme('int4')">INT4 Nibble</button>
-          <button class="sim-btn quant-btn" data-q="sparse" onclick="setQuantScheme('sparse')">Ampere 2:4</button>
-          <button class="sim-btn quant-btn" data-q="ternary" onclick="setQuantScheme('ternary')">BitNet 1.58b</button>
-          <button class="sim-btn quant-btn" data-q="fp8" onclick="setQuantScheme('fp8')">FP8 E4M3</button>
-        </div>
-
-        <!-- Dynamic Live Gauges -->
-        <div class="sim-gauges">
-          <div class="sim-gauge">
-            <span class="sim-gauge-label">Compression</span>
-            <span class="sim-gauge-val highlight" id="gauge-q-comp">3.5x Ratio</span>
-          </div>
-          <div class="sim-gauge">
-            <span class="sim-gauge-label">Reconstruction</span>
-            <span class="sim-gauge-val" id="gauge-q-sqnr">26.8 dB SQNR</span>
-          </div>
-          <div class="sim-gauge">
-            <span class="sim-gauge-label">PPL Delta</span>
-            <span class="sim-gauge-val" id="gauge-q-ppl">+0.12 ΔPPL</span>
-          </div>
-          <div class="sim-gauge">
-            <span class="sim-gauge-label">Hardware SIMD</span>
-            <span class="sim-gauge-val" id="gauge-q-simd">2x uint8</span>
-          </div>
-        </div>
-
-        <!-- Interactive Bit-Packing / Sparsity Visualizer -->
-        <div class="bit-vis-box">
-          <div class="bit-vis-header">
-            <span id="bit-vis-title">VECTORIZED SUB-BYTE BIT LAYOUT (UINT8 BUFFER STREAM)</span>
-            <span id="bit-vis-desc">2x 4-BIT NIBBLES PACKED PER BYTE</span>
-          </div>
-          <div class="bit-byte-stream" id="bit-stream-container">
-            <!-- Dynamic byte units generated by JS -->
-          </div>
-          <div class="mem-legend">
-            <span class="legend-item"><span class="legend-box" style="background: var(--accent);"></span> High Bits [7:4]</span>
-            <span class="legend-item"><span class="legend-box" style="background: var(--telemetry-green);"></span> Low Bits [3:0]</span>
-            <span class="legend-item"><span class="legend-box" style="background: var(--telemetry-cyan);"></span> Metadata Indices</span>
-          </div>
-        </div>
-
-        <!-- Copyable CLI Command -->
-        <div class="cli-snippet-box">
-          <div class="cli-code" id="cli-q-display">
-            <span class="prompt">$</span> pip install quantbench-engine &amp;&amp; quantbench pack-inspect --format int4
-          </div>
-          <button class="copy-btn" onclick="copySnippet('pip install quantbench-engine && quantbench pack-inspect --format int4', this)">
-            Copy CLI
-          </button>
-        </div>
-      </div>
-
+    <div class="links">
+      <a href="https://github.com/Prajwal7-2002" target="_blank" rel="noopener noreferrer">GitHub ↗</a>
+      <a href="https://huggingface.co/prajwalpujari16" target="_blank" rel="noopener noreferrer">Hugging Face ↗</a>
+      <a href="https://pypi.org/user/Prajwal2002PI/" target="_blank" rel="noopener noreferrer">PyPI Profile ↗</a>
+      <a href="https://www.linkedin.com/in/prajwal-pujari-mn9964" target="_blank" rel="noopener noreferrer">LinkedIn ↗</a>
+      <a href="mailto:prajwalpujari16@gmail.com">Direct Email ↗</a>
     </div>
 
-    <!-- RIGHT: SILICON BENCHMARK MATRIX (Style C) -->
-    <div class="bento-tile" id="benchmarks">
-      <div class="tile-header">
-        <span class="tile-label">📊 SILICON BENCHMARK MATRIX</span>
-        <span class="tile-badge">RTX 3050 LAPTOP · 6GB VRAM</span>
-      </div>
-
-      <div style="display: flex; flex-direction: column; gap: 14px;">
-        <table class="matrix-table">
-          <thead>
-            <tr>
-              <th>Runtime</th>
-              <th>Strategy</th>
-              <th>tok/s</th>
-              <th>VRAM</th>
-              <th>Status</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr class="highlight-row">
-              <td>mini-infer v0.4.0</td>
-              <td>PagedAttention (PyTorch)</td>
-              <td>26.4</td>
-              <td>1.50 GB</td>
-              <td><span class="provenance-pill">✓ Educational Baseline</span></td>
-            </tr>
-            <tr class="highlight-row">
-              <td>Ollama 0.35.1</td>
-              <td>4-bit GGUF (Optimized C++)</td>
-              <td>164.2</td>
-              <td>0.50 GB</td>
-              <td><span class="provenance-pill">✓ Production Binary</span></td>
-            </tr>
-            <tr class="highlight-row">
-              <td>quantbench v0.1.2</td>
-              <td>INT4 Block (G=128)</td>
-              <td>41.5</td>
-              <td>0.94 GB</td>
-              <td><span class="provenance-pill">✓ 3.5x Compressed</span></td>
-            </tr>
-            <tr>
-              <td>Roofline Calculator</td>
-              <td>Theoretical Model</td>
-              <td>444.0</td>
-              <td>0.50 GB</td>
-              <td><span class="provenance-pill-bad">⚠️ +170% Error (No Overhead)</span></td>
-            </tr>
-            <tr>
-              <td>servebench v1.2.0</td>
-              <td>Harness + Saturation Knee</td>
-              <td>--</td>
-              <td>&lt;50 MB</td>
-              <td><span class="provenance-pill">✓ Sigstore Verified</span></td>
-            </tr>
-            <tr>
-              <td>RunsOnMine</td>
-              <td>Physical Validity Gate</td>
-              <td>112.0</td>
-              <td>T4 Cloud</td>
-              <td><span class="provenance-pill">✓ CC BY 4.0 Data</span></td>
-            </tr>
-          </tbody>
-        </table>
-
-        <div class="matrix-footer">
-          <strong>Key Systems Takeaway:</strong> Theoretical roofline calculators estimate 444 tok/s on an RTX 3050 laptop, but real-world Ollama serving measures 164.2 tok/s due to memory clock states and engine overhead (tracked in <code>RunsOnMine</code>). Meanwhile, <code>mini-infer</code> implements continuous batching and Paged KV-cache in pure PyTorch (scaling from 8.5 to 26.4 tok/s at c=4), and <code>quantbench</code> INT4 block packing cuts weight footprint by 3.5× with zero-copy dequantization hooks.
-        </div>
-
-        <div style="background: var(--bg-subtle); border: 1px solid var(--border); border-radius: 6px; padding: 10px 12px; display: flex; align-items: center; justify-content: space-between; font-family: 'JetBrains Mono', monospace; font-size: 0.74rem;">
-          <span style="color: var(--text-dim);">CRYPTOGRAPHIC PROVENANCE:</span>
-          <span class="provenance-pill">SLSA Level 2 Attestation</span>
-        </div>
-      </div>
+    <!-- HARDWARE CONTEXT STAMP -->
+    <div class="hardware-stamp">
+      <span class="stamp-dot"></span>
+      <span>Profiled on constrained silicon: <strong>NVIDIA RTX 3050 Laptop (6GB VRAM, 70W TGP, PCIe 4.0 x4)</strong> · PyTorch 2.5 · CUDA 12.4</span>
     </div>
+  </header>
 
-  </section>
-
-  <!-- SECTION LABEL: FLAGSHIP RUNTIMES (Style B) -->
-  <div id="runtimes"></div>
-  <div class="section-label-row" id="flagships">
-    <span class="section-label">03 // CORE INFERENCE SYSTEMS FLAGSHIPS</span>
-    <span class="section-sublabel">PRODUCTION CODE · FULL SUITES · VERIFIED ARTIFACTS</span>
+  <!-- PROJECTS -->
+  <div class="section-title" id="projects">
+    <span>Open Source Projects</span>
+    <span class="section-meta">5 engines on PyPI</span>
   </div>
 
-  <!-- FLAGSHIPS GRID (Style B) -->
-  <section class="flagships-grid-quad">
+  <!-- streamspec -->
+  <article class="project">
+    <div class="project-header">
+      <a href="https://github.com/Prajwal7-2002/streamspec" target="_blank" rel="noopener noreferrer" class="project-name">streamspec</a>
+      <span class="project-tag">v1.2.0 · AGPL-3.0</span>
+    </div>
+    <p class="project-desc">
+      Runs 70B models and DeepSeek-R1 on consumer GPUs (8–16 GB VRAM) by streaming layers from disk or host RAM into GPU memory while previous layers are computing. Prefetches the next layer asynchronously over PCIe so the GPU doesn't stall waiting on I/O.
+    </p>
 
-    <!-- FLAGSHIP 1: streamspec (Hero Bento Anchor) -->
-    <div class="flagship-card flagship-card-hero">
-      <div class="flagship-top">
-        <div class="flagship-header-row">
-          <a href="https://github.com/Prajwal7-2002/streamspec" target="_blank" rel="noopener noreferrer" class="flagship-title">
-            <img src="./assets/logos/streamspec.svg" alt="streamspec logo" class="flagship-icon" onerror="this.style.display='none'" />
-            streamspec
-            <span style="font-size: 0.8rem; color: var(--text-dim); font-family: 'JetBrains Mono', monospace;">v1.2.0</span>
-          </a>
-          <span class="provenance-pill">AGPL-3.0 · Speculative Streaming</span>
-        </div>
-        <p class="flagship-desc">
-          Asynchronous <strong>speculative layer-streaming runtime</strong> enabling 70B &amp; DeepSeek-R1 inference on consumer VRAM (8–16 GB). Eliminates single-token disk thrashing via batched GEMM sweeps.
-        </p>
-        <ul class="flagship-features">
-          <li><span>[Double-Buffer Prefetch]</span> Overlaps layer L+1 transfer with layer L execution with &gt;90% bus overlap efficiency.</li>
-          <li><span>[Zero-Extra-Sweep]</span> Concatenates trailing tokens to eliminate redundant target sync sweeps (O(1) disk passes/round).</li>
-          <li><span>[Adaptive Dynamic K]</span> Online EMA controller modulates candidate length K based on empirical token acceptance.</li>
-        </ul>
-      </div>
-
-      <div style="display: flex; flex-direction: column; gap: 12px;">
-        <div class="flagship-stat-strip">
-          <span>I/O Speedup: <span class="metric">10x–15x</span></span>
-          <span>Bus Overlap: <span class="metric">&gt;90% (Async)</span></span>
-          <span>CI/CD: <span class="metric">10/10 Pass (100%)</span></span>
-        </div>
-
-        <div class="flagship-footer-row">
-          <div class="flagship-links">
-            <a href="https://github.com/Prajwal7-2002/streamspec" target="_blank" rel="noopener noreferrer" class="flagship-link">
-              GitHub ↗
-            </a>
-            <a href="https://pypi.org/project/streamspec/" target="_blank" rel="noopener noreferrer" class="flagship-link">
-              PyPI ↗
-            </a>
-            <a href="https://huggingface.co/spaces/prajwalpujari16/streamspec" target="_blank" rel="noopener noreferrer" class="flagship-link" style="color: var(--cyan); font-weight: 600;">
-              🤗 HF Studio ↗
-            </a>
-            <a href="https://colab.research.google.com/github/Prajwal7-2002/streamspec/blob/main/notebooks/streamspec_70b_benchmark.ipynb" target="_blank" rel="noopener noreferrer" class="flagship-link" style="color: var(--accent); font-weight: 600;">
-              Google Colab ↗
-            </a>
-            <a href="https://github.com/Prajwal7-2002/streamspec/blob/main/SPECIFICATION.md" target="_blank" rel="noopener noreferrer" class="flagship-link">
-              Architecture Spec ↗
-            </a>
-          </div>
-          <button class="copy-btn" onclick="copySnippet('pip install streamspec', this)">
-            $ pip install streamspec
-          </button>
-        </div>
-      </div>
+    <div class="pip-row">
+      <button class="pip-chip" onclick="copyPip('pip install streamspec', this)" title="Click to copy command">
+        <span>$ pip install streamspec</span>
+        <span class="copy-label">copy</span>
+      </button>
     </div>
 
-    <!-- FLAGSHIP 2: mini-infer -->
-    <div class="flagship-card">
-      <div class="flagship-top">
-        <div class="flagship-header-row">
-          <a href="https://github.com/Prajwal7-2002/mini-infer" target="_blank" rel="noopener noreferrer" class="flagship-title">
-            <img src="./assets/logos/mini-infer.svg" alt="mini-infer logo" class="flagship-icon" />
-            mini-infer
-            <span style="font-size: 0.8rem; color: var(--text-dim); font-family: 'JetBrains Mono', monospace;">v0.4.0</span>
-          </a>
-          <span class="provenance-pill">PyPI · Sigstore</span>
-        </div>
-        <p class="flagship-desc">
-          Educational, from-scratch <strong>continuous batching LLM inference runtime</strong> in pure PyTorch featuring Paged KV-Cache allocation, iteration-level scheduling, and raw Safetensors streaming deserialization.
-        </p>
-        <ul class="flagship-features">
-          <li><span>[Paging]</span> Zero-fragmentation virtual memory table mapping logical token blocks to physical GPU memory slots.</li>
-          <li><span>[Batching]</span> Step-level continuous iteration merges new prompts with ongoing decodes dynamically.</li>
-          <li><span>[Eviction]</span> Prefix LRU cache eviction under memory pressure preventing OOM faults on long sequences.</li>
-        </ul>
-      </div>
+    <div class="project-stats">10x–15x faster I/O than naive offloading · &gt;90% PCIe bus overlap</div>
 
-      <div style="display: flex; flex-direction: column; gap: 12px;">
-        <div class="flagship-stat-strip">
-          <span>c=4 Speed: <span class="metric">26.4 tok/s</span></span>
-          <span>Batch Scaling: <span class="metric">3.1x</span></span>
-          <span>Target: <span class="metric">Qwen2.5 / SmolLM2</span></span>
-        </div>
-
-        <div class="flagship-footer-row">
-          <div class="flagship-links">
-            <a href="https://github.com/Prajwal7-2002/mini-infer" target="_blank" rel="noopener noreferrer" class="flagship-link">
-              GitHub ↗
-            </a>
-            <a href="https://pypi.org/project/mini-infer/" target="_blank" rel="noopener noreferrer" class="flagship-link">
-              PyPI Package ↗
-            </a>
-            <a href="https://huggingface.co/spaces/prajwalpujari16/mini-infer" target="_blank" rel="noopener noreferrer" class="flagship-link" style="color: var(--accent); font-weight: 600;">
-              Live Studio 🚀
-            </a>
-          </div>
-          <button class="copy-btn" onclick="copySnippet('pip install mini-infer', this)">
-            $ pip install mini-infer
-          </button>
-        </div>
-      </div>
+    <div class="project-links">
+      <a href="https://github.com/Prajwal7-2002/streamspec" target="_blank" rel="noopener noreferrer">GitHub ↗</a>
+      <a href="https://pypi.org/project/streamspec/" target="_blank" rel="noopener noreferrer">PyPI ↗</a>
+      <a href="https://huggingface.co/spaces/prajwalpujari16/streamspec" target="_blank" rel="noopener noreferrer">Hugging Face Space ↗</a>
+      <a href="https://colab.research.google.com/github/Prajwal7-2002/streamspec/blob/main/notebooks/streamspec_70b_benchmark.ipynb" target="_blank" rel="noopener noreferrer">Colab Notebook ↗</a>
     </div>
 
-    <!-- FLAGSHIP 2: servebench -->
-    <div class="flagship-card">
-      <div class="flagship-top">
-        <div class="flagship-header-row">
-          <a href="https://github.com/Prajwal7-2002/servebench" target="_blank" rel="noopener noreferrer" class="flagship-title">
-            <img src="./assets/logos/servebench.svg" alt="servebench logo" class="flagship-icon" />
-            servebench
-            <span style="font-size: 0.8rem; color: var(--text-dim); font-family: 'JetBrains Mono', monospace;">v1.2.0</span>
-          </a>
-          <span class="provenance-pill">PyPI · Sigstore</span>
+    <details class="project-breakdown">
+      <summary class="breakdown-toggle">
+        <span class="toggle-icon">▸</span>
+        <span>Architecture breakdown &amp; silicon proof</span>
+      </summary>
+      <div class="breakdown-content">
+        <div class="breakdown-item">
+          <div class="breakdown-label">The Bottleneck</div>
+          <div class="breakdown-text">70B parameter models require ~140 GB FP16 VRAM. Running on an 8GB or 16GB consumer GPU forces CPU/NVMe layer swapping, where single-token sequential passes stall the CUDA cores while waiting on PCIe bus transfers.</div>
         </div>
-        <p class="flagship-desc">
-          Universal <strong>production load testing &amp; capacity harness</strong> for LLM serving engines. Captures streaming SSE chunks with microsecond precision to diagnose TTFT and ITL tail latency degradation.
-        </p>
-        <ul class="flagship-features">
-          <li><span>[SSE Parser]</span> High-throughput Server-Sent Events client extracting TTFT, ITL jitter, and queue delays.</li>
-          <li><span>[Adapters]</span> Multi-engine support for vLLM, SGLang, Ollama, and custom local inference servers.</li>
-          <li><span>[Telemetry]</span> Heuristic bottleneck diagnosis differentiating compute bound vs KV-cache bound clusters.</li>
-        </ul>
-      </div>
-
-      <div style="display: flex; flex-direction: column; gap: 12px;">
-        <div class="flagship-stat-strip">
-          <span>Tests: <span class="metric">152/152 Pass</span></span>
-          <span>Peak MBU: <span class="metric">44.8% (RTX 3050)</span></span>
-          <span>Knee: <span class="metric">Ollama 4→8 Slots</span></span>
+        <div class="breakdown-item">
+          <div class="breakdown-label">The Mechanism</div>
+          <div class="breakdown-text">Double-buffered pinned memory ring buffer that prefetches layer L+1 over DMA while layer L computes on GPU, hiding 90%+ of PCIe latency behind batched GEMM sweeps. Dynamic EMA modulates speculative draft candidate length K based on live acceptance rates.</div>
         </div>
-
-        <div class="flagship-footer-row">
-          <div class="flagship-links">
-            <a href="https://github.com/Prajwal7-2002/servebench" target="_blank" rel="noopener noreferrer" class="flagship-link">
-              GitHub ↗
-            </a>
-            <a href="https://pypi.org/project/servebench/" target="_blank" rel="noopener noreferrer" class="flagship-link">
-              PyPI Package ↗
-            </a>
-          </div>
-          <button class="copy-btn" onclick="copySnippet('pip install servebench', this)">
-            $ pip install servebench
-          </button>
+        <div class="breakdown-item">
+          <div class="breakdown-label">Silicon Verification</div>
+          <div class="breakdown-text">Measured 10x–15x I/O throughput gains over baseline unbatched paging on an NVIDIA RTX 3050 (6GB). 10/10 automated test suites passing in CI.</div>
         </div>
       </div>
+    </details>
+  </article>
+
+  <!-- mini-infer -->
+  <article class="project">
+    <div class="project-header">
+      <a href="https://github.com/Prajwal7-2002/mini-infer" target="_blank" rel="noopener noreferrer" class="project-name">mini-infer</a>
+      <span class="project-tag">v0.4.0 · PyPI</span>
+    </div>
+    <p class="project-desc">
+      A small continuous-batching inference engine built in pure PyTorch. Implements paged KV-cache memory allocation and iteration-level scheduling from scratch to demonstrate how modern serving systems avoid fragmentation and batch requests dynamically.
+    </p>
+
+    <div class="pip-row">
+      <button class="pip-chip" onclick="copyPip('pip install mini-infer', this)" title="Click to copy command">
+        <span>$ pip install mini-infer</span>
+        <span class="copy-label">copy</span>
+      </button>
     </div>
 
-    <!-- FLAGSHIP 3: sched-sim -->
-    <div class="flagship-card">
-      <div class="flagship-top">
-        <div class="flagship-header-row">
-          <a href="https://github.com/Prajwal7-2002/sched-sim" target="_blank" rel="noopener noreferrer" class="flagship-title">
-            <img src="./assets/logos/sched-sim.svg" alt="sched-sim logo" class="flagship-icon" />
-            sched-sim
-            <span style="font-size: 0.8rem; color: var(--text-dim); font-family: 'JetBrains Mono', monospace;">v0.2.3</span>
-          </a>
-          <span class="provenance-pill">PyPI · Discrete-Event</span>
-        </div>
-        <p class="flagship-desc">
-          High-fidelity <strong>discrete-event simulator for LLM serving schedulers</strong>. Evaluates Sarathi Chunked Prefill, Radix Prefix Caching, and PD Disaggregation on CPU, calibrated against out-of-sample real serving data.
-        </p>
-        <ul class="flagship-features">
-          <li><span>[Roofline]</span> Analytical compute &amp; DRAM bandwidth latency physics calibrated with physical silicon data.</li>
-          <li><span>[Radix Cache]</span> SGLang/vLLM-style Radix tree prefix caching with chained block hashing and LRU eviction.</li>
-          <li><span>[Perfetto]</span> Microsecond forward-pass iteration slicing and request lifecycle export for ui.perfetto.dev.</li>
-        </ul>
-      </div>
+    <div class="project-stats">26.4 tok/s at concurrency=4 on RTX 3050 · 3.1x batch speedup</div>
 
-      <div style="display: flex; flex-direction: column; gap: 12px;">
-        <div class="flagship-stat-strip">
-          <span>Tests: <span class="metric">42/42 Pass</span></span>
-          <span>Policies: <span class="metric">6 Schedulers</span></span>
-          <span>Out-of-Sample: <span class="metric">±12% TPOT (Ollama)</span></span>
-        </div>
-
-        <div class="flagship-footer-row">
-          <div class="flagship-links">
-            <a href="https://github.com/Prajwal7-2002/sched-sim" target="_blank" rel="noopener noreferrer" class="flagship-link">
-              GitHub ↗
-            </a>
-            <a href="https://pypi.org/project/sched-sim/" target="_blank" rel="noopener noreferrer" class="flagship-link">
-              PyPI Package ↗
-            </a>
-            <a href="https://huggingface.co/spaces/prajwalpujari16/sched-sim" target="_blank" rel="noopener noreferrer" class="flagship-link" style="color: var(--accent); font-weight: 600;">
-              Live Studio ⏱️
-            </a>
-          </div>
-          <button class="copy-btn" onclick="copySnippet('pip install sched-sim', this)">
-            $ pip install sched-sim
-          </button>
-        </div>
-      </div>
+    <div class="project-links">
+      <a href="https://github.com/Prajwal7-2002/mini-infer" target="_blank" rel="noopener noreferrer">GitHub ↗</a>
+      <a href="https://pypi.org/project/mini-infer/" target="_blank" rel="noopener noreferrer">PyPI ↗</a>
+      <a href="https://huggingface.co/spaces/prajwalpujari16/mini-infer" target="_blank" rel="noopener noreferrer">Hugging Face Space ↗</a>
     </div>
 
-    <!-- FLAGSHIP 4: quantbench -->
-    <div class="flagship-card">
-      <div class="flagship-top">
-        <div class="flagship-header-row">
-          <a href="https://github.com/Prajwal7-2002/quantbench" target="_blank" rel="noopener noreferrer" class="flagship-title">
-            <img src="./assets/logos/quantbench.svg" alt="quantbench logo" class="flagship-icon" />
-            quantbench
-            <span style="font-size: 0.8rem; color: var(--text-dim); font-family: 'JetBrains Mono', monospace;">v0.1.2</span>
-          </a>
-          <span class="provenance-pill">PyPI · Pareto Engine</span>
+    <details class="project-breakdown">
+      <summary class="breakdown-toggle">
+        <span class="toggle-icon">▸</span>
+        <span>Architecture breakdown &amp; silicon proof</span>
+      </summary>
+      <div class="breakdown-content">
+        <div class="breakdown-item">
+          <div class="breakdown-label">The Bottleneck</div>
+          <div class="breakdown-text">Standard sequential generation preallocates max-context contiguous GPU memory for each request, causing severe internal fragmentation and frequent CUDA Out-Of-Memory errors under concurrent workloads.</div>
         </div>
-        <p class="flagship-desc">
-          First-principles <strong>LLM quantization engine &amp; Pareto evaluation benchmark</strong>. Implements sub-byte bit-packing runtimes, Ampere 2:4 structured sparsity, drop-in PyTorch <code>QuantLinear</code> layers, and Cholesky GPTQ calibration.
-        </p>
-        <ul class="flagship-features">
-          <li><span>[Bit-Packing]</span> Vectorized 2x INT4 nibbles into uint8, BitNet 1.58b ternary packing, and Ampere 2:4 sparsity condensation.</li>
-          <li><span>[Calibration]</span> SmoothQuant activation migration, AWQ Frobenius grid search, and block-wise Cholesky Hessian damping updates.</li>
-          <li><span>[Pareto Engine]</span> Multi-layer SQNR (dB) and sliding-window perplexity sweeps against PyTorch/AutoGPTQ baselines.</li>
-        </ul>
-      </div>
-
-      <div style="display: flex; flex-direction: column; gap: 12px;">
-        <div class="flagship-stat-strip">
-          <span>Tests: <span class="metric">47/47 Pass (95%)</span></span>
-          <span>Compression: <span class="metric">3.5x INT4 / 7.5x BitNet</span></span>
-          <span>Dequant: <span class="metric">Zero-Copy Buffer Hook</span></span>
+        <div class="breakdown-item">
+          <div class="breakdown-label">The Mechanism</div>
+          <div class="breakdown-text">Virtual memory block manager mapping non-contiguous GPU physical slots to logical token positions. Iteration-level continuous scheduling injects new prompt prefill passes alongside active decode tokens without waiting for previous requests to finish.</div>
         </div>
-
-        <div class="flagship-footer-row">
-          <div class="flagship-links">
-            <a href="https://github.com/Prajwal7-2002/quantbench" target="_blank" rel="noopener noreferrer" class="flagship-link">
-              GitHub ↗
-            </a>
-            <a href="https://pypi.org/project/quantbench-engine/" target="_blank" rel="noopener noreferrer" class="flagship-link">
-              PyPI Package ↗
-            </a>
-            <a href="https://prajwal7-2002.github.io/quantbench/" target="_blank" rel="noopener noreferrer" class="flagship-link">
-              Docs ↗
-            </a>
-            <a href="https://huggingface.co/spaces/prajwalpujari16/quantbench" target="_blank" rel="noopener noreferrer" class="flagship-link" style="color: var(--accent); font-weight: 600;">
-              Live Studio 🔬
-            </a>
-          </div>
-          <button class="copy-btn" onclick="copySnippet('pip install quantbench-engine', this)">
-            $ pip install quantbench-engine
-          </button>
+        <div class="breakdown-item">
+          <div class="breakdown-label">Silicon Verification</div>
+          <div class="breakdown-text">Benchmarked against Qwen2.5 and SmolLM2 on RTX 3050 Laptop GPU. Achieved 26.4 tok/s aggregate throughput at c=4 concurrency (3.1x speedup over sequential execution) with zero memory leaks.</div>
         </div>
       </div>
+    </details>
+  </article>
+
+  <!-- servebench -->
+  <article class="project">
+    <div class="project-header">
+      <a href="https://github.com/Prajwal7-2002/servebench" target="_blank" rel="noopener noreferrer" class="project-name">servebench</a>
+      <span class="project-tag">v1.2.0 · PyPI</span>
+    </div>
+    <p class="project-desc">
+      Load testing tool for local LLM servers (vLLM, Ollama, SGLang). Streams HTTP SSE tokens with microsecond timestamps to measure time-to-first-token (TTFT) and inter-token latency (ITL) under concurrent user traffic.
+    </p>
+
+    <div class="pip-row">
+      <button class="pip-chip" onclick="copyPip('pip install servebench', this)" title="Click to copy command">
+        <span>$ pip install servebench</span>
+        <span class="copy-label">copy</span>
+      </button>
     </div>
 
-  
-    <!-- FLAGSHIP 5: infersize -->
-    <div class="flagship-card">
-      <div class="flagship-top">
-        <div class="flagship-header-row">
-          <a href="https://github.com/Prajwal7-2002/infersize" target="_blank" rel="noopener noreferrer" class="flagship-title">
-            <img src="./assets/logos/infersize.svg" alt="infersize logo" class="flagship-icon" />
-            infersize
-            <span style="font-size: 0.8rem; color: var(--text-dim); font-family: 'JetBrains Mono', monospace;">v0.4.0</span>
-          </a>
-          <span class="provenance-pill">PyPI · Capacity CAD</span>
-        </div>
-        <p class="flagship-desc">
-          First-principles <strong>analytical performance modeling, multi-GPU comparison matrix &amp; cloud TCO sizer</strong>. Predicts exact parameter footprints, memory-bandwidth decode throughput, and $/1M tokens before downloading weights or renting clusters.
-        </p>
-        <ul class="flagship-features">
-          <li><span>[VRAM Physics]</span> Exact SwiGLU 3x parameter accounting, DeepSeek-V3 MLA (98.2% KV cache reduction), GQA scaling, and MoE active routing.</li>
-          <li><span>[Hardware Matrix]</span> Multi-accelerator side-by-side evaluation, speculative decoding speedup sizer, and local physical zero-OOM verification.</li>
-          <li><span>[Cloud Economics]</span> Dynamic Hugging Face Hub ingestion, roofline decode throughput, $/1M tokens, and interactive Streamlit Web Studio.</li>
-        </ul>
-      </div>
+    <div class="project-stats">152 unit tests passing · tracks tail latency percentiles</div>
 
-      <div style="display: flex; flex-direction: column; gap: 12px;">
-        <div class="flagship-stat-strip">
-          <span>Tests: <span class="metric">49/49 Pass (100% CI)</span></span>
-          <span>MLA: <span class="metric">DeepSeek-V3</span></span>
-          <span>Compute: <span class="metric">Zero GPU Required</span></span>
-        </div>
-
-        <div class="flagship-footer-row">
-          <div class="flagship-links">
-            <a href="https://github.com/Prajwal7-2002/infersize" target="_blank" rel="noopener noreferrer" class="flagship-link">
-              GitHub ↗
-            </a>
-            <a href="https://pypi.org/project/infersize/" target="_blank" rel="noopener noreferrer" class="flagship-link">
-              PyPI Package ↗
-            </a>
-            <a href="https://prajwal7-2002.github.io/infersize/" target="_blank" rel="noopener noreferrer" class="flagship-link">
-              Documentation ↗
-            </a>
-            <a href="https://huggingface.co/spaces/prajwalpujari16/infersize" target="_blank" rel="noopener noreferrer" class="flagship-link" style="color: var(--accent); font-weight: 600;">
-              Live Studio ⚡
-            </a>
-          </div>
-          <button class="copy-btn" onclick="copySnippet('pip install infersize', this)">
-            $ pip install infersize
-          </button>
-        </div>
-      </div>
+    <div class="project-links">
+      <a href="https://github.com/Prajwal7-2002/servebench" target="_blank" rel="noopener noreferrer">GitHub ↗</a>
+      <a href="https://pypi.org/project/servebench/" target="_blank" rel="noopener noreferrer">PyPI ↗</a>
     </div>
 
-    <!-- FLAGSHIP 6: RunsOnMine -->
-    <div class="flagship-card">
-      <div class="flagship-top">
-        <div class="flagship-header-row">
-          <a href="https://github.com/Prajwal7-2002/runsonmine" target="_blank" rel="noopener noreferrer" class="flagship-title">
-            <img src="./assets/logos/runsonmine.svg" alt="RunsOnMine logo" class="flagship-icon" />
-            RunsOnMine
-            <span style="font-size: 0.8rem; color: var(--text-dim); font-family: 'JetBrains Mono', monospace;">v0.3.0</span>
-          </a>
-          <span class="provenance-pill">CC BY 4.0 · Open Data</span>
+    <details class="project-breakdown">
+      <summary class="breakdown-toggle">
+        <span class="toggle-icon">▸</span>
+        <span>Architecture breakdown &amp; silicon proof</span>
+      </summary>
+      <div class="breakdown-content">
+        <div class="breakdown-item">
+          <div class="breakdown-label">The Bottleneck</div>
+          <div class="breakdown-text">Generic HTTP load testers (e.g. ApacheBench, wrk) only record end-to-end response time, masking critical LLM streaming degradations like TTFT spikes, KV-cache queuing delays, and token jitter.</div>
         </div>
-        <p class="flagship-desc">
-          Crowdsourced <strong>local AI hardware benchmark database &amp; physical validity gate</strong>. Collects measured speeds from community laptops, desktops, and Macs so developers see real tok/s before downloading models.
-        </p>
-        <ul class="flagship-features">
-          <li><span>[Real vs Est]</span> Exposes the 444 vs 164 tok/s gap on RTX 3050 between theoretical paper models and real Ollama runs.</li>
-          <li><span>[Physics Gate]</span> Automated CI verification: rejects impossible submissions where speed exceeds memory bandwidth / model size.</li>
-          <li><span>[Zero Leak]</span> Submissions via <code>uvx servebench submit</code> collect zero usernames, IPs, prompts, or model outputs.</li>
-        </ul>
-      </div>
-
-      <div style="display: flex; flex-direction: column; gap: 12px;">
-        <div class="flagship-stat-strip">
-          <span>RTX 3050: <span class="metric">164 tok/s (Real)</span></span>
-          <span>Kaggle T4: <span class="metric">112 tok/s</span></span>
-          <span>Tests: <span class="metric">24/24 Pass</span></span>
+        <div class="breakdown-item">
+          <div class="breakdown-label">The Mechanism</div>
+          <div class="breakdown-text">High-throughput Server-Sent Events parser logging microsecond per-token arrival delta timestamps. Automates concurrency sweeps to map the latency knee where serving slots saturate.</div>
         </div>
-
-        <div class="flagship-footer-row">
-          <div class="flagship-links">
-            <a href="https://github.com/Prajwal7-2002/runsonmine" target="_blank" rel="noopener noreferrer" class="flagship-link">
-              GitHub ↗
-            </a>
-            <a href="https://huggingface.co/spaces/prajwalpujari16/runsonmine" target="_blank" rel="noopener noreferrer" class="flagship-link" style="color: var(--accent); font-weight: 600;">
-              Live Studio ⚡
-            </a>
-            <a href="https://prajwal7-2002.github.io/runsonmine/" target="_blank" rel="noopener noreferrer" class="flagship-link">
-              Live Database ↗
-            </a>
-          </div>
-          <button class="copy-btn" onclick="copySnippet('uvx servebench submit --model qwen2.5:0.5b', this)">
-            $ uvx servebench submit
-          </button>
+        <div class="breakdown-item">
+          <div class="breakdown-label">Silicon Verification</div>
+          <div class="breakdown-text">Identified Ollama concurrency bottleneck at 4→8 slots under 44.8% Memory Bandwidth Utilization (MBU) on local hardware. 152/152 unit tests passing.</div>
         </div>
       </div>
+    </details>
+  </article>
+
+  <!-- sched-sim -->
+  <article class="project">
+    <div class="project-header">
+      <a href="https://github.com/Prajwal7-2002/sched-sim" target="_blank" rel="noopener noreferrer" class="project-name">sched-sim</a>
+      <span class="project-tag">v0.2.3 · PyPI</span>
+    </div>
+    <p class="project-desc">
+      A CPU-based discrete-event simulator for benchmarking LLM scheduler policies (chunked prefill, prefix caching, prefill-decode disaggregation) without renting GPU clusters. Calibrated against real Ollama serving runs within ±12%.
+    </p>
+
+    <div class="pip-row">
+      <button class="pip-chip" onclick="copyPip('pip install sched-sim', this)" title="Click to copy command">
+        <span>$ pip install sched-sim</span>
+        <span class="copy-label">copy</span>
+      </button>
     </div>
 
-    <!-- FLAGSHIP 7: token-atlas -->
-    <div class="flagship-card">
-      <div class="flagship-top">
-        <div class="flagship-header-row">
-          <a href="https://github.com/Prajwal7-2002/token-atlas" target="_blank" rel="noopener noreferrer" class="flagship-title">
-            <img src="./assets/logos/token-atlas.svg" alt="token-atlas logo" class="flagship-icon" onerror="this.style.display='none'" />
-            token-atlas
-            <span style="font-size: 0.8rem; color: var(--text-dim); font-family: 'JetBrains Mono', monospace;">v0.3.0</span>
-          </a>
-          <span class="provenance-pill">PyPI · Multilingual CAD</span>
-        </div>
-        <p class="flagship-desc">
-          Universal multilingual <strong>tokenizer efficiency benchmark &amp; global linguistic inflation atlas</strong>. Analyzes 52 languages across 13 frontier tokenizers, multi-domain benchmarks (Code, Indentation, Tool-Calling Schemas), cost router, and prompt minifier.
-        </p>
-        <ul class="flagship-features">
-          <li><span>[13 Frontier Models]</span> Benchmarks DeepSeek-R1, Qwen2.5-Coder, Cohere Aya, Llama-3.2, Mistral Tekken, GPT-4o.</li>
-          <li><span>[Domain Taxes]</span> Measures 2.63× tool schema bloat and 1.16×–1.42× 4-space indentation tax.</li>
-          <li><span>[Router &amp; Minifier]</span> Computes true effective $/1M cost and losslessly compresses prompt whitespace and JSON schemas.</li>
-        </ul>
-      </div>
+    <div class="project-stats">Simulates 6 scheduler policies · exports Perfetto execution traces</div>
 
-      <div style="display: flex; flex-direction: column; gap: 12px;">
-        <div class="flagship-stat-strip">
-          <span>Languages: <span class="metric">52 Analyzed</span></span>
-          <span>Tokenizers: <span class="metric">13 Models</span></span>
-          <span>Tests: <span class="metric">41/41 Pass (91% Cov)</span></span>
-        </div>
-
-        <div class="flagship-footer-row">
-          <div class="flagship-links">
-            <a href="https://github.com/Prajwal7-2002/token-atlas" target="_blank" rel="noopener noreferrer" class="flagship-link">
-              GitHub ↗
-            </a>
-            <a href="https://pypi.org/project/token-atlas-engine/" target="_blank" rel="noopener noreferrer" class="flagship-link">
-              PyPI Package ↗
-            </a>
-            <a href="https://prajwal7-2002.github.io/token-atlas/" target="_blank" rel="noopener noreferrer" class="flagship-link" style="color: var(--accent); font-weight: 600;">
-              Live Studio 🌐
-            </a>
-          </div>
-          <button class="copy-btn" onclick="copySnippet('pip install token-atlas-engine', this)">
-            $ pip install token-atlas-engine
-          </button>
-        </div>
-      </div>
+    <div class="project-links">
+      <a href="https://github.com/Prajwal7-2002/sched-sim" target="_blank" rel="noopener noreferrer">GitHub ↗</a>
+      <a href="https://pypi.org/project/sched-sim/" target="_blank" rel="noopener noreferrer">PyPI ↗</a>
+      <a href="https://huggingface.co/spaces/prajwalpujari16/sched-sim" target="_blank" rel="noopener noreferrer">Hugging Face Space ↗</a>
     </div>
 
-  </section>
+    <details class="project-breakdown">
+      <summary class="breakdown-toggle">
+        <span class="toggle-icon">▸</span>
+        <span>Architecture breakdown &amp; silicon proof</span>
+      </summary>
+      <div class="breakdown-content">
+        <div class="breakdown-item">
+          <div class="breakdown-label">The Bottleneck</div>
+          <div class="breakdown-text">Evaluating serving scheduling algorithms (Sarathi, Radix Attention, Disaggregation) typically requires provisioning multi-node GPU clusters, making rapid policy iteration slow and expensive.</div>
+        </div>
+        <div class="breakdown-item">
+          <div class="breakdown-label">The Mechanism</div>
+          <div class="breakdown-text">Analytical roofline model driven by memory bus bandwidth and FLOP limits. Simulates chained Radix hash trees and chunked iterations on CPU in seconds, exporting JSON trace dumps viewable on ui.perfetto.dev.</div>
+        </div>
+        <div class="breakdown-item">
+          <div class="breakdown-label">Silicon Verification</div>
+          <div class="breakdown-text">Simulated time-per-output-token (TPOT) matched real out-of-sample physical Ollama hardware runs within ±12%. 42/42 tests passing.</div>
+        </div>
+      </div>
+    </details>
+  </article>
 
+  <!-- quantbench -->
+  <article class="project">
+    <div class="project-header">
+      <a href="https://github.com/Prajwal7-2002/quantbench" target="_blank" rel="noopener noreferrer" class="project-name">quantbench</a>
+      <span class="project-tag">v0.1.2 · PyPI</span>
+    </div>
+    <p class="project-desc">
+      Quantization experiments and benchmarks in PyTorch. Includes INT4 bit-packing into uint8 tensors, BitNet 1.58b ternary packing, Ampere 2:4 structured sparsity masks, and GPTQ second-order Hessian calibration.
+    </p>
 
+    <div class="pip-row">
+      <button class="pip-chip" onclick="copyPip('pip install quantbench-engine', this)" title="Click to copy command">
+        <span>$ pip install quantbench-engine</span>
+        <span class="copy-label">copy</span>
+      </button>
+    </div>
 
-  <!-- SECTION LABEL: APPLIED RAG & EDGE SYSTEMS (Style B) -->
-  <div class="section-label-row" id="rag">
-    <span class="section-label">04 // APPLIED EDGE SLM &amp; ENTERPRISE RAG</span>
-    <span class="section-sublabel">FINE-TUNED SLMS · HYBRID RETRIEVAL · AIR-GAPPED DEPLOYMENTS</span>
+    <div class="project-stats">3.5x INT4 compression · 47 test cases covering accuracy &amp; speed</div>
+
+    <div class="project-links">
+      <a href="https://github.com/Prajwal7-2002/quantbench" target="_blank" rel="noopener noreferrer">GitHub ↗</a>
+      <a href="https://pypi.org/project/quantbench-engine/" target="_blank" rel="noopener noreferrer">PyPI ↗</a>
+    </div>
+
+    <details class="project-breakdown">
+      <summary class="breakdown-toggle">
+        <span class="toggle-icon">▸</span>
+        <span>Architecture breakdown &amp; silicon proof</span>
+      </summary>
+      <div class="breakdown-content">
+        <div class="breakdown-item">
+          <div class="breakdown-label">The Bottleneck</div>
+          <div class="breakdown-text">Naively applying sub-byte quantization (INT4/ternary) creates accuracy degradation and dequantization overhead unless weights are packed aligned to hardware registers and calibrated against Hessian matrices.</div>
+        </div>
+        <div class="breakdown-item">
+          <div class="breakdown-label">The Mechanism</div>
+          <div class="breakdown-text">Vectorized 2x INT4 nibble packing into uint8, 2:4 Ampere sparsity index condensation, and block-wise Cholesky Hessian damping updates with drop-in PyTorch QuantLinear layers.</div>
+        </div>
+        <div class="breakdown-item">
+          <div class="breakdown-label">Silicon Verification</div>
+          <div class="breakdown-text">Measured 3.5x memory reduction for INT4 and 7.5x for BitNet ternary packing on Llama/Qwen layers with zero-copy buffer hooks. 47/47 unit tests passing.</div>
+        </div>
+      </div>
+    </details>
+  </article>
+
+  <!-- UPSTREAM CONTRIBUTIONS WITH FILES & DIFFS -->
+  <div class="section-title" id="upstream">
+    <span>Upstream Contributions</span>
+    <span class="section-meta">Merged production patches</span>
+  </div>
+  <p style="color: var(--text-muted); font-size: 0.93rem; margin-bottom: 12px;">
+    Merged pull requests in <strong>ModelCloud/GPTQModel</strong> (production LLM quantization library):
+  </p>
+
+  <div class="table-wrap">
+    <table class="pr-table">
+      <thead>
+        <tr>
+          <th style="width: 75px;">PR</th>
+          <th>Patch Description &amp; Modules</th>
+          <th style="width: 85px; text-align: right;">Status</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><a href="https://github.com/ModelCloud/GPTQModel/pull/4145" target="_blank" rel="noopener noreferrer" class="pr-id">#4145</a></td>
+          <td>
+            Pass residual, alibi, and mask tensors during Bloom AWQ module forward replay and reject unsafe norm folds
+            <span class="pr-file">📁 gptqmodel/models/bloom.py · <a href="https://github.com/ModelCloud/GPTQModel/pull/4145" target="_blank" rel="noopener noreferrer" style="color: var(--accent);">View diff ↗</a></span>
+          </td>
+          <td style="text-align: right;"><span class="badge-merged">Merged ✓</span></td>
+        </tr>
+        <tr>
+          <td><a href="https://github.com/ModelCloud/GPTQModel/pull/4142" target="_blank" rel="noopener noreferrer" class="pr-id">#4142</a></td>
+          <td>
+            Scoped deterministic PyTorch algorithms in GPU weighted k-means (VPTQ)
+            <span class="pr-file">📁 gptqmodel/quantization/vptq/kmeans.py · <a href="https://github.com/ModelCloud/GPTQModel/pull/4142" target="_blank" rel="noopener noreferrer" style="color: var(--accent);">View diff ↗</a></span>
+          </td>
+          <td style="text-align: right;"><span class="badge-merged">Merged ✓</span></td>
+        </tr>
+        <tr>
+          <td><a href="https://github.com/ModelCloud/GPTQModel/pull/4096" target="_blank" rel="noopener noreferrer" class="pr-id">#4096</a></td>
+          <td>
+            Repaired `hf_repack_layer` and `hf_pack_layer` GPTQ v1 qzero bit-packing alignment
+            <span class="pr-file">📁 gptqmodel/models/auto.py · <a href="https://github.com/ModelCloud/GPTQModel/pull/4096" target="_blank" rel="noopener noreferrer" style="color: var(--accent);">View diff ↗</a></span>
+          </td>
+          <td style="text-align: right;"><span class="badge-merged">Merged ✓</span></td>
+        </tr>
+        <tr>
+          <td><a href="https://github.com/ModelCloud/GPTQModel/pull/4029" target="_blank" rel="noopener noreferrer" class="pr-id">#4029</a></td>
+          <td>
+            Standardized multi-EOS stop lists, tokenizer unpacking, and OpenAI/vLLM request parsing
+            <span class="pr-file">📁 gptqmodel/adapter.py · <a href="https://github.com/ModelCloud/GPTQModel/pull/4029" target="_blank" rel="noopener noreferrer" style="color: var(--accent);">View diff ↗</a></span>
+          </td>
+          <td style="text-align: right;"><span class="badge-merged">Merged ✓</span></td>
+        </tr>
+      </tbody>
+    </table>
   </div>
 
-  <section class="flagships-grid">
-
-    <!-- PROJECT: EdgeSLM -->
-    <div class="flagship-card">
-      <div class="flagship-top">
-        <div class="flagship-header-row">
-          <a href="https://github.com/Prajwal7-2002/EdgeSLM" target="_blank" rel="noopener noreferrer" class="flagship-title">
-            EdgeSLM
-            <span style="font-size: 0.8rem; color: var(--text-dim); font-family: 'JetBrains Mono', monospace;">v3.0</span>
-          </a>
-          <span class="provenance-pill">Qwen2.5-0.5B · LoRA</span>
-        </div>
-        <p class="flagship-desc">
-          Document sensitivity classifier and enterprise DLP service engineered for strictly air-gapped CPU/edge inference. Combines a LoRA fine-tune of Qwen2.5-0.5B with a deterministic Tier-1 structural secret scanner to ensure zero data leaves the machine.
-        </p>
-        <ul class="flagship-features">
-          <li><span>[Batching]</span> Dynamic Tensor Chunk Batching yields a 6.7x multi-page document speedup.</li>
-          <li><span>[Speculative]</span> Speculative early-exit mechanism cuts redundant compute by 88.9%.</li>
-          <li><span>[Accuracy]</span> Achieves 100% secret recall on real-world balanced 100-document SEC/Enron benchmark.</li>
-        </ul>
-      </div>
-
-      <div style="display: flex; flex-direction: column; gap: 12px;">
-        <div class="flagship-stat-strip">
-          <span>Speedup: <span class="metric">6.7x Chunk Batch</span></span>
-          <span>Footprint: <span class="metric">392 MB ONNX</span></span>
-          <span>Recall: <span class="metric">100% Secret</span></span>
-        </div>
-
-        <div class="flagship-footer-row">
-          <div class="flagship-links">
-            <a href="https://github.com/Prajwal7-2002/EdgeSLM" target="_blank" rel="noopener noreferrer" class="flagship-link">
-              GitHub ↗
-            </a>
-            <a href="https://huggingface.co/prajwalpujari16/EdgeSLM-qwen0.5b-v3" target="_blank" rel="noopener noreferrer" class="flagship-link">
-              Hugging Face (🤗) ↗
-            </a>
-            <a href="https://prajwal7-2002.github.io/EdgeSLM/" target="_blank" rel="noopener noreferrer" class="flagship-link">
-              Docs ↗
-            </a>
-          </div>
-          <span class="tile-badge" style="color: var(--accent);">ONNX INT4 Quantized</span>
-        </div>
-      </div>
-    </div>
-
-    <!-- PROJECT: Menmo -->
-    <div class="flagship-card">
-      <div class="flagship-top">
-        <div class="flagship-header-row">
-          <a href="https://menmo-app.netlify.app" target="_blank" rel="noopener noreferrer" class="flagship-title">
-            Menmo
-            <span style="font-size: 0.8rem; color: var(--text-dim); font-family: 'JetBrains Mono', monospace;">Production</span>
-          </a>
-          <span class="provenance-pill">Hybrid RAG · Pinecone</span>
-        </div>
-        <p class="flagship-desc">
-          Document search and chat application featuring <strong>hybrid retrieval</strong> and strict page-level source citations. Combines dense MiniLM embeddings with sparse BM25 using Reciprocal Rank Fusion (RRF) for high-precision recall.
-        </p>
-        <ul class="flagship-features">
-          <li><span>[Hybrid RRF]</span> Dense semantic embeddings fused with sparse BM25 keyword matching on Pinecone.</li>
-          <li><span>[Routing]</span> Multi-tenant LLM intent router seamlessly falls back to cited web search.</li>
-          <li><span>[Grounding]</span> Zero hallucination citation mechanism with interactive PDF page jump links.</li>
-        </ul>
-      </div>
-
-      <div style="display: flex; flex-direction: column; gap: 12px;">
-        <div class="flagship-stat-strip">
-          <span>Engine: <span class="metric">BM25 + Dense RRF</span></span>
-          <span>Vector: <span class="metric">Pinecone Cloud</span></span>
-          <span>Latency: <span class="metric">&lt;600ms RAG</span></span>
-        </div>
-
-        <div class="flagship-footer-row">
-          <div class="flagship-links">
-            <a href="https://menmo-app.netlify.app" target="_blank" rel="noopener noreferrer" class="flagship-link">
-              Live Web App ↗
-            </a>
-          </div>
-          <span class="tile-badge" style="color: var(--telemetry-green);">Production Live</span>
-        </div>
-      </div>
-    </div>
-
-  </section>
-
-  <!-- SECTION LABEL: UPSTREAM (Style B) -->
-  <div class="section-label-row" id="upstream">
-    <span class="section-label">UPSTREAM // ECOSYSTEM CONTRIBUTIONS (MERGED)</span>
-    <span class="section-sublabel">PRODUCTION CODE &amp; PATCHES MERGED INTO EXTERNAL INFERENCE ENGINES</span>
+  <!-- WORKBENCH PULSE -->
+  <div class="section-title">
+    <span>Currently Exploring</span>
+    <span class="section-meta">Active engineering pulse</span>
   </div>
 
-  <section class="horizon-card" style="margin-bottom: 40px;">
-    <div class="horizon-header">
-      <div style="display: flex; align-items: center; gap: 12px; flex-wrap: wrap;">
-        <span class="tile-label" style="font-size: 0.95rem; color: var(--text);">
-          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="color: var(--accent);"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"></path><polyline points="15 3 21 3 21 9"></polyline><line x1="10" y1="14" x2="21" y2="3"></line></svg>
-          ModelCloud/GPTQModel
-        </span>
-        <span class="provenance-pill">4 Merged PRs · Core Quantization</span>
-      </div>
-      <a href="https://github.com/ModelCloud/GPTQModel/pulls?q=is%3Apr+author%3APrajwal7-2002+is%3Amerged" target="_blank" rel="noopener noreferrer" class="flagship-link">
-        View Merged PRs on GitHub ↗
-      </a>
+  <div class="workbench-card">
+    <div class="workbench-status">
+      <span class="pulse-dot"></span>
+      <span>ON THE WORKBENCH · Q4 2026</span>
     </div>
-
-    <ul class="flagship-features" style="margin-top: 14px;">
-      <li><span>[AWQ Replay]</span> <strong>PR #4145</strong>: Fixed Bloom AWQ module forward replay inputs (<code>residual</code>, <code>alibi</code>, <code>mask</code>) and rejected unsafe norm folds.</li>
-      <li><span>[GPU K-Means]</span> <strong>PR #4142</strong>: Scoped deterministic PyTorch algorithms safely in GPU-accelerated weighted k-means (VPTQ).</li>
-      <li><span>[Bit-Packing]</span> <strong>PR #4096</strong>: Repaired <code>hf_repack_layer</code> and <code>hf_pack_layer</code> GPTQ v1 qzero bit-packing alignment.</li>
-      <li><span>[Inference]</span> <strong>PR #4029</strong>: Standardized multi-EOS stop lists, tokenizer output unpacking, and OpenAI/vLLM SDK request parsing.</li>
-    </ul>
-  </section>
-
-  <!-- SECTION LABEL: RESEARCH NOTES -->
-  <div class="section-label-row" id="notes">
-    <span class="section-label">05 // ARCHITECTURAL NOTES &amp; RESEARCH ESSAYS</span>
-    <span class="section-sublabel">SYSTEMS ESSAYS &amp; EMPIRICAL TEARDOWNS</span>
+    <p class="workbench-text">
+      Currently experimenting with FP8 KV-cache quantization kernels in CUDA, integrating speculative decoding verification passes with FlashInfer kernels, and profiling memory bandwidth saturation on Ampere and Ada consumer architectures.
+    </p>
   </div>
 
-  <!-- NOTES PREVIEWS -->
-  <section class="notes-row">
-    <a href="/blog/posts/speculative-layer-streaming-memory-wall.html" class="note-tile">
-      <span class="note-date">SYSTEMS RESEARCH // NOVEMBER 2026</span>
-      <h5 class="note-title">Breaking the Consumer Memory Wall: Speculative Layer-Streaming for 70B Models</h5>
-      <span class="note-cta">Read Architecture Deep-Dive →</span>
-    </a>
-
-    <a href="/blog/posts/token-inflation-multilingual-tax.html" class="note-tile">
-      <span class="note-date">EMPIRICAL NLP // NOVEMBER 2026</span>
-      <h5 class="note-title">The Multilingual Token Tax: Why Indian &amp; Low-Resource Languages Pay 4.8x More</h5>
-      <span class="note-cta">Read Empirical Research →</span>
-    </a>
-
-    <a href="/blog/" class="note-tile">
-      <span class="note-date">SYSTEMS ARCHIVE // 2026</span>
-      <h5 class="note-title">All Architectural Notes, Roofline Profiling &amp; Serving Teardowns</h5>
-      <span class="note-cta">Browse All Notes (/blog/) →</span>
-    </a>
-  </section>
-
-  <!-- SECTION LABEL: SOLUTIONS (Style B + Style C) -->
-  <div class="section-label-row" id="solutions">
-    <span class="section-label">06 // ENTERPRISE SOLUTIONS &amp; CONSULTING</span>
-    <span class="section-sublabel">INFERENCE ARCHITECTURE · DOCUMENT AI · CAPACITY SIZING</span>
+  <!-- CONSULTING / AUDIT SERVICE -->
+  <div class="section-title" id="consulting">
+    <span>Independent Consulting</span>
+    <span class="section-meta">Fixed-scope technical audit</span>
   </div>
 
-  <!-- SOLUTIONS BENTO TILES -->
-  <section class="solutions-bento">
-
-    <div class="solution-tile">
-      <div style="display: flex; flex-direction: column; gap: 8px;">
-        <span class="tile-label" style="font-size: 0.72rem;">PRODUCTION DEPLOYMENT</span>
-        <h4 class="solution-tile-title">Document AI &amp; Enterprise RAG</h4>
-        <p class="solution-tile-desc">
-          Building end-to-end document intelligence pipelines: visual layout parsing, table extraction, multi-stage hybrid search, and citation-grounded LLM synthesis.
-        </p>
-      </div>
-      <ul class="solution-tile-points">
-        <li>Complex PDF &amp; tabular OCR extraction</li>
-        <li>Hybrid dense/sparse BM25 vector retrieval</li>
-        <li>Sub-second P99 answer generation</li>
-      </ul>
+  <div class="audit-box">
+    <h3>GPU Cost &amp; Inference Latency Optimization Audit</h3>
+    <p>
+      If your team is running open-weight models in production (vLLM, SGLang, Ollama) and dealing with high cloud bills, memory errors, or slow response times, I can help. Over 5 days, I profile your serving setup, find the bottlenecks (KV-cache sizing, batching settings, GPU utilization), and give you exact configuration and code fixes.
+    </p>
+    <div class="audit-meta">
+      <span class="audit-price-tag">$1,500 flat fee · 5 business days · 100% money-back ROI guarantee</span>
+      <a href="/audit.html" class="audit-link">Read Service Brief ↗</a>
     </div>
-
-    <div class="solution-tile">
-      <div style="display: flex; flex-direction: column; gap: 8px;">
-        <span class="tile-label" style="font-size: 0.72rem;">ON-PREM &amp; EDGE</span>
-        <h4 class="solution-tile-title">Private Small Language Models (SLMs)</h4>
-        <p class="solution-tile-desc">
-          Quantizing and deploying domain-specific models (1.5B–8B parameters) entirely within air-gapped on-premise infrastructure. Zero cloud exposure with low VRAM footprint.
-        </p>
-      </div>
-      <ul class="solution-tile-points">
-        <li>FP8, AWQ, and GGUF quantization tuning</li>
-        <li>Consumer &amp; workstation GPU deployment</li>
-        <li>100% data privacy and compliance</li>
-      </ul>
-    </div>
-
-    <div class="solution-tile">
-      <div style="display: flex; flex-direction: column; gap: 8px;">
-        <span class="tile-label" style="font-size: 0.72rem;">CAPACITY PLANNING</span>
-        <h4 class="solution-tile-title">Inference Capacity &amp; Cost Audit</h4>
-        <p class="solution-tile-desc">
-          Load-testing existing vLLM, TGI, or custom serving clusters with `servebench`. Finding the exact concurrency sweet-spot to cut cloud compute bills by 30–60%.
-        </p>
-      </div>
-      <ul class="solution-tile-points">
-        <li>Time-to-First-Token &amp; ITL jitter profiling</li>
-        <li>KV-cache memory sizing under burst load</li>
-        <li>Autoscaling threshold calibration</li>
-      </ul>
-      <div style="margin-top: 8px; border-top: 1px solid var(--border); padding-top: 10px;">
-        <a href="/audit.html" class="flagship-link" style="color: var(--accent); font-weight: 600;">
-          View 1-Week Audit Scope &amp; Terms →
-        </a>
-      </div>
-    </div>
-
-  </section>
-
-  <!-- SECTION LABEL: DISPATCH TERMINAL (Style B + Style C) -->
-  <div id="dispatch"></div>
-  <div class="section-label-row" id="contact">
-    <span class="section-label">07 // DISPATCH TERMINAL &amp; DIRECT INQUIRY</span>
-    <span class="section-sublabel">CONSULTING ENGAGEMENTS · SERVING AUDITS · CONTRACT ROLES</span>
   </div>
 
-  <!-- WORKSTATION CTA DISPATCH BAR -->
-  <section class="dispatch-banner">
-    <div class="dispatch-info">
-      <h4>Ready to Optimize Your Serving Infrastructure?</h4>
-      <p>
-        Available for consulting engagements, private SLM serving setups, and full-time systems engineering positions. Responses guaranteed within 24 hours.
-      </p>
+  <!-- FOOTER -->
+  <footer class="footer">
+    <div>Prajwal Pujari &copy; 2026 · Bengaluru, India</div>
+    <div>
+      <a href="mailto:prajwalpujari16@gmail.com">prajwalpujari16@gmail.com</a>
     </div>
-    <div style="display: flex; align-items: center; gap: 12px; flex-wrap: wrap;">
-      <a href="/audit.html" class="btn btn-secondary">
-        <span>⚡ 1-WEEK AUDIT BRIEF ↗</span>
-      </a>
-      <a href="mailto:prajwalpujari16@gmail.com" class="btn btn-primary">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect width="20" height="16" x="2" y="4" rx="2"/><path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7"/></svg>
-        <span>DISPATCH EMAIL</span>
-      </a>
-      <a href="https://wa.me/916360012214?text=Hi%20Prajwal%2C%20I%20saw%20your%20inference%20systems%20workstation." target="_blank" rel="noopener noreferrer" class="btn btn-secondary">
-        <span>WHATSAPP DIRECT ↗</span>
-      </a>
-      <a href="https://www.linkedin.com/in/prajwal-pujari-mn9964" target="_blank" rel="noopener noreferrer" class="btn btn-secondary">
-        <span>LINKEDIN ↗</span>
-      </a>
-    </div>
-  </section>
+  </footer>
 
 </main>
 
-<!-- WORKSTATION FOOTER -->
-<footer>
-  <div class="footer-inner">
-    <div>
-      &copy; 2026 Prajwal Pujari · High-Performance AI/ML Systems &amp; Inference Engineering
-    </div>
-    <div style="display: flex; gap: 16px;">
-      <a href="https://github.com/Prajwal7-2002" target="_blank" rel="noopener noreferrer">GitHub</a>
-      <a href="https://pypi.org/user/Prajwal2002PI/" target="_blank" rel="noopener noreferrer">PyPI Profile</a>
-      <a href="https://www.linkedin.com/in/prajwal-pujari-mn9964" target="_blank" rel="noopener noreferrer">LinkedIn</a>
-      <a href="mailto:prajwalpujari16@gmail.com">prajwalpujari16@gmail.com</a>
-    </div>
-  </div>
-</footer>
-
 <script>
-  // SIMULATOR LOGIC (Style A)
-  const simData = {
-    1: { toks: "8.5 tok/s", ttft: "118 ms", itl: "117 ms", vram: "1.20 GB", prefix: 4, active: 4, free: 24, label: "8 / 32 ALLOCATED (25%)", cmd: "pip install mini-infer && python -m mini_infer.cli --model qwen-0.5b --concurrency 1" },
-    2: { toks: "15.3 tok/s", ttft: "255 ms", itl: "146 ms", vram: "1.35 GB", prefix: 6, active: 10, free: 16, label: "16 / 32 ALLOCATED (50%)", cmd: "pip install mini-infer && python -m mini_infer.cli --model qwen-0.5b --concurrency 2" },
-    4: { toks: "26.4 tok/s", ttft: "756 ms", itl: "151 ms", vram: "1.50 GB", prefix: 8, active: 16, free: 8, label: "24 / 32 ALLOCATED (75%) [MEASURED PEAK]", cmd: "pip install mini-infer && python -m mini_infer.cli --model qwen-0.5b --concurrency 4" },
-    8: { toks: "27.8 tok/s", ttft: "1420 ms", itl: "168 ms", vram: "1.75 GB", prefix: 8, active: 22, free: 2, label: "30 / 32 ALLOCATED (94%) [HEAVY BURST]", cmd: "pip install mini-infer && python -m mini_infer.cli --model qwen-0.5b --concurrency 8" }
-  };
-
-  function setSimConcurrency(c) {
-    document.querySelectorAll('.sim-btn').forEach(btn => {
-      btn.classList.toggle('active', parseInt(btn.dataset.c) === c);
-    });
-
-    const data = simData[c];
-    document.getElementById('gauge-toks').textContent = data.toks;
-    document.getElementById('gauge-ttft').textContent = data.ttft;
-    document.getElementById('gauge-itl').textContent = data.itl;
-    document.getElementById('gauge-vram').textContent = data.vram;
-    document.getElementById('mem-status-label').textContent = data.label;
-    document.getElementById('cli-cmd-display').innerHTML = '<span class="prompt">$</span> ' + data.cmd;
-
-    renderMemoryGrid(data.prefix, data.active, data.free);
-  }
-
-  function renderMemoryGrid(prefixCount, activeCount, freeCount) {
-    const grid = document.getElementById('mem-grid');
-    grid.innerHTML = '';
-    
-    for (let i = 0; i < prefixCount; i++) {
-      const cell = document.createElement('div');
-      cell.className = 'mem-cell prefix';
-      cell.title = 'Prefix Cache Block (Shared)';
-      grid.appendChild(cell);
-    }
-    for (let i = 0; i < activeCount; i++) {
-      const cell = document.createElement('div');
-      cell.className = 'mem-cell active';
-      cell.title = 'Active Decode Block';
-      grid.appendChild(cell);
-    }
-    for (let i = 0; i < freeCount; i++) {
-      const cell = document.createElement('div');
-      cell.className = 'mem-cell free';
-      cell.title = 'Free Memory Page';
-      grid.appendChild(cell);
-    }
-  }
-
-  // Initialize simulator with default concurrency 4
-  renderMemoryGrid(8, 16, 8);
-
-  // Workstation Mode Switcher
-  function switchSimulatorMode(mode) {
-    const isPaged = mode === 'paged';
-    document.getElementById('tab-paged').classList.toggle('active', isPaged);
-    document.getElementById('tab-quant').classList.toggle('active', !isPaged);
-    document.getElementById('sim-view-paged').style.display = isPaged ? 'flex' : 'none';
-    document.getElementById('sim-view-quant').style.display = isPaged ? 'none' : 'flex';
-    document.getElementById('sim-main-title').textContent = isPaged ? '⚡ RUNTIME SIMULATOR // mini-infer v0.4.0' : '🧮 PRECISION WORKSTATION // quantbench v0.1.2';
-  }
-
-  // Quantization Schemes Data
-  const quantData = {
-    int4: {
-      comp: "3.5x Ratio", sqnr: "26.8 dB", ppl: "+0.12 ΔPPL", simd: "2x uint8",
-      title: "INT4 VECTORIZED NIBBLE PACKING (UINT8 STREAM)",
-      desc: "2x 4-BIT SIGNED/UNSIGNED NIBBLES CONDENSED PER BYTE",
-      cmd: "pip install quantbench-engine && quantbench pack-inspect --format int4",
-      bytes: [
-        { byte: "0x3F", b0: "15", b1: "3", bits0: "1111", bits1: "0011" },
-        { byte: "0x1A", b0: "10", b1: "1", bits0: "1010", bits1: "0001" },
-        { byte: "0x78", b0: "8",  b1: "7", bits0: "1000", bits1: "0111" },
-        { byte: "0x0B", b0: "11", b1: "0", bits0: "1011", bits1: "0000" }
-      ]
-    },
-    sparse: {
-      comp: "2.0x Condense", sqnr: "32.1 dB", ppl: "+0.08 ΔPPL", simd: "Ampere 2:4",
-      title: "AMPERE 2:4 STRUCTURED SPARSITY CONDENSATION",
-      desc: "50% ZERO PRUNING + 2-BIT COLUMN METADATA NIBBLE",
-      cmd: "pip install quantbench-engine && quantbench pack-inspect --format sparse24",
-      bytes: [
-        { byte: "Meta 0xE4", b0: "Idx [0,2]", b1: "Idx [1,3]", bits0: "1110", bits1: "0100" },
-        { byte: "Vals #1",  b0: "+0.84",      b1: "-1.12",      bits0: "W[0]",  bits1: "W[2]" },
-        { byte: "Meta 0x48", b0: "Idx [0,1]", b1: "Idx [2,3]", bits0: "0100", bits1: "1000" },
-        { byte: "Vals #2",  b0: "+0.45",      b1: "+0.92",      bits0: "W[0]",  bits1: "W[1]" }
-      ]
-    },
-    ternary: {
-      comp: "7.5x Extreme", sqnr: "14.3 dB", ppl: "+0.45 ΔPPL", simd: "BitNet 1.58b",
-      title: "BITNET 1.58B 2-BIT TERNARY PACKING {-1, 0, +1}",
-      desc: "4x WEIGHTS CONDENSED INTO 1 BYTE VIA 2-BIT BIASED ENCODING",
-      cmd: "pip install quantbench-engine && quantbench pack-inspect --format ternary",
-      bytes: [
-        { byte: "0x96", b0: "+1, -1", b1: "0, +1", bits0: "10 01", bits1: "00 10" },
-        { byte: "0x4A", b0: "-1, 0",  b1: "-1, +1", bits0: "01 00", bits1: "01 10" },
-        { byte: "0x12", b0: "0, -1",  b1: "0, 0",   bits0: "00 01", bits1: "00 00" },
-        { byte: "0x89", b0: "+1, 0",  b1: "-1, -1", bits0: "10 00", bits1: "01 01" }
-      ]
-    },
-    fp8: {
-      comp: "2.0x Fast", sqnr: "46.2 dB", ppl: "+0.02 ΔPPL", simd: "OCP E4M3FN",
-      title: "OCP FP8 E4M3FN ANALYTICAL EMULATION",
-      desc: "1 SIGN + 4 EXPONENT + 3 MANTISSA (BIAS=7, NO INF)",
-      cmd: "pip install quantbench-engine && quantbench eval --shape 1024x1024",
-      bytes: [
-        { byte: "0x48", b0: "M: 000", b1: "E: 1001", bits0: "Sign 0", bits1: "+2.0" },
-        { byte: "0x3F", b0: "M: 111", b1: "E: 0111", bits0: "Sign 0", bits1: "+1.875" },
-        { byte: "0xC8", b0: "M: 000", b1: "E: 1001", bits0: "Sign 1", bits1: "-2.0" },
-        { byte: "0x7E", b0: "M: 110", b1: "E: 1111", bits0: "Sign 0", bits1: "+448 (Max)" }
-      ]
-    }
-  };
-
-  function setQuantScheme(scheme) {
-    document.querySelectorAll('.quant-btn').forEach(btn => {
-      btn.classList.toggle('active', btn.dataset.q === scheme);
-    });
-
-    const data = quantData[scheme];
-    document.getElementById('gauge-q-comp').textContent = data.comp;
-    document.getElementById('gauge-q-sqnr').textContent = data.sqnr;
-    document.getElementById('gauge-q-ppl').textContent = data.ppl;
-    document.getElementById('gauge-q-simd').textContent = data.simd;
-    document.getElementById('bit-vis-title').textContent = data.title;
-    document.getElementById('bit-vis-desc').textContent = data.desc;
-    document.getElementById('cli-q-display').innerHTML = '<span class="prompt">$</span> ' + data.cmd;
-
-    renderBitStream(data.bytes);
-  }
-
-  function renderBitStream(bytes) {
-    const stream = document.getElementById('bit-stream-container');
-    if (!stream) return;
-    stream.innerHTML = '';
-    bytes.forEach(item => {
-      const unit = document.createElement('div');
-      unit.className = 'byte-unit';
-      unit.innerHTML = `
-        <div class="byte-header">${item.byte}</div>
-        <div class="nibble-row">
-          <div class="nibble-cell">
-            <div class="nibble-val">${item.b0}</div>
-            <div class="nibble-bits">${item.bits0}</div>
-          </div>
-          <div class="nibble-cell">
-            <div class="nibble-val">${item.b1}</div>
-            <div class="nibble-bits">${item.bits1}</div>
-          </div>
-        </div>
-      `;
-      stream.appendChild(unit);
-    });
-  }
-
-  // Initialize quant scheme with INT4
-  renderBitStream(quantData.int4.bytes);
-
-  // Copy Snippet Utility
-  function copySnippet(text, btn) {
+  // COPY PIP COMMAND WITH TACTILE FEEDBACK
+  function copyPip(command, button) {
     if (!navigator.clipboard) return;
-    navigator.clipboard.writeText(text).then(() => {
-      const original = btn.innerHTML;
-      btn.innerHTML = '<span style="color: var(--telemetry-green); font-weight: 700;">✓ Copied</span>';
-      setTimeout(() => {
-        btn.innerHTML = original;
-      }, 2000);
-    }).catch(() => {});
+    navigator.clipboard.writeText(command).then(function() {
+      button.classList.add('copied');
+      var label = button.querySelector('.copy-label');
+      var original = label ? label.textContent : '';
+      if (label) label.textContent = 'copied ✓';
+      setTimeout(function() {
+        button.classList.remove('copied');
+        if (label) label.textContent = original;
+      }, 1600);
+    });
   }
 
-  // Dark / Light Theme Toggle
-  const root = document.documentElement;
-  const themeBtn = document.getElementById('theme-btn');
-  const themeIcon = document.getElementById('theme-icon');
-
+  // SMOOTH THEME SWITCHER
   function updateThemeUI(theme) {
-    if (theme === 'light') {
-      themeIcon.innerHTML = '<path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>';
+    const doc = document.documentElement;
+    const icon = document.getElementById('theme-icon');
+    const label = document.getElementById('theme-label');
+    if (theme === 'dark') {
+      doc.setAttribute('data-theme', 'dark');
+      if (icon) icon.textContent = '☀️';
+      if (label) label.textContent = 'Light';
+      localStorage.setItem('theme', 'dark');
     } else {
-      themeIcon.innerHTML = '<circle cx="12" cy="12" r="5"></circle><line x1="12" y1="1" x2="12" y2="3"></line><line x1="12" y1="21" x2="12" y2="23"></line><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line><line x1="1" y1="12" x2="3" y2="12"></line><line x1="21" y1="12" x2="23" y2="12"></line><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>';
+      doc.removeAttribute('data-theme');
+      if (icon) icon.textContent = '🌙';
+      if (label) label.textContent = 'Dark';
+      localStorage.setItem('theme', 'light');
     }
   }
 
-  updateThemeUI(root.dataset.theme || 'dark');
+  function toggleTheme() {
+    const isDark = document.documentElement.getAttribute('data-theme') === 'dark';
+    updateThemeUI(isDark ? 'light' : 'dark');
+  }
 
-  themeBtn.addEventListener('click', () => {
-    const nextTheme = root.dataset.theme === 'light' ? 'dark' : 'light';
-    root.dataset.theme = nextTheme;
-    try { localStorage.setItem('theme', nextTheme); } catch (e) {}
-    updateThemeUI(nextTheme);
-  });
+  // Initialize theme from saved localStorage or system preference
+  (function() {
+    var saved = localStorage.getItem('theme');
+    if (saved === 'dark' || (!saved && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
+      updateThemeUI('dark');
+    } else {
+      updateThemeUI('light');
+    }
+  })();
 </script>
 
 </body>
