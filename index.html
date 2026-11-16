@@ -149,6 +149,15 @@
 
   * { box-sizing: border-box; margin: 0; padding: 0; }
 
+  @media (prefers-reduced-motion: reduce) {
+    *, *::before, *::after {
+      animation-duration: 0.01ms !important;
+      animation-iteration-count: 1 !important;
+      transition-duration: 0.01ms !important;
+      scroll-behavior: auto !important;
+    }
+  }
+
   html {
     scroll-behavior: smooth;
     font-size: 16px;
@@ -956,13 +965,29 @@
     justify-content: space-between;
     gap: 18px;
     box-shadow: var(--card-inset), var(--shadow);
-    transition: all 0.2s ease;
+    transition: transform 180ms cubic-bezier(0.16, 1, 0.3, 1), border-color 150ms ease, box-shadow 180ms ease, background-color 150ms ease;
   }
 
   .flagship-card:hover {
     border-color: var(--accent-border-hover);
     transform: translateY(-2px);
     box-shadow: var(--card-inset), var(--shadow-hover);
+  }
+
+  .flagship-card-hero {
+    grid-column: span 2;
+    background: linear-gradient(180deg, var(--card-bg) 0%, rgba(245, 158, 11, 0.02) 100%);
+    border-color: var(--accent-border);
+  }
+
+  @media (max-width: 900px) {
+    .flagship-card-hero {
+      grid-column: span 1;
+    }
+  }
+
+  .btn:active, .flagship-link:active, .note-tile:active, .solution-tile:active, .sim-tab:active {
+    transform: scale(0.98);
   }
 
   .flagship-top {
@@ -1586,8 +1611,8 @@
   <!-- FLAGSHIPS GRID (Style B) -->
   <section class="flagships-grid-quad">
 
-    <!-- FLAGSHIP 1: streamspec -->
-    <div class="flagship-card">
+    <!-- FLAGSHIP 1: streamspec (Hero Bento Anchor) -->
+    <div class="flagship-card flagship-card-hero">
       <div class="flagship-top">
         <div class="flagship-header-row">
           <a href="https://github.com/Prajwal7-2002/streamspec" target="_blank" rel="noopener noreferrer" class="flagship-title">
