@@ -2027,6 +2027,34 @@
 
   </section>
 
+  <!-- SECTION LABEL: UPSTREAM (Style B) -->
+  <div class="section-label-row" id="upstream">
+    <span class="section-label">UPSTREAM // ECOSYSTEM CONTRIBUTIONS (MERGED)</span>
+    <span class="section-sublabel">PRODUCTION CODE &amp; PATCHES MERGED INTO EXTERNAL INFERENCE ENGINES</span>
+  </div>
+
+  <section class="horizon-card" style="margin-bottom: 40px;">
+    <div class="horizon-header">
+      <div style="display: flex; align-items: center; gap: 12px; flex-wrap: wrap;">
+        <span class="tile-label" style="font-size: 0.95rem; color: var(--text);">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="color: var(--accent);"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"></path><polyline points="15 3 21 3 21 9"></polyline><line x1="10" y1="14" x2="21" y2="3"></line></svg>
+          ModelCloud/GPTQModel
+        </span>
+        <span class="provenance-pill">4 Merged PRs · Core Quantization</span>
+      </div>
+      <a href="https://github.com/ModelCloud/GPTQModel/pulls?q=is%3Apr+author%3APrajwal7-2002+is%3Amerged" target="_blank" rel="noopener noreferrer" class="flagship-link">
+        View Merged PRs on GitHub ↗
+      </a>
+    </div>
+
+    <ul class="flagship-features" style="margin-top: 14px;">
+      <li><span>[AWQ Replay]</span> <strong>PR #4145</strong>: Fixed Bloom AWQ module forward replay inputs (<code>residual</code>, <code>alibi</code>, <code>mask</code>) and rejected unsafe norm folds.</li>
+      <li><span>[GPU K-Means]</span> <strong>PR #4142</strong>: Scoped deterministic PyTorch algorithms safely in GPU-accelerated weighted k-means (VPTQ).</li>
+      <li><span>[Bit-Packing]</span> <strong>PR #4096</strong>: Repaired <code>hf_repack_layer</code> and <code>hf_pack_layer</code> GPTQ v1 qzero bit-packing alignment.</li>
+      <li><span>[Inference]</span> <strong>PR #4029</strong>: Standardized multi-EOS stop lists, tokenizer output unpacking, and OpenAI/vLLM SDK request parsing.</li>
+    </ul>
+  </section>
+
   <!-- SECTION LABEL: RESEARCH NOTES -->
   <div class="section-label-row" id="notes">
     <span class="section-label">05 // ARCHITECTURAL NOTES &amp; RESEARCH ESSAYS</span>
