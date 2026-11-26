@@ -704,8 +704,8 @@ Packed 4-bit Metadata Nibble:      (0b00) | (0b10 &lt;&lt; 2) = 0b1000 = 0x08
 
       <hr />
 
-      <h2 id="empirical-benchmarks">Empirical Benchmarks: RTX 3050 Laptop GPU</h2>
-      <p>We measured memory footprint, arithmetic intensity, and theoretical DRAM latency across all schemes using our integration benchmark (<code>examples/03_servebench_roofline_eval.py</code>) on a representative transformer feed-forward projection $(1536 \to 8960)$:</p>
+      <h2 id="empirical-benchmarks">Calculated Footprint and Bandwidth Limits</h2>
+      <p>We calculated memory footprint, arithmetic intensity, and the theoretical DRAM-bound latency for each scheme using (<code>examples/03_servebench_roofline_eval.py</code>) on a representative transformer feed-forward projection $(1536 \to 8960)$:</p>
 
       <table>
         <thead>
@@ -755,6 +755,8 @@ Packed 4-bit Metadata Nibble:      (0b00) | (0b10 &lt;&lt; 2) = 0b1000 = 0x08
           </tr>
         </tbody>
       </table>
+
+      <p><strong>Measured on a full model:</strong> on Qwen2.5-0.5B (RTX 3050 laptop), INT8 made the model 1.56&times; smaller with +0.4% perplexity and INT4 G=128 2.11&times; smaller with +30% perplexity, but decoding ran slower than BF16 (0.68&times; and 0.23&times;) because the reference runtime unpacks weights on every pass. The bandwidth savings above need fused dequant-matmul kernels. Full results: <a href="https://huggingface.co/datasets/prajwalpujari16/quantbench-pareto">quantbench-pareto dataset</a>.</p>
 
       <hr />
 

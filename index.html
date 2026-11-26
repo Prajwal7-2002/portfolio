@@ -705,7 +705,7 @@
         <span class="project-tag">v1.2.0 · AGPL-3.0</span>
       </div>
       <p class="project-desc">
-        Runs 70B models and DeepSeek-R1 on consumer GPUs (8–16 GB VRAM) by streaming layers from disk or host RAM into GPU memory while previous layers are computing. Prefetches the next layer asynchronously over PCIe so the GPU doesn't stall waiting on I/O.
+        Aims to run models larger than VRAM (target: 70B-class on 8–16 GB GPUs, not yet measured) by streaming layers from disk or host RAM into GPU memory while previous layers are computing. Prefetches the next layer asynchronously over PCIe so the GPU doesn't stall waiting on I/O.
       </p>
 
       <div class="pip-row">
@@ -715,7 +715,7 @@
         </button>
       </div>
 
-      <div class="project-stats">10x–15x faster I/O than naive offloading · &gt;90% PCIe bus overlap</div>
+      <div class="project-stats">1.85x fewer target-model weight sweeps · 93.9% prefetch overlap (measured, Qwen2.5 1.5B + 0.5B draft)</div>
 
       <div class="project-links">
         <a href="https://github.com/Prajwal7-2002/streamspec" target="_blank" rel="noopener noreferrer">GitHub ↗</a>
@@ -736,11 +736,11 @@
           </div>
           <div class="breakdown-item">
             <div class="breakdown-label">The Mechanism</div>
-            <div class="breakdown-text">Double-buffered pinned memory ring buffer that prefetches layer L+1 over DMA while layer L computes on GPU, hiding 90%+ of PCIe latency behind batched GEMM sweeps. Dynamic EMA modulates speculative draft candidate length K based on live acceptance rates.</div>
+            <div class="breakdown-text">Double-buffered pinned memory ring buffer that prefetches layer L+1 over DMA while layer L computes on GPU, hiding most transfer time behind compute (93.9% overlap measured). Dynamic EMA modulates speculative draft candidate length K based on live acceptance rates.</div>
           </div>
           <div class="breakdown-item">
             <div class="breakdown-label">Silicon Verification</div>
-            <div class="breakdown-text">Measured 10x–15x I/O throughput gains over baseline unbatched paging on an NVIDIA RTX 3050 (6GB). 10/10 automated test suites passing in CI.</div>
+            <div class="breakdown-text">On an RTX 3050 (6GB) with real Qwen2.5-1.5B (target) and 0.5B (draft) weights: 13 target weight sweeps instead of 24 (1.85x fewer) with output identical to the target model. 70B-class runs are not measured yet. 10/10 tests in CI.</div>
           </div>
         </div>
       </details>
@@ -787,7 +787,7 @@
           </div>
           <div class="breakdown-item">
             <div class="breakdown-label">Silicon Verification</div>
-            <div class="breakdown-text">Benchmarked against Qwen2.5 and SmolLM2 on RTX 3050 Laptop GPU. Achieved 26.4 tok/s aggregate throughput at c=4 concurrency (3.1x speedup over sequential execution) with zero memory leaks.</div>
+            <div class="breakdown-text">Benchmarked against Qwen2.5 and SmolLM2 on RTX 3050 Laptop GPU. Achieved 26.4 tok/s aggregate throughput at c=4 concurrency (3.1x the throughput of a single user, 24 requests per level).</div>
           </div>
         </div>
       </details>
@@ -810,7 +810,7 @@
         </button>
       </div>
 
-      <div class="project-stats">152 unit tests passing · tracks tail latency percentiles</div>
+      <div class="project-stats">Tracks tail latency percentiles · CI on Windows, macOS and Linux</div>
 
       <div class="project-links">
         <a href="https://github.com/Prajwal7-2002/servebench" target="_blank" rel="noopener noreferrer">GitHub ↗</a>
@@ -833,7 +833,7 @@
           </div>
           <div class="breakdown-item">
             <div class="breakdown-label">Silicon Verification</div>
-            <div class="breakdown-text">Identified Ollama concurrency bottleneck at 4→8 slots under 44.8% Memory Bandwidth Utilization (MBU) on local hardware. 152/152 unit tests passing.</div>
+            <div class="breakdown-text">Measured Ollama (qwen2.5:0.5b) on an RTX 3050 laptop: 189 → 403 tok/s from 1 to 4 users, with memory-bandwidth utilization falling from 44.8% to 23.8%, using the engine-reported model size.</div>
           </div>
         </div>
       </details>
@@ -880,7 +880,7 @@
           </div>
           <div class="breakdown-item">
             <div class="breakdown-label">Silicon Verification</div>
-            <div class="breakdown-text">Simulated time-per-output-token (TPOT) matched real out-of-sample physical Ollama hardware runs within ±12%. 42/42 tests passing.</div>
+            <div class="breakdown-text">On held-out real runs (RTX 3050 laptop), simulated time-per-output-token (TPOT) was within ±12% in 7 of 11 rows; time-to-first-token predictions are still off for larger models.</div>
           </div>
         </div>
       </details>
@@ -903,7 +903,7 @@
         </button>
       </div>
 
-      <div class="project-stats">3.5x INT4 compression · 47 test cases covering accuracy &amp; speed</div>
+      <div class="project-stats">INT4: 2.11x smaller model on Qwen2.5-0.5B (+30% perplexity, measured)</div>
 
       <div class="project-links">
         <a href="https://github.com/Prajwal7-2002/quantbench" target="_blank" rel="noopener noreferrer">GitHub ↗</a>
@@ -926,7 +926,7 @@
           </div>
           <div class="breakdown-item">
             <div class="breakdown-label">Silicon Verification</div>
-            <div class="breakdown-text">Measured 3.5x memory reduction for INT4 and 7.5x for BitNet ternary packing on Llama/Qwen layers with zero-copy buffer hooks. 47/47 unit tests passing.</div>
+            <div class="breakdown-text">Measured on Qwen2.5-0.5B (RTX 3050): INT8 1.56x smaller with +0.4% perplexity; INT4 G=128 2.11x smaller with +30% perplexity. Decoding is slower than BF16 in the reference runtime, which unpacks weights every pass. Full results in the public HF dataset.</div>
           </div>
         </div>
       </details>

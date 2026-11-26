@@ -3,9 +3,9 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Breaking the Consumer Silicon Memory Wall: How Speculative Layer-Streaming Runs 70B Models on an 8GB Laptop · Prajwal Pujari</title>
+<title>Breaking the Consumer Silicon Memory Wall: Speculative Layer-Streaming for Models Larger Than VRAM · Prajwal Pujari</title>
 <meta name="description" content="The Arithmetic Intensity Collapse of Sequential Offloading, Asynchronous Double-Buffered Prefetching, and Exact Target Invariance Under Rejection Sampling.">
-<meta property="og:title" content="Breaking the Consumer Silicon Memory Wall: How Speculative Layer-Streaming Runs 70B Models on an 8GB Laptop · Prajwal Pujari">
+<meta property="og:title" content="Breaking the Consumer Silicon Memory Wall: Speculative Layer-Streaming for Models Larger Than VRAM · Prajwal Pujari">
 <meta property="og:description" content="A rigorous systems engineering breakdown of the arithmetic intensity wall in sequential model offloading, asynchronous ping-pong layer prefetching, and zero-extra-sweep speculative decoding.">
 <meta property="og:type" content="article">
 <link rel="canonical" href="https://prajwal-pujari.vercel.app/blog/posts/speculative-layer-streaming-memory-wall.html">
@@ -566,7 +566,7 @@
       <span>CI TESTED (10/10 PASS)</span>
     </div>
 
-    <h1 class="post-title">Breaking the Consumer Silicon Memory Wall: How Speculative Layer-Streaming Runs 70B Models on an 8GB Laptop</h1>
+    <h1 class="post-title">Breaking the Consumer Silicon Memory Wall: Speculative Layer-Streaming for Models Larger Than VRAM</h1>
 
     <p class="post-subtitle">
       A first-principles systems analysis of the Arithmetic Intensity Collapse in sequential offloading, asynchronous double-buffered prefetching, and zero-extra-sweep speculative decoding.
@@ -581,7 +581,7 @@
 
   <!-- Abstract Box -->
   <div class="abstract-box">
-    <strong>Executive Abstract:</strong> Running frontier 70B or DeepSeek-R1 reasoning models on consumer hardware (laptops and mini-PCs with 8 GB to 16 GB of VRAM) has historically relied on single-token layer streaming (AirLLM style). In this architecture, generating 1 token requires reading all 80 transformer layers from disk across the PCIe bus, resulting in an Arithmetic Intensity Collapse (\(\mathcal{I} = 4.0\text{ FLOPs/Byte}\)) and a crippling 10-second per token latency (0.1 tok/s). This article presents <strong>StreamSpec</strong>: a speculative layer-streaming runtime that amortizes disk streaming overhead by a factor of \(10\times\text{--}15\times\) through \(K\)-chunked batched GEMM passes, overlaps memory transfer via asynchronous double-buffering (\(\eta_{\text{overlap}} > 90\%\)), and mathematically proves zero reasoning quality loss under Leviathan rejection sampling.
+    <strong>Executive Abstract:</strong> Running frontier 70B or DeepSeek-R1 reasoning models on consumer hardware (laptops and mini-PCs with 8 GB to 16 GB of VRAM) has historically relied on single-token layer streaming (AirLLM style). In this architecture, generating 1 token requires reading all 80 transformer layers from disk across the PCIe bus, resulting in an Arithmetic Intensity Collapse (\(\mathcal{I} = 4.0\text{ FLOPs/Byte}\)) and a crippling 10-second per token latency (0.1 tok/s). This article presents <strong>StreamSpec</strong>: a speculative layer-streaming runtime that amortizes streaming overhead through \(K\)-chunked batched GEMM passes, overlaps memory transfer via asynchronous double-buffering, and keeps the target model's output distribution exact under Leviathan rejection sampling. <strong>What is measured so far</strong> (Section 7): with real Qwen2.5-1.5B (target) and 0.5B (draft) weights on an RTX 3050 laptop, 13 target weight sweeps instead of 24 (1.85&times; fewer) with identical output. The 70B-class scenario below is the design goal and is analysed, not yet measured.
   </div>
 
   <!-- SECTION 1 -->

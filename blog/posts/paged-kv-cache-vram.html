@@ -3,9 +3,9 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Why Naive KV-Caches Waste >60% VRAM (And How Paged Memory Fixes It) · Prajwal Pujari</title>
+<title>Why Contiguous KV-Caches Waste VRAM (And How Paged Memory Fixes It) · Prajwal Pujari</title>
 <meta name="description" content="How replacing contiguous memory allocations with 16-token physical blocks and virtual table mapping brings production PagedAttention to pure PyTorch.">
-<meta property="og:title" content="Why Naive KV-Caches Waste >60% VRAM (And How Paged Memory Fixes It) · Prajwal Pujari">
+<meta property="og:title" content="Why Contiguous KV-Caches Waste VRAM (And How Paged Memory Fixes It) · Prajwal Pujari">
 <meta property="og:description" content="How replacing contiguous memory allocations with 16-token physical blocks and virtual table mapping brings production PagedAttention to pure PyTorch.">
 <meta property="og:type" content="article">
 <link rel="canonical" href="https://prajwal-pujari.vercel.app/blog/posts/paged-kv-cache-vram.html">
@@ -550,7 +550,7 @@
         <span>•</span>
         <span>5 min read</span>
       </div>
-      <h1 class="post-title">Why Naive KV-Caches Waste >60% VRAM (And How Paged Memory Fixes It)</h1>
+      <h1 class="post-title">Why Contiguous KV-Caches Waste VRAM (And How Paged Memory Fixes It)</h1>
       <p class="post-subtitle">How replacing contiguous memory allocations with 16-token physical blocks and virtual table mapping brings production PagedAttention to pure PyTorch.</p>
     </header>
 
@@ -562,11 +562,11 @@
 <span class="k">[Request 2: Token 1..120] [------- Contiguous Pre-allocated Waste (1928 slots) --------]</span>
 </code></pre></div>
 
-<h3 id="the-problem-over-60-vram-waste">The Problem: Over 60% VRAM Waste</h3>
+<h3 id="the-problem-over-60-vram-waste">The Problem: Reserved but Unused VRAM</h3>
 <p>Because user prompt lengths and output generation counts are unknown ahead of time, contiguous allocators must reserve worst-case buffer pools. This causes two severe types of memory waste:<br />
 1. <strong>Internal Fragmentation</strong>: Reserved slots in the sequence buffer that are never filled by the user request.<br />
 2. <strong>External Fragmentation</strong>: Virtual memory address gaps between concurrent requests that cannot fit a new contiguous allocation, causing Out-Of-Memory (OOM) errors even when total free VRAM is plentiful.</p>
-<p>On consumer laptop hardware (such as an NVIDIA RTX 3050 6GB Laptop GPU), contiguous pre-allocation caps your maximum concurrency to just <strong>1 or 2 concurrent requests</strong> before crashing with CUDA OOM.</p>
+<p>The <a href="https://arxiv.org/abs/2309.06180">vLLM paper (Kwon et al., SOSP 2023)</a> found that systems allocating KV memory this way leave most of it unused. On a 6 GB laptop GPU, reserving the full context for every request limits how many requests fit at once.</p>
 <hr />
 <h2 id="the-solution-paged-kv-memory-allocation-in-pure-pytorch">The Solution: Paged KV Memory Allocation in Pure PyTorch</h2>
 <p>Inspired by virtual memory paging in operating systems (and popularized by vLLM's CUDA kernels), <strong><a href="https://github.com/Prajwal7-2002/mini-infer">mini-infer</a></strong> brings hardware-efficient Paged KV caching to <strong>pure PyTorch</strong> without requiring a C++ compiler or CUDA toolkit toolchain.</p>
@@ -590,11 +590,11 @@
 <span class="c1"># Tokens 32..34 -&gt; Physical Block 19 (only 3 slots used, 13 slots free)</span>
 </code></pre></div>
 
-<h3 id="2-eliminating-memory-waste-to-below-38">2. Eliminating Memory Waste to Below 3.8%</h3>
+<h3 id="2-eliminating-memory-waste-to-below-38">2. Waste Limited to the Last Block</h3>
 <p>Because memory is requested on-demand as tokens generate:<br />
 * <strong>Zero External Fragmentation</strong>: Physical blocks can be anywhere in VRAM.<br />
 * <strong>Minimal Internal Fragmentation</strong>: Waste is strictly limited to the <em>tail block</em> of an active sequence (at most $16 - 1 = 15$ token slots).<br />
-* Across a typical batch of 16 concurrent requests, memory utilization jumps from <strong>&lt;40% up to &gt;96.2%</strong>, dropping memory waste to <strong>&lt;3.8%</strong>.</p>
+* Example (calculated for Qwen2.5-0.5B in bf16, 12 KB of KV cache per token): reserving 2,048 tokens takes <strong>24 MB</strong> per request, while a 48-token reply needs only <strong>0.56 MB</strong> in 16-token blocks.</p>
 <hr />
 <h2 id="implementation-walkthrough">Implementation Walkthrough</h2>
 <p>In <code>mini-infer</code>, the <code>BlockAllocator</code> manages available block indices using a simple, O(1) free-list stack:</p>
@@ -617,44 +617,24 @@
 <p>$$\text{Shape: } [N_{\text{blocks}}, \text{block_size}, N_{\text{heads}}, D_{\text{head}}]$$</p>
 <p>Attention is gathered dynamically using the sequence's block table via PyTorch's native Scaled Dot-Product Attention (<code>F.scaled_dot_product_attention</code>), ensuring high CUDA kernel performance without custom C++ extensions.</p>
 <hr />
-<h2 id="measured-results-on-consumer-hardware">Measured Results on Consumer Hardware</h2>
-<p>We benchmarked <code>mini-infer</code> against real hardware constraints on an RTX 3050 6GB Laptop GPU (maintaining a &lt; 4GB total VRAM footprint) using <strong><a href="https://github.com/Prajwal7-2002/servebench">servebench</a></strong>:</p>
+<h2 id="measured-results-on-consumer-hardware">What Paging Saves (Calculated)</h2>
+<p>KV-cache memory for one request with Qwen2.5-0.5B in bf16 (24 layers, 2 KV heads, head size 64: 12 KB per token), comparing a contiguous 2,048-token reservation with 16-token blocks. These are calculated from tensor sizes, not measured.</p>
 <table>
 <thead>
 <tr>
-<th>Metric</th>
-<th>Contiguous PyTorch Baseline</th>
-<th>mini-infer Paged KV Cache</th>
-<th>Impact</th>
+<th>Reply length</th>
+<th>Contiguous (2,048 reserved)</th>
+<th>Paged (16-token blocks)</th>
+<th>Reserved but unused</th>
 </tr>
 </thead>
 <tbody>
-<tr>
-<td><strong>Max Concurrent Concurrency</strong></td>
-<td>2 requests</td>
-<td><strong>8+ requests</strong></td>
-<td><strong>4x Capacity Increase</strong></td>
-</tr>
-<tr>
-<td><strong>VRAM Memory Waste</strong></td>
-<td>62.4%</td>
-<td><strong>&lt; 3.8%</strong></td>
-<td><strong>94% Waste Reduction</strong></td>
-</tr>
-<tr>
-<td><strong>Out-Of-Memory Crashes</strong></td>
-<td>Frequent on long prompts</td>
-<td>Zero (dynamic block reclamation)</td>
-<td><strong>Production Stability</strong></td>
-</tr>
-<tr>
-<td><strong>Build Dependencies</strong></td>
-<td>Requires PyTorch</td>
-<td>Pure PyTorch (<code>pip install mini-infer</code>)</td>
-<td><strong>Zero C++ / CMake required</strong></td>
-</tr>
+<tr><td>48 tokens</td><td>24 MB</td><td><strong>0.56 MB</strong></td><td>97.7%</td></tr>
+<tr><td>256 tokens</td><td>24 MB</td><td><strong>3 MB</strong></td><td>87.5%</td></tr>
+<tr><td>1,024 tokens</td><td>24 MB</td><td><strong>12 MB</strong></td><td>50.0%</td></tr>
 </tbody>
 </table>
+<p>Measured throughput of the engine under concurrent load is in <a href="/blog/posts/roofline-serving-benchmarks.html">the servebench post</a>: 8.5 tok/s for one user and 26.4 tok/s for four on an RTX 3050 laptop.</p>
 <hr />
 <h2 id="try-it-locally">Try It Locally</h2>
 <p>You can install <code>mini-infer</code> directly from PyPI:</p>

@@ -495,12 +495,12 @@
         <span>•</span>
         <span style="color: var(--telemetry-green); font-weight: 600;">NEW RELEASE</span>
       </div>
-      <h2 class="post-card-title">Breaking the Consumer Silicon Memory Wall: How Speculative Layer-Streaming Runs 70B Models on an 8GB Laptop</h2>
-      <p class="post-card-excerpt">A first-principles systems analysis of the Arithmetic Intensity Collapse in sequential offloading, asynchronous double-buffered prefetching (&gt;90% overlap efficiency), zero-extra-sweep concatenation, and exact Leviathan distribution invariance.</p>
+      <h2 class="post-card-title">Breaking the Consumer Silicon Memory Wall: Speculative Layer-Streaming for Models Larger Than VRAM</h2>
+      <p class="post-card-excerpt">A first-principles systems analysis of the Arithmetic Intensity Collapse in sequential offloading, asynchronous double-buffered prefetching (93.9% overlap measured), zero-extra-sweep concatenation, and exact Leviathan distribution invariance.</p>
       <div class="post-metrics-strip">
-        <span class="post-metric-tag">model: 70B &amp; DeepSeek-R1</span>
-        <span class="post-metric-tag">i/o speedup: 10x-15x</span>
-        <span class="post-metric-tag">bus overlap: &gt;90% (Async)</span>
+        <span class="post-metric-tag">measured: Qwen2.5 1.5B + 0.5B draft</span>
+        <span class="post-metric-tag">target sweeps: 1.85x fewer</span>
+        <span class="post-metric-tag">prefetch overlap: 93.9%</span>
         <span class="post-metric-tag">extra sweeps: 0 (Concatenation)</span>
         <span class="post-metric-tag">quality loss: 0 (Exact Proof)</span>
         <span class="post-metric-tag">pypi: pip install streamspec</span>
@@ -515,12 +515,12 @@
         <span>•</span>
         <span>8 MIN READ</span>
       </div>
-      <h2 class="post-card-title">The Hidden Token Tax: Why Multilingual LLM APIs Cost Up to 4.5× More (And How Modern Tokenizers Optimized It)</h2>
-      <p class="post-card-excerpt">Why non-English prompts suffer extreme Byte-Pair Encoding fragmentation, how formatted JSON tool schemas add 2.6× token bloat, and how modern frontier tokenizers rebalance API economics across 52 world languages.</p>
+      <h2 class="post-card-title">The Hidden Token Tax: Why Kannada Needs 12.6× More Tokens Than English on GPT-4 (and 2.7× on GPT-4o)</h2>
+      <p class="post-card-excerpt">Why non-English prompts suffer extreme Byte-Pair Encoding fragmentation, how formatted JSON tool schemas add 2.6× token bloat, and how a newer tokenizer changes the cost across 52 languages (measured on FLORES-200).</p>
       <div class="post-metrics-strip">
         <span class="post-metric-tag">benchmark: Meta FLORES-200 (52 Languages)</span>
-        <span class="post-metric-tag">tokenizers: 13 Frontier Models</span>
-        <span class="post-metric-tag">kannada penalty: 12.63x (Llama) -&gt; 2.71x (GPT-4o)</span>
+        <span class="post-metric-tag">tokenizers measured: GPT-4, GPT-4o</span>
+        <span class="post-metric-tag">kannada penalty: 12.63x (GPT-4) -&gt; 2.71x (GPT-4o)</span>
         <span class="post-metric-tag">tool schema bloat: 2.63x</span>
         <span class="post-metric-tag">runtime: Pure Python / PyTorch</span>
       </div>
@@ -572,13 +572,12 @@
         <span>•</span>
         <span>5 MIN READ</span>
       </div>
-      <h2 class="post-card-title">Why Naive KV-Caches Waste &gt;60% VRAM (And How Paged Memory Fixes It)</h2>
-      <p class="post-card-excerpt">How replacing contiguous dynamic memory allocations with 16-token physical blocks and virtual table mapping brings production PagedAttention to pure PyTorch, eliminating CUDA out-of-memory crashes.</p>
+      <h2 class="post-card-title">Why Contiguous KV-Caches Waste VRAM (And How Paged Memory Fixes It)</h2>
+      <p class="post-card-excerpt">How replacing contiguous dynamic memory allocations with 16-token physical blocks and virtual table mapping brings PagedAttention-style memory management to pure PyTorch.</p>
       <div class="post-metrics-strip">
         <span class="post-metric-tag">block size: 16 tokens</span>
-        <span class="post-metric-tag">vram waste before: &gt;60%</span>
-        <span class="post-metric-tag">vram waste after: &lt;3.8%</span>
-        <span class="post-metric-tag">runtime: Pure PyTorch</span>
+        <span class="post-metric-tag">48-token reply: 24 MB reserved vs 0.56 MB paged (calculated)</span>
+                <span class="post-metric-tag">runtime: Pure PyTorch</span>
         <span class="post-metric-tag">silicon: RTX 3050 6GB Laptop GPU</span>
       </div>
     </a>

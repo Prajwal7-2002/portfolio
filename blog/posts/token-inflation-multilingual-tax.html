@@ -3,10 +3,10 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>The Hidden Token Tax: Why Multilingual LLM APIs Cost Up to 4.5× More · Prajwal Pujari</title>
+<title>The Hidden Token Tax: Why Kannada Needs 12.6× More Tokens Than English on GPT-4 · Prajwal Pujari</title>
 <meta name="description" content="Why non-English prompts suffer extreme Byte-Pair Encoding fragmentation, how formatted JSON tool schemas add 2.6x token bloat, and how modern tokenizers rebalance API economics.">
-<meta property="og:title" content="The Hidden Token Tax: Why Multilingual LLM APIs Cost Up to 4.5× More · Prajwal Pujari">
-<meta property="og:description" content="Empirical analysis across 52 world languages and 13 frontier LLM tokenizers using Meta's FLORES-200 benchmark.">
+<meta property="og:title" content="The Hidden Token Tax: Why Kannada Needs 12.6× More Tokens Than English on GPT-4 · Prajwal Pujari">
+<meta property="og:description" content="Measured token inflation across 52 languages for the GPT-4 and GPT-4o tokenizers on Meta's FLORES-200 benchmark.">
 <meta property="og:type" content="article">
 <link rel="canonical" href="https://prajwal-pujari.vercel.app/blog/posts/token-inflation-multilingual-tax.html">
 <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🌐</text></svg>">
@@ -545,13 +545,13 @@
         <span>•</span>
         <span>8 MIN READ</span>
       </div>
-      <h1 class="post-title">The Hidden Token Tax: Why Multilingual LLM APIs Cost Up to 4.5× More (And How Modern Tokenizers Optimized It)</h1>
+      <h1 class="post-title">The Hidden Token Tax: Why Kannada Needs 12.6× More Tokens Than English on GPT-4 (And How Modern Tokenizers Optimized It)</h1>
       <p class="post-subtitle">Why non-English prompts suffer extreme Byte-Pair Encoding fragmentation, how formatted JSON tool schemas add 2.6× token bloat, and how modern frontier tokenizers rebalance vocabulary economics.</p>
       
       <div class="metrics-strip">
         <span class="metric-pill">benchmark: Meta FLORES-200 (52 Languages)</span>
-        <span class="metric-pill">tokenizers: 13 Frontier Models</span>
-        <span class="metric-pill">inflation penalty: 1.0x (English) → 4.5x (Kannada)</span>
+        <span class="metric-pill">tokenizers measured: GPT-4, GPT-4o</span>
+        <span class="metric-pill">inflation: 12.63x (Kannada, GPT-4) → 2.71x (GPT-4o)</span>
         <span class="metric-pill">schema bloat: 2.63x (pretty vs compact)</span>
         <span class="metric-pill">runtime: Pure Python / PyTorch</span>
       </div>
@@ -560,13 +560,13 @@
     <div class="prose">
       <h2 id="the-illusion-of-uniform-pricing">1. The Illusion of Uniform Token Pricing</h2>
       <p>Every commercial LLM provider bills developer traffic with a flat headline rate: for example, <code>$0.150 / 1M input tokens</code> and <code>$0.600 / 1M output tokens</code>. This pricing structure creates an intuitive assumption: if two developers send the same 500-word paragraph to an API, they pay the exact same price.</p>
-      <p>In practice, that assumption is completely false. If Developer A sends the paragraph in English, it consumes approximately <strong>380 tokens</strong>. If Developer B sends the <em>exact same semantic thought</em> in Kannada, Telugu, or Hindi, it consumes <strong>up to 1,750 tokens</strong>. Developer B pays up to <strong>4.6× more money</strong> for the identical computation.</p>
+      <p>In practice, that assumption is completely false. In our FLORES-200 sample, the same five sentences took <strong>86 tokens</strong> in English with GPT-4's tokenizer and <strong>1,086 tokens</strong> in Kannada (1,110 in Telugu, 570 in Hindi). At a per-token price, the Kannada version costs about <strong>12.6× more</strong> for the same content.</p>
 
       <div class="callout">
         <strong>The Compounding Penalties of Token Inflation:</strong><br>
         Token inflation is not just a financial penalty. It triggers 4 concurrent systems degradation bottlenecks:
         <ul style="margin: 8px 0 0 20px;">
-          <li><strong>Context Shrinkage:</strong> A 128k context window is effectively reduced to ~28k words for Dravidian and Indic languages.</li>
+          <li><strong>Context Shrinkage:</strong> On GPT-4's tokenizer, a 128k-token window holds only as much Kannada as about 10k tokens of English (measured effective context 10,136); on GPT-4o it is about 47k.</li>
           <li><strong>Prefill Latency (TTFT):</strong> Attention prefill scales quadratically or linearly with sequence length, adding 3× to 5× latency before the first token streams.</li>
           <li><strong>DRAM Memory Footprint:</strong> Paged KV-cache allocators must reserve 4× more physical blocks in GPU VRAM per concurrent session.</li>
           <li><strong>Billing Inflation:</strong> Cost scales linearly with raw token counts on every input and output call.</li>
@@ -604,7 +604,7 @@
 
       <hr />
 
-      <h2 id="empirical-measurements">3. Empirical Measurements: 52 Languages Across 13 Models</h2>
+      <h2 id="empirical-measurements">3. Measurements: 52 Languages, GPT-4 vs GPT-4o</h2>
       <p>To quantify this tax objectively without sampling bias, our benchmarking engine evaluates tokenizers against identical, professionally aligned sentences from Meta's <strong>FLORES-200</strong> parallel evaluation corpus.</p>
       
       <p>We define the <strong>Token Inflation Index ($\tau$)</strong> relative to English:</p>
@@ -615,89 +615,27 @@
       <div class="data-table-wrapper">
         <table class="data-table">
           <thead>
-            <tr>
-              <th>Language</th>
-              <th>GPT-4 (100k)</th>
-              <th>LLaMA-3.1 (128k)</th>
-              <th>GPT-4o (200k)</th>
-              <th>Mistral Tekken (131k)</th>
-              <th>DeepSeek-V3 (128k)</th>
-            </tr>
+            <tr><th>Language</th><th>GPT-4 (cl100k_base)</th><th>GPT-4o (o200k_base)</th></tr>
           </thead>
           <tbody>
-            <tr>
-              <td><strong>English (Baseline)</strong></td>
-              <td>1.00×</td>
-              <td>1.00×</td>
-              <td>1.00×</td>
-              <td>1.00×</td>
-              <td>1.00×</td>
-            </tr>
-            <tr>
-              <td><strong>German (de)</strong></td>
-              <td>1.28×</td>
-              <td>1.21×</td>
-              <td>1.12×</td>
-              <td>1.10×</td>
-              <td>1.14×</td>
-            </tr>
-            <tr>
-              <td><strong>Russian (ru)</strong></td>
-              <td>2.14×</td>
-              <td>1.82×</td>
-              <td>1.38×</td>
-              <td>1.44×</td>
-              <td>1.52×</td>
-            </tr>
-            <tr>
-              <td><strong>Arabic (ar)</strong></td>
-              <td>2.84×</td>
-              <td>2.18×</td>
-              <td>1.52×</td>
-              <td class="green">1.41× (Leader)</td>
-              <td>1.64×</td>
-            </tr>
-            <tr>
-              <td><strong>Chinese (zh)</strong></td>
-              <td>1.48×</td>
-              <td>1.34×</td>
-              <td>1.18×</td>
-              <td>1.22×</td>
-              <td class="green">0.98× (Super-Compact)</td>
-            </tr>
-            <tr>
-              <td><strong>Hindi (hi)</strong></td>
-              <td>4.12×</td>
-              <td>2.96×</td>
-              <td>1.78×</td>
-              <td>1.82×</td>
-              <td>1.94×</td>
-            </tr>
-            <tr>
-              <td><strong>Kannada (kn)</strong></td>
-              <td>9.24×</td>
-              <td class="highlight">12.63× (Extreme)</td>
-              <td class="green">2.71× (-78%)</td>
-              <td>2.94×</td>
-              <td>3.45×</td>
-            </tr>
-            <tr>
-              <td><strong>Tamil (ta)</strong></td>
-              <td>8.16×</td>
-              <td>10.42×</td>
-              <td>2.64×</td>
-              <td>2.88×</td>
-              <td>3.12×</td>
-            </tr>
+            <tr><td>English (baseline)</td><td>1.00×</td><td>1.00×</td></tr>
+            <tr><td>German (de)</td><td>2.05×</td><td>1.69×</td></tr>
+            <tr><td>Russian (ru)</td><td>3.37×</td><td>1.68×</td></tr>
+            <tr><td>Arabic (ar)</td><td>3.98×</td><td>1.67×</td></tr>
+            <tr><td>Chinese (zh)</td><td>1.98×</td><td>1.38×</td></tr>
+            <tr><td>Hindi (hi)</td><td>6.63×</td><td>2.14×</td></tr>
+            <tr><td>Kannada (kn)</td><td>12.63×</td><td>2.71×</td></tr>
+            <tr><td>Tamil (ta)</td><td>10.08×</td><td>2.58×</td></tr>
           </tbody>
         </table>
       </div>
 
-      <p>Three striking patterns emerge from the empirical data:</p>
+      <p>Measured on 5 FLORES-200 sentences per language (<a href="https://huggingface.co/datasets/prajwalpujari16/token-atlas-benchmark">dataset</a>), so treat small differences with care. Other tokenizers (Llama, Mistral, DeepSeek) are not in the published data yet.</p>
+      <p>What stands out:</p>
       <ol>
-        <li><strong>Chinese Super-Compression:</strong> DeepSeek-V3 encodes Chinese at $\tau = 0.98\times$. Expressing a thought in Chinese on DeepSeek requires fewer tokens than expressing it in English.</li>
-        <li><strong>Arabic Optimization:</strong> Mistral's Tekken tokenizer outperforms all competitors on Arabic ($\tau = 1.41\times$), reflecting dedicated North African &amp; Middle Eastern vocabulary optimization.</li>
-        <li><strong>The Dravidian Breakthrough:</strong> In GPT-4 and LLaMA-3.1, Kannada and Tamil suffered catastrophic $9\times$ to $12.6\times$ inflation. OpenAI's <code>o200k_base</code> vocabulary expansion cut this penalty by nearly <strong>78%</strong> down to $2.71\times$.</li>
+        <li><strong>Dravidian languages pay the most on GPT-4:</strong> Kannada needs 12.63× and Tamil 10.08× the tokens of the same English text.</li>
+        <li><strong>GPT-4o's larger vocabulary cuts that sharply:</strong> Kannada drops to 2.71× (79% fewer tokens) and Tamil to 2.58× (74% fewer).</li>
+        <li><strong>Every language measured still costs more than English on GPT-4o</strong>, from 1.38× (Chinese) to 2.71× (Kannada).</li>
       </ol>
 
       <hr />
