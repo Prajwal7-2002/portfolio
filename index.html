@@ -695,7 +695,7 @@
     <div class="card-tag">02 // SYSTEMS RUNTIMES</div>
     <div class="card-header-row">
       <h2 class="card-section-title">Open Source Projects</h2>
-      <span class="card-section-meta">5 engines on PyPI</span>
+      <span class="card-section-meta">6 on PyPI · 7 projects</span>
     </div>
 
     <!-- streamspec -->
@@ -797,7 +797,7 @@
     <article class="project">
       <div class="project-header">
         <a href="https://github.com/Prajwal7-2002/servebench" target="_blank" rel="noopener noreferrer" class="project-name">servebench</a>
-        <span class="project-tag">v1.2.0 · PyPI</span>
+        <span class="project-tag">v1.1.7 · PyPI</span>
       </div>
       <p class="project-desc">
         Load testing tool for local LLM servers (vLLM, Ollama, SGLang). Streams HTTP SSE tokens with microsecond timestamps to measure time-to-first-token (TTFT) and inter-token latency (ITL) under concurrent user traffic.
@@ -834,6 +834,102 @@
           <div class="breakdown-item">
             <div class="breakdown-label">Silicon Verification</div>
             <div class="breakdown-text">Measured Ollama (qwen2.5:0.5b) on an RTX 3050 laptop: 189 → 403 tok/s from 1 to 4 users, with memory-bandwidth utilization falling from 44.8% to 23.8%, using the engine-reported model size.</div>
+          </div>
+        </div>
+      </details>
+    </article>
+
+    <!-- runsonmine -->
+    <article class="project">
+      <div class="project-header">
+        <a href="https://github.com/Prajwal7-2002/runsonmine" target="_blank" rel="noopener noreferrer" class="project-name">runsonmine</a>
+        <span class="project-tag">Apache-2.0 · CC BY 4.0 data</span>
+      </div>
+      <p class="project-desc">
+        Open registry of measured local LLM inference speeds (not datasheet estimates) collected from laptops, desktops, and cloud GPUs with <code>servebench submit</code>. Checks every submitted JSON against physical memory-bandwidth bounds in CI.
+      </p>
+
+      <div class="pip-row">
+        <button class="pip-chip" onclick="copyPip('uvx servebench@latest submit --model qwen2.5:0.5b', this)" title="Click to copy command">
+          <span>$ uvx servebench@latest submit --model qwen2.5:0.5b</span>
+          <span class="copy-label">copy</span>
+        </button>
+      </div>
+
+      <div class="project-stats">8 validated files (24 concurrency rows) across 2 GPUs · CI physics check</div>
+
+      <div class="project-links">
+        <a href="https://github.com/Prajwal7-2002/runsonmine" target="_blank" rel="noopener noreferrer">GitHub ↗</a>
+        <a href="https://prajwal7-2002.github.io/runsonmine/" target="_blank" rel="noopener noreferrer">Live Site ↗</a>
+        <a href="https://huggingface.co/datasets/prajwalpujari16/consumer-silicon-benchmarks" target="_blank" rel="noopener noreferrer">HF Dataset ↗</a>
+        <a href="https://huggingface.co/spaces/prajwalpujari16/runsonmine" target="_blank" rel="noopener noreferrer">Hugging Face Space ↗</a>
+      </div>
+
+      <details class="project-breakdown">
+        <summary class="breakdown-toggle">
+          <span class="toggle-icon">▸</span>
+          <span>Architecture breakdown &amp; silicon proof</span>
+        </summary>
+        <div class="breakdown-content">
+          <div class="breakdown-item">
+            <div class="breakdown-label">The Bottleneck</div>
+            <div class="breakdown-text">"Can I run this model?" calculators estimate speeds from published GPU bandwidth, missing serving runtime overhead, quantization formats, battery/power throttling, and real laptop memory clocks.</div>
+          </div>
+          <div class="breakdown-item">
+            <div class="breakdown-label">The Mechanism</div>
+            <div class="breakdown-text"><code>servebench submit</code> runs a fixed 1, 2, and 4 concurrent user workload with AC/battery, clock, and power telemetry while stripping hostnames, IPs, and prompts. CI validates every pull request against memory-bandwidth bounds before publishing to the static site and Hugging Face dataset.</div>
+          </div>
+          <div class="breakdown-item">
+            <div class="breakdown-label">Silicon Verification</div>
+            <div class="breakdown-text">8 validated result files (24 concurrency rows across RTX 3050 Laptop and Dual Tesla T4). On an RTX 3050 laptop (Ollama 0.35.1, qwen2.5:0.5b Q4_K_M), single-user decode measured 164 tok/s vs a 444 tok/s roofline ceiling. 26/26 tests pass in CI.</div>
+          </div>
+        </div>
+      </details>
+    </article>
+
+    <!-- infersize -->
+    <article class="project">
+      <div class="project-header">
+        <a href="https://github.com/Prajwal7-2002/infersize" target="_blank" rel="noopener noreferrer" class="project-name">infersize</a>
+        <span class="project-tag">v0.3.3 · PyPI</span>
+      </div>
+      <p class="project-desc">
+        Pre-flight VRAM capacity planner, GGUF footprint sizer, and roofline decode estimator for LLM serving. Computes analytical bandwidth ceilings and memory footprints across FP16, INT8, INT4, BitNet 1.58b, and GGUF formats on CPU without a GPU.
+      </p>
+
+      <div class="pip-row">
+        <button class="pip-chip" onclick="copyPip('pip install infersize', this)" title="Click to copy command">
+          <span>$ pip install infersize</span>
+          <span class="copy-label">copy</span>
+        </button>
+      </div>
+
+      <div class="project-stats">No GPU needed · leave-one-out error under 15% on 3 RTX 3050 Ollama models</div>
+
+      <div class="project-links">
+        <a href="https://github.com/Prajwal7-2002/infersize" target="_blank" rel="noopener noreferrer">GitHub ↗</a>
+        <a href="https://pypi.org/project/infersize/" target="_blank" rel="noopener noreferrer">PyPI ↗</a>
+        <a href="https://huggingface.co/spaces/prajwalpujari16/infersize" target="_blank" rel="noopener noreferrer">Hugging Face Space ↗</a>
+        <a href="https://prajwal7-2002.github.io/infersize/" target="_blank" rel="noopener noreferrer">Docs ↗</a>
+      </div>
+
+      <details class="project-breakdown">
+        <summary class="breakdown-toggle">
+          <span class="toggle-icon">▸</span>
+          <span>Architecture breakdown &amp; silicon proof</span>
+        </summary>
+        <div class="breakdown-content">
+          <div class="breakdown-item">
+            <div class="breakdown-label">The Bottleneck</div>
+            <div class="breakdown-text">Trial-and-error model sizing requires downloading multi-gigabyte weights only to hit out-of-memory errors, while naive calculators ignore GGUF block scales, GQA KV-cache sizing, and MoE active parameters.</div>
+          </div>
+          <div class="breakdown-item">
+            <div class="breakdown-label">The Mechanism</div>
+            <div class="breakdown-text">Derives exact parameter and KV-cache byte footprints across tensor parallelism and sequence lengths, supports explicit <code>--bandwidth</code>, <code>--overhead-ms</code>, and <code>--rate</code> flags without hardcoded pricing guesses, and resolves Hugging Face Hub <code>config.json</code> files via standard-library HTTP.</div>
+          </div>
+          <div class="breakdown-item">
+            <div class="breakdown-label">Silicon Verification</div>
+            <div class="breakdown-text">Checked against measured Ollama 0.35.1 decode speeds on an RTX 3050 laptop (Qwen2.5 0.5B/1.5B/3B Q4_K_M): the default bandwidth ceiling never falls below measured speeds, and the calibrated overhead model stays within 15% leave-one-out error. 60/60 tests pass in CI.</div>
           </div>
         </div>
       </details>
